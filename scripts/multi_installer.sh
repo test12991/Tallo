@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Bittoirum Multi-installer
-# a one line clone-and-compile for Bittorium:
+# Talleo Multi-installer
+# a one line clone-and-compile for Talleo:
 #
-#     ` $ curl -sL "https://raw.githubusercontent.com/bittorium/Bittorium/master/multi_installer.sh" | bash
+#     ` $ curl -sL "https://raw.githubusercontent.com/TalleoProject/Talleo/master/multi_installer.sh" | bash
 #
 # Supports Ubuntu 16.04 LTS, OSX 10.10+
 # Supports building project from current directory (automatic detection)
@@ -31,7 +31,7 @@ _note() {
 _fail() {
     local msg=`echo \'$1\'`
     _colorize red "Failure: $msg" | tee -a build.log && echo
-    _colorize red "Please check build.log and if you need help check out the team discord @ 'https://discord.gg/aMF2vUF'" && echo
+    _colorize red "Please check build.log and if you need help check out the team discord @ 'https://discord.gg/aysnp8P'" && echo
     _colorize purple "Exiting script" && echo
     exit 1
 }
@@ -41,26 +41,26 @@ _set_wd() {
         _note "Building project from current working directory ($PWD)"
     else
         _note "Cloning project with git..."
-        if [ -d "$PWD"/bittorium ]; then
-            read -r -p "${1:-bittorium directory already exists. Overwrite? [y/N]} " response
+        if [ -d "$PWD"/Talleo ]; then
+            read -r -p "${1:-Talleo directory already exists. Overwrite? [y/N]} " response
             case "$response" in
                 [yY][eE][sS|[yY])
-                    _colorize red "Overwriting old Bittorium directory" && echo
-                    rm -rf "$PWD"/bittorium
+                    _colorize red "Overwriting old Talleo directory" && echo
+                    rm -rf "$PWD"/Talleo
                     ;;
                 *)
-                    _fail "bittorium directory already exists. Aborting..."
+                    _fail "Talleo directory already exists. Aborting..."
                     ;;
             esac
         fi
-        mkdir Bittorium
-        git clone -q https://github.com/bittorium/Bittorium Bittorium   >>build.log 2>&1 || _fail "Unable to clone git repository. Please see build.log for more information"
-        cd Bittorium
+        mkdir Talleo
+        git clone -q https://github.com/TalleoProject/Talleo Talleo   >>build.log 2>&1 || _fail "Unable to clone git repository. Please see build.log for more information"
+        cd Talleo
     fi
 }
 
-_build_Bittorium() {
-    _note "Building Bittorium from source (this might take a while)..."
+_build_Talleo() {
+    _note "Building Talleo from source (this might take a while)..."
     if [ -d build ]; then
         _colorize red "Overwriting old build directory" && echo
         rm -rf build
@@ -109,7 +109,7 @@ _configure_linux() {
     elif [ "$(awk -F= '/^NAME/{print $2}' /etc/os-release)" = "\"Debian GNU/Linux\"" ]; then
         _configure_debian
     else
-        _fail "Your OS version isn't supported by this installer. Please consider adding support for your OS to the project ('https://github.com/bittorium')"
+        _fail "Your OS version isn't supported by this installer. Please consider adding support for your OS to the project ('https://github.com/TalleoProject')"
     fi
 }
 
@@ -138,21 +138,21 @@ _configure_os() {
             _configure_osx
             ;;
         *)
-            _fail "This installer only runs on OSX 10.10+ and Ubuntu 16.04+. Please consider adding support for your OS to the project ('https://github.com/bittorium')"
+            _fail "This installer only runs on OSX 10.10+ and Ubuntu 16.04+. Please consider adding support for your OS to the project ('https://github.com/TalleoProject')"
             ;;
     esac
     _note "Operating system configuration completed. You're halfway there!"
 }
 
-_note "Bittorium Multi_Installer v1.0"
+_note "Talleo Multi_Installer v1.0"
 _colorize green " _______         _   _       _____      _       \n|__   __|       | | | |     / ____|    (_)      \n   | |_   _ _ __| |_| | ___| |     ___  _ _ __  \n   | | | | | '__| __| |/ _ \ |    / _ \| | '_ \ \n   | | |_| | |  | |_| |  __/ |___| (_) | | | | |\n   |_|\__,_|_|   \__|_|\___|\_____\___/|_|_| |_|\n" && echo
 
 _configure_os
 
 _set_wd
-_build_Bittorium
+_build_Talleo
 
 _note "Installation complete!"
-_note "Look in 'Bittorium/build/src/' for the executible binaries. See 'https://github.com/bittorium/Bittorium' for more project support."
+_note "Look in 'Talleo/build/src/' for the executable binaries. See 'https://github.com/TalleoProject/Talleo' for more project support."
 
 

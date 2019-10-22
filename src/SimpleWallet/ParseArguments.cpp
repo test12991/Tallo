@@ -2,6 +2,7 @@
 Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
+Copyright (C) 2019, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -155,7 +156,7 @@ Config parseArguments(int argc, char **argv)
 
 void versionMessage()
 {
-    std::cout << "Bittorium v" << PROJECT_VERSION << " Simplewallet"
+    std::cout << "Talleo v" << PROJECT_VERSION << " Simplewallet"
               << std::endl;
 }
 

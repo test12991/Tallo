@@ -3,6 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
+Copyright (C) 2019, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -232,8 +233,8 @@ void splitTx(CryptoNote::WalletGreen &wallet,
                  (std::ceil(double(txSize) / double(maxSize))));
 
         /* Split the requested fee over each transaction, i.e. if a fee of 20
-           BTOR was requested and we split it into 4 transactions each one will
-           have a fee of 5 BTOR. If the fee per transaction is less than the
+           TLO was requested and we split it into 4 transactions each one will
+           have a fee of 5 TLO. If the fee per transaction is less than the
            min fee, use the min fee. */
         uint64_t feePerTx = std::max (p.fee / numTransactions, minFee);
 
@@ -797,7 +798,7 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
     uint64_t remote_node_fee = 0;
     if (!remote_fee_address.empty())
     {
-        // Remote node fee is between 0.01 and 1.00 BTOR depending on transfer amount
+        // Remote node fee is between 0.01 and 1.00 TLO depending on transfer amount
         remote_node_fee = std::min(UINT64_C(1), std::max(static_cast<uint64_t>(amount * 0.000025), UINT64_C(100)));
     }
 
@@ -942,7 +943,7 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
             {
                 std::cout << WarningMsg("Couldn't connect to the network to "
                                         "send the transaction!") << std::endl
-                          << "Ensure Bittoriumd or the remote node you are "
+                          << "Ensure Talleod or the remote node you are "
                           << "using is open and functioning." << std::endl;
             }
             else if (retried)
@@ -1026,7 +1027,7 @@ Maybe<uint64_t> getFee()
         std::cout << std::endl 
                   << InformationMsg("What fee do you want to use?")
                   << std::endl
-                  << "Hit enter for the default fee of 0.01 BTOR: ";
+                  << "Hit enter for the default fee of 0.01 TLO: ";
 
         std::getline(std::cin, stringAmount);
 
@@ -1089,7 +1090,7 @@ Maybe<uint64_t> getTransferAmount()
         std::string stringAmount;
 
         std::cout << std::endl
-                  << InformationMsg("How much BTOR do you want to send?: ");
+                  << InformationMsg("How much TLO do you want to send?: ");
 
         std::getline(std::cin, stringAmount);
 
@@ -1148,7 +1149,7 @@ bool parseFee(std::string feeString)
     }
     else if (fee < CryptoNote::parameters::MINIMUM_FEE)
     {
-        std::cout << WarningMsg("Fee must be at least 0.01 BTOR!") << std::endl;
+        std::cout << WarningMsg("Fee must be at least 0.01 TLO!") << std::endl;
         return false;
     }
 
@@ -1191,11 +1192,11 @@ bool parseAddress(std::string address)
         return false;
     }
     /* Can't see an easy way to go from prefix num -> prefix string, so for
-       now just hard code "bT" - it will let testers send stuff at least */
+       now just hard code "TA" - it will let testers send stuff at least */
     else if (prefix != expectedPrefix)
     {
         std::cout << WarningMsg("Invalid address! It should start with "
-                                "\"bT\"!") << std::endl << std::endl;
+                                "\"TA\"!") << std::endl << std::endl;
 
         return false;
     }
@@ -1242,7 +1243,7 @@ bool parseAmount(std::string amountString)
         std::cout << WarningMsg("Failed to parse amount! Ensure you entered "
                                 "the value correctly.")
                   << std::endl
-                  << "Please note, the minimum you can send is 0.01 BTOR,"
+                  << "Please note, the minimum you can send is 0.01 TLO,"
                   << std::endl
                   << "and you can only use 2 decimal places."
                   << std::endl;

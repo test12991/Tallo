@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -244,7 +245,7 @@ bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& 
     int64_t diff = static_cast<int64_t>(hshd.current_height) - static_cast<int64_t>(get_current_blockchain_height());
 
     logger(diff >= 0 ? (is_inital ? Logging::INFO : Logging::DEBUGGING) : Logging::TRACE, Logging::BRIGHT_GREEN) << context <<
-      "Your Bittorium node is syncing with the network. You are "
+      "Your Talleo node is syncing with the network. You are "
       // << get_current_blockchain_height() << " -> " << hshd.current_height
       << std::abs(diff) << " blocks (" << std::abs(diff) / (24 * 60 * 60 / m_currency.difficultyTarget()) << " days) "
       << (diff >= 0 ? std::string("behind") : std::string("ahead of")) << " the remote node. Synchronization started! " << std::endl;
@@ -575,7 +576,7 @@ bool CryptoNoteProtocolHandler::request_missing_objects(CryptoNoteConnectionCont
     requestMissingPoolTransactions(context);
 
     context.m_state = CryptoNoteConnectionContext::state_normal;
-    logger(Logging::INFO, Logging::BRIGHT_GREEN) << context << "Successfully synchronized with the Bittorium Network.";
+    logger(Logging::INFO, Logging::BRIGHT_GREEN) << context << "Successfully synchronized with the Talleo Network.";
     on_connection_synchronized();
   }
   return true;
@@ -586,11 +587,11 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
   if (m_synchronized.compare_exchange_strong(val_expected, true)) {
     logger(Logging::INFO)
       << ENDL ;
-      logger(INFO, BRIGHT_MAGENTA) << "===[ Bittorium Tip! ]=============================" << ENDL ;
-      logger(INFO, WHITE) << " Always exit Bittoriumd and Simplewallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
+      logger(INFO, BRIGHT_MAGENTA) << "===[ Talleo Tip! ]=================================" << ENDL ;
+      logger(INFO, WHITE) << " Always exit Talleod and Simplewallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
       logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
       logger(INFO, WHITE) << " Use the \"export_keys\" command in Simplewallet to display your keys for restoring a corrupted wallet." << ENDL ;
-      logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the Bittorium Discord Chat - https://discord.gg/aMF2vUF" << ENDL ;
+      logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the Talleo Discord Chat - https://discord.gg/aysnp8P" << ENDL ;
       logger(INFO, BRIGHT_MAGENTA) << "===================================================" << ENDL << ENDL ;
 
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, m_core.getTopBlockIndex());

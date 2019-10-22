@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -200,8 +201,6 @@ Core::Core(const Currency& currency, Logging::ILogger& logger, Checkpoints&& che
 
   upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_2, currency.upgradeHeight(BLOCK_MAJOR_VERSION_2));
   upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_3, currency.upgradeHeight(BLOCK_MAJOR_VERSION_3));
-  upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_4, currency.upgradeHeight(BLOCK_MAJOR_VERSION_4));
-  upgradeManager->addMajorBlockVersion(BLOCK_MAJOR_VERSION_5, currency.upgradeHeight(BLOCK_MAJOR_VERSION_5));
 
   transactionPool = std::unique_ptr<ITransactionPoolCleanWrapper>(new TransactionPoolCleanWrapper(
     std::unique_ptr<ITransactionPool>(new TransactionPool(logger)),
@@ -628,7 +627,7 @@ std::error_code Core::addBlock(const CachedBlock& cachedBlock, RawBlock&& rawBlo
     return blockValidationResult;
   }
 
-  if (blockTemplate.majorVersion >= BLOCK_MAJOR_VERSION_5 && blockTemplate.transactionHashes.size() < 1) {
+  if (blockTemplate.majorVersion >= BLOCK_MAJOR_VERSION_3 && blockTemplate.transactionHashes.size() < 1) {
     logger(Logging::WARNING) << "New block must have at least one transaction";
     return error::BlockValidationError::NOT_ENOUGH_TRANSACTIONS;
   }
@@ -674,7 +673,7 @@ std::error_code Core::addBlock(const CachedBlock& cachedBlock, RawBlock&& rawBlo
       logger(Logging::WARNING) << "Checkpoint block hash mismatch for block " << blockStr;
       return error::BlockValidationError::CHECKPOINT_BLOCK_HASH_MISMATCH;
     }
-  } else if (!currency.checkProofOfWork(cryptoContext, cachedBlock, currentDifficulty)) {
+  } else if (!currency.checkProofOfWork(cachedBlock, currentDifficulty)) {
     logger(Logging::WARNING) << "Proof of work too weak for block " << blockStr;
     return error::BlockValidationError::PROOF_OF_WORK_TOO_WEAK;
   }
@@ -1197,7 +1196,7 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
       return false;
     }
 
-    if (b.majorVersion >= BLOCK_MAJOR_VERSION_5 && b.transactionHashes.size() < 1) {
+    if (b.majorVersion >= BLOCK_MAJOR_VERSION_3 && b.transactionHashes.size() < 1) {
       logger(Logging::ERROR, Logging::BRIGHT_RED) << "New block must have at least one transaction";
         return false;
     }

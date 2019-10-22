@@ -252,7 +252,7 @@ bool DaemonCommandsHandler::print_alternate_chains(const std::vector<std::string
 
     for (const auto& chain: res.chains) {
       std::cout << chain.length << " blocks long, branching at height " << (chain.height - chain.length + 1)
-                << ", difficulty " << chain.difficulty << ": " << chain.block_hash;
+                << ", difficulty " << chain.difficulty << ": " << chain.block_hash << std::endl;
     }
   }
 

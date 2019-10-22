@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -57,20 +58,16 @@ const Crypto::Hash& CachedBlock::getBlockHash() const {
   return blockHash.get();
 }
 
-const Crypto::Hash& CachedBlock::getBlockLongHash(cn_context& cryptoContext) const {
+const Crypto::Hash& CachedBlock::getBlockLongHash() const {
   if (!blockLongHash.is_initialized()) {
     if (block.majorVersion == BLOCK_MAJOR_VERSION_1) {
       const auto& rawHashingBlock = getBlockHashingBinaryArray();
       blockLongHash = Hash();
-      cn_slow_hash_v6(cryptoContext, rawHashingBlock.data(), rawHashingBlock.size(), blockLongHash.get());
-    } else if ((block.majorVersion == BLOCK_MAJOR_VERSION_2) || (block.majorVersion == BLOCK_MAJOR_VERSION_3)) {
+      cn_slow_hash_v0(rawHashingBlock.data(), rawHashingBlock.size(), blockLongHash.get());
+    } else if (block.majorVersion >= BLOCK_MAJOR_VERSION_2) {
       const auto& rawHashingBlock = getParentBlockHashingBinaryArray(true);
       blockLongHash = Hash();
-      cn_slow_hash_v6(cryptoContext, rawHashingBlock.data(), rawHashingBlock.size(), blockLongHash.get());
-    } else if (block.majorVersion >= BLOCK_MAJOR_VERSION_4) {
-      const auto& rawHashingBlock = getParentBlockHashingBinaryArray(true);
-      blockLongHash = Hash();
-      cn_lite_slow_hash_v1(cryptoContext, rawHashingBlock.data(), rawHashingBlock.size(), blockLongHash.get());
+      cn_turtle_slow_hash_v2(rawHashingBlock.data(), rawHashingBlock.size(), blockLongHash.get());
     } else {
       throw std::runtime_error("Unknown block major version.");
     }

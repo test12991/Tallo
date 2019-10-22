@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -303,7 +304,7 @@ bool RpcServer::masternode_check_incoming_tx(const BinaryArray& tx_blob) {
   }
 
   if (amount != 0) {
-    logger(INFO) << "Masternode received relayed transaction fee: " << m_core.getCurrency().formatAmount(amount) << " BTOR";
+    logger(INFO) << "Masternode received relayed transaction fee: " << m_core.getCurrency().formatAmount(amount) << " TLO";
     return true;
   }
   return false;
@@ -665,7 +666,7 @@ bool RpcServer::verifyCollateral() {
     return false;
   }
   req.transaction = Common::toHex(&m_collateral_hash, sizeof(m_collateral_hash));
-  req.account = "bTXQBcHwS83gk5Ucb7gS9h58yMR7yw5rDjCNP22BT9DYjRdY6yxa9SHA1UALacBPpBTvirC4VY6n1JEJAGewV3g82SctDmvTw";
+  req.account = "TA4a8vvm6KMgk5Ucb7gS9h58yMR7yw5rDjCNP22BT9DYjRdY6yxa9SHA1UALacBPpBTvirC4VY6n1JEJAGewV3g82ScuMRbH4";
   req.viewKey = "d3365d5799225af5954e5b938b3c4703335151dfc339b8bb608d79d2a376890d";
   if (on_get_transaction_out_amounts_for_account(req, res) && res.amount == 7500000) {
     return true;

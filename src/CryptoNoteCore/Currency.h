@@ -134,9 +134,9 @@ public:
 
   Difficulty nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps, std::vector<Difficulty> cumulativeDifficulties) const;
 
-  bool checkProofOfWorkV1(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
-  bool checkProofOfWorkV2(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
-  bool checkProofOfWork(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const;
+  bool checkProofOfWorkV1(const CachedBlock& block, Difficulty currentDifficulty) const;
+  bool checkProofOfWorkV2(const CachedBlock& block, Difficulty currentDifficulty) const;
+  bool checkProofOfWork(const CachedBlock& block, Difficulty currentDifficulty) const;
 
   Currency(Currency&& currency);
 

@@ -126,11 +126,10 @@ void Miner::hashWorkerFunc() {
 void Miner::workerFunc(const BlockTemplate& blockTemplate, Difficulty difficulty, uint32_t nonceStep) {
   try {
     BlockTemplate block = blockTemplate;
-    Crypto::cn_context cryptoContext;
 
     while (m_state == MiningState::MINING_IN_PROGRESS) {
       CachedBlock cachedBlock(block);
-      Crypto::Hash hash = cachedBlock.getBlockLongHash(cryptoContext);
+      Crypto::Hash hash = cachedBlock.getBlockLongHash();
       m_hashCount++;
 
       if (check_hash(hash, difficulty)) {

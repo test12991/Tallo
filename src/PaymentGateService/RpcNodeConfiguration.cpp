@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (C) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -28,8 +29,8 @@ RpcNodeConfiguration::RpcNodeConfiguration() {
 
 void RpcNodeConfiguration::initOptions(boost::program_options::options_description& desc) {
   desc.add_options()
-    ("daemon-address", po::value<std::string>()->default_value("localhost"), "Bittoriumd address")
-    ("daemon-port", po::value<uint16_t>()->default_value(34916), "daemon port");
+    ("daemon-address", po::value<std::string>()->default_value("localhost"), "Talleod address")
+    ("daemon-port", po::value<uint16_t>()->default_value(33888), "daemon port");
 }
 
 void RpcNodeConfiguration::init(const boost::program_options::variables_map& options) {

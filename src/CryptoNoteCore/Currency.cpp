@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -95,7 +96,7 @@ bool Currency::generateGenesisBlock() {
   //std::string hex_tx_represent = Common::toHex(txb);
 
   // Hard code coinbase tx in genesis block, because through generating tx use random, but genesis should be always the same
-  std::string genesisCoinbaseTxHex = "010a01ff000180a4a7da06028e505c361665ab0b4446fdb33f5b665426fa53060f8c01dbdb57381795bb3eb22101befd3e3ca6affbe16d62fe15367cf4720b97571c60d8b6f49e17901b7b937822";
+  std::string genesisCoinbaseTxHex = "010a01ff000180dea0cb05029df5307495c417ab41c47e5efab467d383d1f0350658af95a9ff190cac156e21210110ef4466f44d02f35eb2daf3be975e4279c15714f1e4b3204b7e40f5442fbaef";
   BinaryArray minerTxBlob;
 
   bool r =
@@ -120,10 +121,8 @@ bool Currency::generateGenesisBlock() {
 }
 
 size_t Currency::difficultyWindowByBlockVersion(uint8_t blockMajorVersion) const {
-  if (blockMajorVersion >= BLOCK_MAJOR_VERSION_5) {
+  if (blockMajorVersion >= BLOCK_MAJOR_VERSION_3) {
     return 60;
-  } else if (blockMajorVersion >= BLOCK_MAJOR_VERSION_3 && blockMajorVersion < BLOCK_MAJOR_VERSION_5) {
-    return m_difficultyWindow;
   } else if (blockMajorVersion == BLOCK_MAJOR_VERSION_2) {
     return CryptoNote::parameters::DIFFICULTY_WINDOW_V2;
   } else {
@@ -175,10 +174,6 @@ uint32_t Currency::upgradeHeight(uint8_t majorVersion) const {
     return m_upgradeHeightV2;
   } else if (majorVersion == BLOCK_MAJOR_VERSION_3) {
     return m_upgradeHeightV3;
-  } else if (majorVersion == BLOCK_MAJOR_VERSION_4) {
-    return m_upgradeHeightV4;
-  } else if (majorVersion == BLOCK_MAJOR_VERSION_5) {
-    return m_upgradeHeightV5;
   } else {
     return static_cast<uint32_t>(-1);
   }
@@ -645,21 +640,21 @@ Difficulty Currency::nextDifficulty(uint8_t version, uint32_t blockIndex, std::v
   return nextDifficultyDefault(version, blockIndex, timestamps, cumulativeDifficulties);
 }
 
-bool Currency::checkProofOfWorkV1(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDifficulty) const {
+bool Currency::checkProofOfWorkV1(const CachedBlock& block, Difficulty currentDifficulty) const {
   if (BLOCK_MAJOR_VERSION_1 != block.getBlock().majorVersion) {
     return false;
   }
 
-  return check_hash(block.getBlockLongHash(context), currentDifficulty);
+  return check_hash(block.getBlockLongHash(), currentDifficulty);
 }
 
-bool Currency::checkProofOfWorkV2(Crypto::cn_context& context, const CachedBlock& cachedBlock, Difficulty currentDifficulty) const {
+bool Currency::checkProofOfWorkV2(const CachedBlock& cachedBlock, Difficulty currentDifficulty) const {
   const auto& block = cachedBlock.getBlock();
   if (block.majorVersion < BLOCK_MAJOR_VERSION_2) {
     return false;
   }
 
-  if (!check_hash(cachedBlock.getBlockLongHash(context), currentDifficulty)) {
+  if (!check_hash(cachedBlock.getBlockLongHash(), currentDifficulty)) {
     return false;
   }
 
@@ -685,16 +680,14 @@ bool Currency::checkProofOfWorkV2(Crypto::cn_context& context, const CachedBlock
   return true;
 }
 
-bool Currency::checkProofOfWork(Crypto::cn_context& context, const CachedBlock& block, Difficulty currentDiffic) const {
+bool Currency::checkProofOfWork(const CachedBlock& block, Difficulty currentDiffic) const {
   switch (block.getBlock().majorVersion) {
   case BLOCK_MAJOR_VERSION_1:
-    return checkProofOfWorkV1(context, block, currentDiffic);
+    return checkProofOfWorkV1(block, currentDiffic);
 
   case BLOCK_MAJOR_VERSION_2:
   case BLOCK_MAJOR_VERSION_3:
-  case BLOCK_MAJOR_VERSION_4:
-  case BLOCK_MAJOR_VERSION_5:
-    return checkProofOfWorkV2(context, block, currentDiffic);
+    return checkProofOfWorkV2(block, currentDiffic);
   }
 
   logger(ERROR, BRIGHT_RED) << "Unknown block major version: " << block.getBlock().majorVersion << "." << block.getBlock().minorVersion;
@@ -826,8 +819,6 @@ CurrencyBuilder::CurrencyBuilder(Logging::ILogger& log) : m_currency(log) {
 
   upgradeHeightV2(parameters::UPGRADE_HEIGHT_V2);
   upgradeHeightV3(parameters::UPGRADE_HEIGHT_V3);
-  upgradeHeightV4(parameters::UPGRADE_HEIGHT_V4);
-  upgradeHeightV5(parameters::UPGRADE_HEIGHT_V5);
   upgradeVotingThreshold(parameters::UPGRADE_VOTING_THRESHOLD);
   upgradeVotingWindow(parameters::UPGRADE_VOTING_WINDOW);
   upgradeWindow(parameters::UPGRADE_WINDOW);

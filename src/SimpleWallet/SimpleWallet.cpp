@@ -3,6 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (c) 2018, The Karbo developers
+Copyright (C) 2019, The Talleo developers
 
 
 This program is free software: you can redistribute it and/or modify
@@ -67,7 +68,7 @@ int main(int argc, char **argv)
 
     remote_fee_address = getFeeAddress(localDispatcher, config.host, config.port);
 
-    /* Our connection to Bittoriumd */
+    /* Our connection to Talleod */
     std::unique_ptr<CryptoNote::INode> node(
         new CryptoNote::NodeRpcProxy(config.host, config.port, 
                                      logger.getLogger()));
@@ -126,7 +127,7 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node,
 
     do
     {
-        std::cout << InformationMsg("Bittoriumd v"
+        std::cout << InformationMsg("Talleod v"
                                   + std::string(PROJECT_VERSION)
                                   + " Simplewallet") << std::endl;
 
@@ -153,15 +154,15 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node,
 
     while (node.getLastKnownBlockHeight() == 0)
     {
-        std::cout << WarningMsg("It looks like Bittoriumd isn't open!")
+        std::cout << WarningMsg("It looks like Talleod isn't open!")
                   << std::endl << std::endl
-                  << WarningMsg("Ensure Bittoriumd is open and has finished "
+                  << WarningMsg("Ensure Talleod is open and has finished "
                                 "initializing.")
                   << std::endl
                   << WarningMsg("If it's still not working, try restarting "
-                                "Bittoriumd. The daemon sometimes gets stuck.") 
+                                "Talleod. The daemon sometimes gets stuck.") 
                   << std::endl
-                  << WarningMsg("Alternatively, perhaps Bittoriumd can't "
+                  << WarningMsg("Alternatively, perhaps Talleod can't "
                                 "communicate with any peers.")
                   << std::endl << std::endl
                   << WarningMsg("The wallet can't function until it can "
@@ -282,7 +283,7 @@ std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet)
 
     while (true)
     {
-        std::cout << "Public BTOR address: ";
+        std::cout << "Public TLO address: ";
 
         std::getline(std::cin, address);
         boost::algorithm::trim(address);
@@ -293,15 +294,15 @@ std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet)
                       << "It should be 99 characters long, but it is "
                       << address.length() << " characters long!" << std::endl;
         }
-        else if (address.substr(0, 2) != "bT")
+        else if (address.substr(0, 2) != "TA")
         {
             std::cout << WarningMsg("Invalid address! It should start with "
-                                    "\"bT\"!") << std::endl;
+                                    "\"TA\"!") << std::endl;
         }
         else if (!CryptoNote::parseAccountAddressString(prefix, publicKeys,
                                                         address))
         {
-            std::cout << WarningMsg("Failed to parse BTOR address! Ensure you "
+            std::cout << WarningMsg("Failed to parse TLO address! Ensure you "
                                     "have entered it correctly.")
                       << std::endl;
         }
@@ -892,7 +893,7 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
         std::string command = getInputAndDoWorkWhileIdle(walletInfo);
 
         /* Split into args to support legacy transfer command, for example
-           transfer 5 bTxyzbf... 100, sends 100 BTOR to bTxyzbf... with a mixin
+           transfer 5 TAxyzbf... 100, sends 100 TLO to TAxyzbf... with a mixin
            of 5 */
         std::vector<std::string> words;
         words = boost::split(words, command, ::isspace);
@@ -1002,7 +1003,7 @@ void help(bool viewWallet)
               << SuccessMsg("bc_height", 25)
               << "Show the blockchain height" << std::endl
               << SuccessMsg("balance", 25)
-              << "Display how much BTOR you have" << std::endl
+              << "Display how much TLO you have" << std::endl
               << SuccessMsg("export_keys", 25)
               << "Export your private keys" << std::endl
               << SuccessMsg("address", 25)
@@ -1019,7 +1020,7 @@ void help(bool viewWallet)
     if (viewWallet)
     {
         std::cout << InformationMsg("Please note you are using a view only "
-                                    "wallet, and so cannot transfer BTOR.")
+                                    "wallet, and so cannot transfer TLO.")
                   << std::endl;
     }
     else
@@ -1035,7 +1036,7 @@ void help(bool viewWallet)
                   << "Fully optimize your wallet to send large amounts"
                   << std::endl
                   << SuccessMsg("transfer", 25)
-                  << "Send BTOR to someone" << std::endl;
+                  << "Send TLO to someone" << std::endl;
     }
 }
 
@@ -1126,7 +1127,7 @@ void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet)
     if (localHeight == 0 && remoteHeight == 0)
     {
         std::cout << WarningMsg("Uh oh, it looks like you don't have "
-                                "Bittoriumd open!")
+                                "Talleod open!")
                   << std::endl;
     }
     else if (walletHeight + 1000 < remoteHeight && localHeight == remoteHeight)
@@ -1154,7 +1155,7 @@ bool shutdown(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node,
 {
     if (alreadyShuttingDown)
     {
-        std::cout << "Patience little Bittorium, we're already shutting down!" 
+        std::cout << "Patience little Talleo, we're already shutting down!" 
                   << std::endl;
         return false;
     }
@@ -1208,7 +1209,7 @@ CryptoNote::BlockDetails getBlock(uint32_t blockHeight,
 {
     CryptoNote::BlockDetails block;
 
-    /* No connection to Bittoriumd */
+    /* No connection to Talleod */
     if (node.getLastKnownBlockHeight() == 0)
     {
         return block;
@@ -1263,7 +1264,7 @@ void printOutgoingTransfer(CryptoNote::WalletTransaction t,
               << WarningMsg("Total Spent: " + formatAmount(-t.totalAmount))
               << std::endl;
 
-    /* Couldn't get timestamp, maybe old node or Bittoriumd closed */
+    /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "")
     {
         std::cout << WarningMsg("Timestamp: " + blockTime) << std::endl;
@@ -1292,7 +1293,7 @@ void printIncomingTransfer(CryptoNote::WalletTransaction t,
                   << std::endl;
     }
 
-    /* Couldn't get timestamp, maybe old node or Bittoriumd closed */
+    /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "")
     {
         std::cout << SuccessMsg("Timestamp: " + blockTime) << std::endl;
@@ -1465,7 +1466,7 @@ void findNewTransactions(CryptoNote::INode &node,
 
     if (localHeight != remoteHeight)
     {
-        std::cout << "Your Bittoriumd isn't fully synced yet!" << std::endl
+        std::cout << "Your Talleod isn't fully synced yet!" << std::endl
                   << "Until you are fully synced, you won't be able to send "
                   << "transactions,"
                   << std::endl
@@ -1536,7 +1537,7 @@ void findNewTransactions(CryptoNote::INode &node,
             if (stuckCounter > 20)
             {
                 std::string warning =
-                    "Syncing may be stuck. Try restarting Bittoriumd.\n"
+                    "Syncing may be stuck. Try restarting Talleod.\n"
                     "If this persists, visit "
                     "https://bitcointalk.org/index.php?topic=5028348"
                     " for support.";
@@ -1635,12 +1636,12 @@ ColouredMsg getPrompt(std::shared_ptr<WalletInfo> &walletInfo)
       shortName = shortName.substr(0, promptLength);
     }
 
-    return InformationMsg("[BTOR " + shortName + "]: ");
+    return InformationMsg("[TLO " + shortName + "]: ");
 }
 
 void connectingMsg()
 {
-    std::cout << std::endl << "Making initial contact with Bittoriumd."
+    std::cout << std::endl << "Making initial contact with Talleod."
               << std::endl
               << "Please wait, this sometimes can take a long time..."
               << std::endl << std::endl;
@@ -1650,9 +1651,9 @@ void viewWalletMsg()
 {
     std::cout << InformationMsg("Please remember that when using a view wallet "
                                 "you can only view incoming transactions!")
-              << std::endl << "This means if you received 100 BTOR and then "
-              << "sent 50 BTOR, your balance would appear to still be 100 "
-              << "BTOR." << std::endl
+              << std::endl << "This means if you received 100 TLO and then "
+              << "sent 50 TLO, your balance would appear to still be 100 "
+              << "TLO." << std::endl
               << "To effectively use a view wallet, you should only deposit "
               << "to this wallet." << std::endl
               << "If you have since needed to withdraw, send your remaining "
