@@ -154,8 +154,7 @@ Config parseArguments(int argc, char **argv)
     return config;
 }
 
-void versionMessage()
-{
+void versionMessage() {
     std::cout << "Talleo v" << PROJECT_VERSION << " Simplewallet"
               << std::endl;
 }
@@ -168,9 +167,8 @@ void helpMessage()
               << "[--remote-daemon <url>] [--wallet-file <file>] "
               << "[--password <pass>]"
               << std::endl << std::endl
-              << "Commands:" << std::endl << "  -h, " << std::left
-              << std::setw(25) << "--help"
-              << "Display this help message and exit"
+              << "Commands:" << std::endl
+              << "  -h, " << std::left << std::setw(25) << "--help" << "Display this help message and exit"
               << std::endl << "  -v, " << std::left << std::setw(25)
               << "--version" << "Display the version information and exit"
               << std::endl << "      " << std::left << std::setw(25)

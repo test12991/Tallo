@@ -40,8 +40,7 @@ class ColouredMsg
         ColouredMsg(std::string msg, Common::Console::Color colour) 
                   : msg(msg), colour(colour) {}
 
-        ColouredMsg(std::string msg, int padding, 
-                    Common::Console::Color colour)
+        ColouredMsg(std::string msg, int padding, Common::Console::Color colour)
                   : msg(msg), colour(colour), padding(padding), pad(true) {}
 
 
@@ -57,16 +56,12 @@ class ColouredMsg
            GreenMsg("user");
            std::cout << std::endl; */
 
-        friend std::ostream& operator<<(std::ostream& os, const ColouredMsg &m)
-        {
+        friend std::ostream& operator<<(std::ostream& os, const ColouredMsg &m) {
             Common::Console::setTextColor(m.colour);
 
-            if (m.pad)
-            {
+            if (m.pad) {
                 os << std::left << std::setw(m.padding) << m.msg;
-            }
-            else
-            {
+            } else {
                 os << m.msg;
             }
 
@@ -81,8 +76,7 @@ class ColouredMsg
         bool pad = false;
 };
 
-class SuccessMsg : public ColouredMsg
-{
+class SuccessMsg : public ColouredMsg {
     public:
         explicit SuccessMsg(std::string msg) 
                : ColouredMsg(msg, Common::Console::Color::Green) {}
@@ -91,37 +85,31 @@ class SuccessMsg : public ColouredMsg
                : ColouredMsg(msg, padding, Common::Console::Color::Green) {}
 };
 
-class InformationMsg : public ColouredMsg
-{
+class InformationMsg : public ColouredMsg {
     public:
         explicit InformationMsg(std::string msg) 
                : ColouredMsg(msg, Common::Console::Color::BrightYellow) {}
 
         explicit InformationMsg(std::string msg, int padding)
-               : ColouredMsg(msg, padding, 
-                             Common::Console::Color::BrightYellow) {}
+               : ColouredMsg(msg, padding, Common::Console::Color::BrightYellow) {}
 };
 
-class SuggestionMsg : public ColouredMsg
-{
+class SuggestionMsg : public ColouredMsg {
     public:
         explicit SuggestionMsg(std::string msg) 
                : ColouredMsg(msg, Common::Console::Color::BrightYellow) {}
 
         explicit SuggestionMsg(std::string msg, int padding)
-               : ColouredMsg(msg, padding, 
-                             Common::Console::Color::BrightYellow) {}
+               : ColouredMsg(msg, padding, Common::Console::Color::BrightYellow) {}
 };
 
-class WarningMsg : public ColouredMsg
-{
+class WarningMsg : public ColouredMsg {
     public:
         explicit WarningMsg(std::string msg) 
                : ColouredMsg(msg, Common::Console::Color::BrightRed) {}
 
         explicit WarningMsg(std::string msg, int padding)
-               : ColouredMsg(msg, padding, 
-                             Common::Console::Color::BrightRed) {}
+               : ColouredMsg(msg, padding, Common::Console::Color::BrightRed) {}
 };
 
 /* This borrows from haskell, and is a nicer boost::optional class. We either

@@ -65,39 +65,31 @@ void promptSaveKeys(CryptoNote::WalletGreen &wallet);
 
 void printPrivateKeys(CryptoNote::WalletGreen &wallet, bool viewWallet);
 
-void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet,
-             bool viewWallet);
+void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool viewWallet);
 
 void welcomeMsg();
 
 void help(bool viewWallet);
 
-void inputLoop(std::shared_ptr<WalletInfo> &walletInfo,
-               CryptoNote::INode &node);
+void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node);
 
 void exportKeys(std::shared_ptr<WalletInfo> &walletInfo);
 
-void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node,
-         Config &config);
+void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config);
 
 void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet);
 
-void listTransfers(bool incoming, bool outgoing, 
-                   CryptoNote::WalletGreen &wallet, CryptoNote::INode &node);
+void listTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node);
 
-void findNewTransactions(CryptoNote::INode &node, 
-                         std::shared_ptr<WalletInfo> &walletInfo);
+void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);
 
 void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);
 
-void changePassword(std::shared_ptr<WalletInfo> &walletInfo,
-                    std::vector<std::string> args);
+void changePassword(std::shared_ptr<WalletInfo> &walletInfo, std::vector<std::string> args);
 
-void printOutgoingTransfer(CryptoNote::WalletTransaction t,
-                           CryptoNote::INode &node);
+void printOutgoingTransfer(CryptoNote::WalletTransaction t, CryptoNote::INode &node);
 
-void printIncomingTransfer(CryptoNote::WalletTransaction t,
-                           CryptoNote::INode &node);
+void printIncomingTransfer(CryptoNote::WalletTransaction t, CryptoNote::INode &node);
 
 void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo);
 
@@ -107,11 +99,9 @@ void connectingMsg();
 
 void viewWalletMsg();
 
-bool isValidMnemonic(std::string &mnemonic_phrase, 
-                     Crypto::SecretKey &private_spend_key);
+bool isValidMnemonic(std::string &mnemonic_phrase, Crypto::SecretKey &private_spend_key);
 
-bool shutdown(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node,
-              bool &alreadyShuttingDown);
+bool shutdown(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, bool &alreadyShuttingDown);
 
 std::string getInputAndDoWorkWhileIdle(std::shared_ptr<WalletInfo> &walletInfo);
 
@@ -123,30 +113,24 @@ std::string getWalletPassword(bool verifyPwd);
 
 std::string getBlockTime(CryptoNote::BlockDetails b);
 
-std::shared_ptr<WalletInfo> importFromKeys(CryptoNote::WalletGreen &wallet, 
-                                           Crypto::SecretKey privateSpendKey,
-                                           Crypto::SecretKey privateViewKey);
+std::shared_ptr<WalletInfo> importFromKeys(CryptoNote::WalletGreen &wallet, Crypto::SecretKey privateSpendKey, Crypto::SecretKey privateViewKey);
 
-Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet,
-                                              Config &config);
+Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, Config &config);
 
 std::shared_ptr<WalletInfo> importWallet(CryptoNote::WalletGreen &wallet);
 
 std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet);
 
-std::shared_ptr<WalletInfo> mnemonicImportWallet(CryptoNote::WalletGreen 
-                                                 &wallet);
+std::shared_ptr<WalletInfo> mnemonicImportWallet(CryptoNote::WalletGreen &wallet);
 
 std::shared_ptr<WalletInfo> generateWallet(CryptoNote::WalletGreen &wallet);
 
-Maybe<std::shared_ptr<WalletInfo>> handleAction(CryptoNote::WalletGreen &wallet,
-                                                Action action, Config &config);
+Maybe<std::shared_ptr<WalletInfo>> handleAction(CryptoNote::WalletGreen &wallet, Action action, Config &config);
 
 Crypto::SecretKey getPrivateKey(std::string outputMsg);
 
 ColouredMsg getPrompt(std::shared_ptr<WalletInfo> &walletInfo);
 
-CryptoNote::BlockDetails getBlock(uint32_t blockHeight,
-                                  CryptoNote::INode &node);
+CryptoNote::BlockDetails getBlock(uint32_t blockHeight, CryptoNote::INode &node);
 
 std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port);

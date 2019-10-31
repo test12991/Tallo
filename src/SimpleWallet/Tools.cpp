@@ -20,29 +20,25 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <SimpleWallet/Tools.h>
 
-void confirmPassword(std::string walletPass)
-{
+void confirmPassword(std::string walletPass) {
     /* Password container requires an rvalue, we don't want to wipe our current
        pass so copy it into a tmp string and std::move that instead */
     std::string tmpString = walletPass;
     Tools::PasswordContainer pwdContainer(std::move(tmpString));
 
-    while (!pwdContainer.read_and_validate("Enter password: "))
-    {
+    while (!pwdContainer.read_and_validate("Enter password: ")) {
         std::cout << "Incorrect password! Try again." << std::endl;
     }
 }
 
-std::string formatAmount(uint64_t amount)
-{
+std::string formatAmount(uint64_t amount) {
     uint64_t dollars = amount / 100;
     uint64_t cents = amount % 100;
 
     return formatDollars(dollars) + "." + formatCents(cents) + " TLO";
 }
 
-std::string formatDollars(uint64_t amount)
-{
+std::string formatDollars(uint64_t amount) {
     /* We want to format our number with comma separators so it's easier to
        use. Now, we could use the nice print_money() function to do this.
        However, whilst this initially looks pretty handy, if we have a locale
@@ -68,16 +64,13 @@ std::string formatDollars(uint64_t amount)
 
     /* Thanks to https://stackoverflow.com/a/7277333/8737306 for this neat
        workaround */
-    class comma_numpunct : public std::numpunct<char>
-    {
+    class comma_numpunct : public std::numpunct<char> {
       protected:
-        virtual char do_thousands_sep() const
-        {
+        virtual char do_thousands_sep() const {
             return ',';
         }
 
-        virtual std::string do_grouping() const
-        {
+        virtual std::string do_grouping() const {
             return "\03";
         }
     };
@@ -90,17 +83,14 @@ std::string formatDollars(uint64_t amount)
 }
 
 /* Pad to two spaces, e.g. 5 becomes 05, 50 remains 50 */
-std::string formatCents(uint64_t amount)
-{
+std::string formatCents(uint64_t amount) {
     std::stringstream stream;
     stream << std::setfill('0') << std::setw(2) << amount;
     return stream.str();
 }
 
-bool confirm(std::string msg)
-{
-    while (true)
-    {
+bool confirm(std::string msg) {
+    while (true) {
         std::cout << InformationMsg(msg + " (Y/n): ");
 
         std::string answer;
@@ -109,21 +99,13 @@ bool confirm(std::string msg)
         char c = std::tolower(answer[0]);
 
         /* Lets people spam enter in the transaction screen */
-        if (c == 'y' || c == '\0')
-        {
+        if (c == 'y' || c == '\0') {
             return true;
-        }
-        else if (c == 'n')
-        {
+        } else if (c == 'n') {
             return false;
-        }
-        /* Don't loop forever on EOF */
-        else if (c == std::ifstream::traits_type::eof())
-        {
+        } else if (c == std::ifstream::traits_type::eof()) { /* Don't loop forever on EOF */
             return false;
-        } 
-        else
-        {
+        } else {
             std::cout << WarningMsg("Bad input: ") << InformationMsg(answer)
                       << WarningMsg(" - please enter either Y or N.")
                       << std::endl;
