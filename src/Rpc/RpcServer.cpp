@@ -304,7 +304,7 @@ bool RpcServer::masternode_check_incoming_tx(const BinaryArray& tx_blob) {
   }
 
   if (amount != 0) {
-    logger(INFO) << "Masternode received relayed transaction fee: " << m_core.getCurrency().formatAmount(amount) << " TLO";
+    logger(INFO) << "Masternode received relayed transaction fee: " << m_core.getCurrency().formatAmount(amount) << " " << CryptoNote::CRYPTONOTE_TICKER;
     return true;
   }
   return false;

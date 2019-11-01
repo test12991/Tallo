@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <SimpleWallet/Tools.h>
+#include <CryptoNoteConfig.h>
 
 void confirmPassword(std::string walletPass) {
     /* Password container requires an rvalue, we don't want to wipe our current
@@ -35,7 +36,7 @@ std::string formatAmount(uint64_t amount) {
     uint64_t dollars = amount / 100;
     uint64_t cents = amount % 100;
 
-    return formatDollars(dollars) + "." + formatCents(cents) + " TLO";
+    return formatDollars(dollars) + "." + formatCents(cents) + " " + CryptoNote::CRYPTONOTE_TICKER;
 }
 
 std::string formatDollars(uint64_t amount) {

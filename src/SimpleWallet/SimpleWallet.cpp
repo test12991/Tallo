@@ -107,9 +107,10 @@ int main(int argc, char **argv) {
 void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config) {
     auto maybeWalletInfo = Nothing<std::shared_ptr<WalletInfo>>();
     Action action;
+    std::string coinName(CryptoNote::CRYPTONOTE_NAME);
 
     do {
-        std::cout << InformationMsg("Talleod v" + std::string(PROJECT_VERSION) + " Simplewallet") << std::endl;
+        std::cout << InformationMsg(coinName + "d v" + std::string(PROJECT_VERSION) + " Simplewallet") << std::endl;
 
         /* Open/import/generate the wallet */
         action = getAction(config);
@@ -132,10 +133,10 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &confi
     });
 
     while (node.getLastKnownBlockHeight() == 0) {
-        std::cout << WarningMsg("It looks like Talleod isn't open!") << std::endl << std::endl
-                  << WarningMsg("Ensure Talleod is open and has finished initializing.") << std::endl
-                  << WarningMsg("If it's still not working, try restarting Talleod. The daemon sometimes gets stuck.") << std::endl
-                  << WarningMsg("Alternatively, perhaps Talleod can't communicate with any peers.") << std::endl
+        std::cout << WarningMsg("It looks like " + coinName +"d isn't open!") << std::endl << std::endl
+                  << WarningMsg("Ensure " + coinName + "d is open and has finished initializing.") << std::endl
+                  << WarningMsg("If it's still not working, try restarting " + coinName + "d. The daemon sometimes gets stuck.") << std::endl
+                  << WarningMsg("Alternatively, perhaps " + coinName + "d can't communicate with any peers.") << std::endl
                   << std::endl
                   << WarningMsg("The wallet can't function until it can communicate with the network.") << std::endl
                   << std::endl;
@@ -212,6 +213,7 @@ Maybe<std::shared_ptr<WalletInfo>> handleAction(CryptoNote::WalletGreen &wallet,
 }
 
 std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet) {
+    std::string coinTicker(CryptoNote::CRYPTONOTE_TICKER);
     Crypto::SecretKey privateViewKey = getPrivateKey("Private View Key: ");
 
     CryptoNote::AccountPublicAddress publicKeys;
@@ -220,7 +222,7 @@ std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet) {
     std::string address;
 
     while (true) {
-        std::cout << "Public TLO address: ";
+        std::cout << "Public " << coinTicker << " address: ";
 
         std::getline(std::cin, address);
         boost::algorithm::trim(address);
@@ -231,7 +233,7 @@ std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet) {
         } else if (address.substr(0, 2) != "TA") {
             std::cout << WarningMsg("Invalid address! It should start with \"TA\"!") << std::endl;
         } else if (!CryptoNote::parseAccountAddressString(prefix, publicKeys, address)) {
-            std::cout << WarningMsg("Failed to parse TLO address! Ensure you have entered it correctly.") << std::endl;
+            std::cout << WarningMsg("Failed to parse " + coinTicker + " address! Ensure you have entered it correctly.") << std::endl;
         } else {
             break;
         }
@@ -713,8 +715,10 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
 }
 
 void help(bool viewWallet) {
+    std::string coinTicker(CryptoNote::CRYPTONOTE_TICKER);
+
     if (viewWallet) {
-        std::cout << InformationMsg("Please note you are using a view only wallet and cannot transfer TLO.") << std::endl;
+        std::cout << InformationMsg("Please note you are using a view only wallet and cannot transfer " + coinTicker + ".") << std::endl;
     }
     std::cout << "Available commands:" << std::endl
               << SuccessMsg("help", 25)
@@ -722,7 +726,7 @@ void help(bool viewWallet) {
               << SuccessMsg("address", 25)
               << "Displays your payment address" << std::endl
               << SuccessMsg("balance", 25)
-              << "Display how much TLO you have" << std::endl
+              << "Display how much " << coinTicker << " you have" << std::endl
               << SuccessMsg("bc_height", 25)
               << "Show the blockchain height" << std::endl
               << SuccessMsg("change_password", 25)
@@ -731,7 +735,7 @@ void help(bool viewWallet) {
               << "Export your private keys" << std::endl;
     if (!viewWallet) {
         std::cout << SuccessMsg("transfer", 25)
-                  << "Send TLO to someone" << std::endl
+                  << "Send " << coinTicker << " to someone" << std::endl
                   << SuccessMsg("list_transfers", 25)
 
                   << "Show all transfers" << std::endl
@@ -763,11 +767,11 @@ void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool view
     uint32_t walletHeight = wallet.getBlockCount();
 
     std::cout << "Available balance: " << SuccessMsg(formatAmount(confirmedBalance)) << std::endl
-              << "Locked (unconfirmed) balance: " << WarningMsg(formatAmount(unconfirmedBalance)) << std::endl 
+              << "Locked (unconfirmed) balance: " << WarningMsg(formatAmount(unconfirmedBalance)) << std::endl
               << "Total balance: " << InformationMsg(formatAmount(totalBalance)) << std::endl;
 
     if (viewWallet) {
-        std::cout << std::endl 
+        std::cout << std::endl
                   << InformationMsg("Please note that view only wallets can only track incoming transactions, and so your wallet balance may appear inflated.") << std::endl;
     }
 
@@ -812,7 +816,7 @@ void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet) 
               << SuccessMsg(std::to_string(remoteHeight)) << std::endl;
 
     if (localHeight == 0 && remoteHeight == 0) {
-        std::cout << WarningMsg("Uh oh, it looks like you don't have Talleod open!") << std::endl;
+        std::cout << WarningMsg("Uh oh, it looks like you don't have " + std::string(CryptoNote::CRYPTONOTE_NAME) + "d open!") << std::endl;
     } else if (walletHeight + 1000 < remoteHeight && localHeight == remoteHeight) {
         std::cout << InformationMsg("You are synced with the network, but the blockchain is still being scanned for your transactions.") << std::endl
                   << "Balances might be incorrect whilst this is ongoing." << std::endl;
@@ -1068,7 +1072,7 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
     int stuckCounter = 0;
 
     if (localHeight != remoteHeight) {
-        std::cout << "Your Talleod isn't fully synced yet!" << std::endl
+        std::cout << "Your " << CryptoNote::CRYPTONOTE_NAME << "d isn't fully synced yet!" << std::endl
                   << "Until you are fully synced, you won't be able to send transactions," << std::endl
                   << "and your balance may be missing or incorrect!" << std::endl
                   << std::endl;
@@ -1123,7 +1127,7 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
 
             if (stuckCounter > 20) {
                 std::string warning =
-                    "Syncing may be stuck. Try restarting Talleod.\n"
+                    "Syncing may be stuck. Try restarting " + std::string(CryptoNote::CRYPTONOTE_NAME) + "d.\n"
                     "If this persists, visit "
                     "https://bitcointalk.org/index.php?topic=5195073"
                     " for support.";
@@ -1207,19 +1211,20 @@ ColouredMsg getPrompt(std::shared_ptr<WalletInfo> &walletInfo) {
       shortName = shortName.substr(0, promptLength);
     }
 
-    return InformationMsg("[TLO " + shortName + "]: ");
+    return InformationMsg("[" + std::string(CryptoNote::CRYPTONOTE_TICKER) + " " + shortName + "]: ");
 }
 
 void connectingMsg() {
     std::cout << std::endl
-              << "Making initial contact with Talleod." << std::endl
+              << "Making initial contact with " << CryptoNote::CRYPTONOTE_NAME << "d." << std::endl
               << "Please wait, this sometimes can take a long time..." << std::endl
               << std::endl;
 }
 
 void viewWalletMsg() {
     std::cout << InformationMsg("Please remember that when using a view wallet you can only view incoming transactions!") << std::endl 
-              << "This means if you received 100 TLO and then sent 50 TLO, your balance would appear to still be 100 TLO." << std::endl
+              << "This means if you received 100 " << CryptoNote::CRYPTONOTE_TICKER << " and then sent 50 " << CryptoNote::CRYPTONOTE_TICKER << ", "
+              << "your balance would appear to still be 100 " << CryptoNote::CRYPTONOTE_TICKER << "." << std::endl
               << "To effectively use a view wallet, you should only deposit to this wallet." << std::endl
               << "If you have since needed to withdraw, send your remaining balance to a new wallet, and import this as a new view wallet so your balance can be correctly observed." << std::endl
               << std::endl;

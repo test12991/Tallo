@@ -21,11 +21,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <SimpleWallet/Transfer.h>
 
+#include <math.h>
+
 // Forward declaration
 extern std::string remote_fee_address;
 
-bool parseAmount(std::string strAmount, uint64_t &amount)
-{
+bool parseAmount(std::string strAmount, uint64_t &amount) {
     boost::algorithm::trim(strAmount);
     /* If the user entered thousand separators, remove them */
     boost::erase_all(strAmount, ",");
@@ -34,40 +35,32 @@ bool parseAmount(std::string strAmount, uint64_t &amount)
     size_t fractionSize;
     size_t numDecimalPlaces = 2;
 
-    if (std::string::npos != pointIndex)
-    {
+    if (std::string::npos != pointIndex) {
         fractionSize = strAmount.size() - pointIndex - 1;
 
-        while (numDecimalPlaces < fractionSize && '0' == strAmount.back())
-        {
+        while (numDecimalPlaces < fractionSize && '0' == strAmount.back()) {
             strAmount.erase(strAmount.size() - 1, 1);
             fractionSize--;
         }
 
-        if (numDecimalPlaces < fractionSize)
-        {
+        if (numDecimalPlaces < fractionSize) {
             return false;
         }
 
         strAmount.erase(pointIndex, 1);
-    }
-    else
-    {
+    } else {
         fractionSize = 0;
     }
 
-    if (strAmount.empty())
-    {
+    if (strAmount.empty()) {
         return false;
     }
 
-    if (!std::all_of(strAmount.begin(), strAmount.end(), ::isdigit))
-    {
+    if (!std::all_of(strAmount.begin(), strAmount.end(), ::isdigit)) {
         return false;
     }
 
-    if (fractionSize < numDecimalPlaces)
-    {
+    if (fractionSize < numDecimalPlaces) {
         strAmount.append(numDecimalPlaces - fractionSize, '0');
     }
 
@@ -80,12 +73,10 @@ bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<Wal
 
     std::string paymentId = "";
 
-    if (t.extra.length() > 0)
-    {
+    if (t.extra.length() > 0) {
         std::vector<uint8_t> vecExtra;
 
-        for (auto it : t.extra)
-        {
+        for (auto it : t.extra) {
             vecExtra.push_back(static_cast<uint8_t>(it));
         }
 
@@ -94,92 +85,65 @@ bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<Wal
         paymentId = Common::podToHex(paymentIdHash);
     }
 
-    std::cout << "You are sending "
-              << SuccessMsg(formatAmount(t.destinations[0].amount))
-              << ", with a fee of " << SuccessMsg(formatAmount(t.fee))
-              << ", " << std::endl;
+    std::cout << "You are sending " << SuccessMsg(formatAmount(t.destinations[0].amount))
+              << ", with a fee of " << SuccessMsg(formatAmount(t.fee));
 
-    if (paymentId != "")
-    {
-        std::cout << "A mixin of " << SuccessMsg(std::to_string(t.mixIn))
+    if (paymentId != "") {
+        std::cout << ", a mixin of " << SuccessMsg(std::to_string(t.mixIn))
                   << " and a Payment ID of " << SuccessMsg(paymentId);
+    } else {
+        std::cout << " and a mixin of " << SuccessMsg(std::to_string(t.mixIn));
     }
-    else
-    {
-        std::cout << "And a mixin of " << SuccessMsg(std::to_string(t.mixIn));
-    }
-    
-    std::cout << std::endl << std::endl
-              << "FROM: " << SuccessMsg(walletInfo->walletFileName)
-              << std::endl
-              << "TO: " << SuccessMsg(t.destinations[0].address)
-              << std::endl << std::endl;
 
-    if (confirm("Is this correct?"))
-    {
+    std::cout << std::endl << std::endl
+              << "FROM: " << SuccessMsg(walletInfo->walletFileName) << std::endl
+              << "TO: " << SuccessMsg(t.destinations[0].address) << std::endl
+              << std::endl;
+
+    if (confirm("Is this correct?")) {
         confirmPassword(walletInfo->walletPass);
         return true;
-    }
-    else
-    {
+    } else {
         return false;
     }
 }
 
-void sendMultipleTransactions(CryptoNote::WalletGreen &wallet,
-                              std::vector<CryptoNote::TransactionParameters>
-                              transfers)
-{
+void sendMultipleTransactions(CryptoNote::WalletGreen &wallet, std::vector<CryptoNote::TransactionParameters> transfers) {
     size_t numTxs = transfers.size();
     size_t currentTx = 1;
 
-    std::cout << "Your transaction has been split up into " << numTxs
-              << " separate transactions of " 
-              << formatAmount(transfers[0].destinations[0].amount)
-              << ". It may take some time to send all the transactions, "
-              << "please be patient." << std::endl << std::endl;
+    std::cout << "Your transaction has been split up into " << numTxs << " separate transactions of " << formatAmount(transfers[0].destinations[0].amount) << "." << std::endl
+              << "It may take some time to send all the transactions, please be patient." << std::endl
+              << std::endl;
 
-    for (auto tx : transfers)
-    {
-        while (true)
-        {
-            std::cout << "Attempting to send transaction "
-                      << InformationMsg(std::to_string(currentTx))
-                      << " of " << InformationMsg(std::to_string(numTxs))
-                      << std::endl;
+    for (auto tx : transfers) {
+        while (true)  {
+            std::cout << "Attempting to send transaction " << InformationMsg(std::to_string(currentTx)) << " of " << InformationMsg(std::to_string(numTxs)) << std::endl;
 
             wallet.updateInternalCache();
 
             uint64_t neededBalance = tx.destinations[0].amount + tx.fee;
 
-            if (neededBalance < wallet.getActualBalance())
-            {
+            if (neededBalance < wallet.getActualBalance()) {
                 size_t id = wallet.transfer(tx);
 
-                CryptoNote::WalletTransaction sentTx 
-                    = wallet.getTransaction(id);
+                CryptoNote::WalletTransaction sentTx = wallet.getTransaction(id);
 
-                std::cout << SuccessMsg("Transaction has been sent!")
-                          << std::endl
-                          << SuccessMsg("Hash: " 
-                                      + Common::podToHex(sentTx.hash))
-                          << std::endl << std::endl;
+                std::cout << SuccessMsg("Transaction has been sent!") << std::endl
+                          << SuccessMsg("Hash: " + Common::podToHex(sentTx.hash)) << std::endl
+                          << std::endl;
 
                 break;
             }
 
             std::cout << "Not enough balance available to send transaction, "
-                      << "this is because some of your balance is used when "
-                      << "sending another transaction to help hide the size "
-                      << "of your transaction, and is locked for a short "
-                      << "time. It will return shortly." << std::endl
-                      << "Needed balance: " << formatAmount(neededBalance) 
-                      << std::endl << "Available balance: " 
-                      << formatAmount(wallet.getActualBalance())
-                      << std::endl << "Locked balance: "
-                      << formatAmount(wallet.getPendingBalance())
-                      << std::endl << "Will try again in 15 seconds..."
-                      << std::endl << std::endl;
+                      << "this is because some of your balance is used when sending another transaction to help hide the size of your transaction, "
+                      << "and is locked for a short time. It will return shortly." << std::endl
+                      << "Needed balance: " << formatAmount(neededBalance) << std::endl
+                      << "Available balance: " << formatAmount(wallet.getActualBalance()) << std::endl
+                      << "Locked balance: " << formatAmount(wallet.getPendingBalance()) << std::endl
+                      << "Will try again in 15 seconds..." << std::endl
+                      << std::endl;
 
             std::this_thread::sleep_for(std::chrono::seconds(15));
         }
@@ -190,19 +154,12 @@ void sendMultipleTransactions(CryptoNote::WalletGreen &wallet,
     std::cout << SuccessMsg("All transactions sent!") << std::endl;
 }
 
-void splitTx(CryptoNote::WalletGreen &wallet, 
-             CryptoNote::TransactionParameters p)
-{
-    std::cout << "Wallet optimization failed, transactions are still too large "
-              << "to send in one chunk, splitting into multiple chunks." 
-              << std::endl << "This may take a long time as portions of your "
-              << "balance get locked whilst sending a transaction."
-              << std::endl << "It may also slightly raise the fee you have "
-              << "to pay, and hence reduce the total amount you can send if "
-              << "your balance cannot cover it." << std::endl;
+void splitTx(CryptoNote::WalletGreen &wallet, CryptoNote::TransactionParameters p) {
+    std::cout << "Wallet optimization failed, transactions are still too large to send in one chunk, splitting into multiple chunks." << std::endl
+              << "This may take a long time as portions of your balance get locked whilst sending a transaction." << std::endl
+              << "It may also slightly raise the fee you have to pay, and hence reduce the total amount you can send if your balance cannot cover it." << std::endl;
 
-    if (!confirm("Is this OK?"))
-    {
+    if (!confirm("Is this OK?")) {
         std::cout << WarningMsg("Cancelling transaction.") << std::endl;
         return;
     }
@@ -213,22 +170,14 @@ void splitTx(CryptoNote::WalletGreen &wallet,
     size_t txSize = wallet.getTxSize(p);
     uint64_t minFee = CryptoNote::parameters::MINIMUM_FEE;
 
-    for (int numTxMultiplier = 2; ; numTxMultiplier++)
-    {
-        /* We modify p a bit in this function, so restore back to initial
-           state each time */
+    for (int numTxMultiplier = 2; ; numTxMultiplier++) {
+        /* We modify p a bit in this function, so restore back to initial state each time */
         p = restoreInitialTx;
 
-        /* We can't just evenly divide a transaction up to be < 115k bytes by
-           decreasing the amount we're sending, because depending upon the
-           inputs we might need to split into more transactions, so a good
-           start is attempting to split them into chunks of 55k bytes or so.
-           We then check at the end that each transaction is small enough, and
-           if not, we up the numTxMultiplier and try again with more
-           transactions. */
-        int numTransactions 
-            = int(numTxMultiplier * 
-                 (std::ceil(double(txSize) / double(maxSize))));
+        /* We can't just evenly divide a transaction up to be < 115k bytes by decreasing the amount we're sending, because depending upon the
+           inputs we might need to split into more transactions, so a good start is attempting to split them into chunks of 55k bytes or so.
+           We then check at the end that each transaction is small enough, and if not, we up the numTxMultiplier and try again with more transactions. */
+        int numTransactions = int(numTxMultiplier * (std::ceil(double(txSize) / double(maxSize))));
 
         /* Split the requested fee over each transaction, i.e. if a fee of 20
            TLO was requested and we split it into 4 transactions each one will
@@ -239,9 +188,8 @@ void splitTx(CryptoNote::WalletGreen &wallet,
         uint64_t totalFee = feePerTx * numTransactions;
 
         uint64_t totalCost = p.destinations[0].amount + totalFee;
-        
-        if (totalCost > wallet.getActualBalance())
-        {
+
+        if (totalCost > wallet.getActualBalance()) {
             std::cout << WarningMsg("Not enough balance to cover network fees.") << std::endl;
             return;
         }
@@ -252,8 +200,7 @@ void splitTx(CryptoNote::WalletGreen &wallet,
 
         std::vector<CryptoNote::TransactionParameters> transfers;
 
-        for (int i = 0; i < numTransactions; i++)
-        {
+        for (int i = 0; i < numTransactions; i++) {
             CryptoNote::TransactionParameters tmp = p;
             tmp.destinations[0].amount = amountPerTx;
             tmp.fee = feePerTx;
@@ -263,12 +210,9 @@ void splitTx(CryptoNote::WalletGreen &wallet,
         /* Add the extra change to the first transaction */
         transfers[0].destinations[0].amount += change;
 
-        for (auto tx : transfers)
-        {
-            /* One of the transfers is too large. Retry, cutting the
-               transactions into smaller pieces */
-            if (wallet.txIsTooLarge(tx))
-            {
+        for (auto tx : transfers) {
+            /* One of the transfers is too large. Retry, cutting the transactions into smaller pieces */
+            if (wallet.txIsTooLarge(tx)) {
                 std::cout << "Split up transactions are still too large! "
                           << "Splitting up into smaller chunks." << std::endl;
                 continue;
@@ -280,22 +224,16 @@ void splitTx(CryptoNote::WalletGreen &wallet,
     }
 }
 
-size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, 
-                             uint64_t threshold)
-{
+size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
     uint64_t bestThreshold = threshold;
     size_t optimizable = 0;
 
-    /* Find the best threshold by starting at threshold and decreasing by
-       half till we get to the minimum amount, storing the threshold that
+    /* Find the best threshold by starting at threshold and decreasing by half till we get to the minimum amount, storing the threshold that
        gave us the most amount of optimizable amounts */
-    while (threshold > CryptoNote::parameters::MINIMUM_FEE)
-    {
-        CryptoNote::IFusionManager::EstimateResult r 
-            = wallet.estimate(threshold);
+    while (threshold > CryptoNote::parameters::MINIMUM_FEE) {
+        CryptoNote::IFusionManager::EstimateResult r = wallet.estimate(threshold);
 
-        if (r.fusionReadyCount > optimizable)
-        {
+        if (r.fusionReadyCount > optimizable) {
             optimizable = r.fusionReadyCount;
             bestThreshold = threshold;
         }
@@ -303,71 +241,48 @@ size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet,
         threshold /= 2;
     }
 
-    /* Can throw if it can't create - lol what are error codes - just catch
-       it and assume we can't fusion anymore */
-    try
-    {
-        return wallet.createFusionTransaction(bestThreshold, 
-                                              CryptoNote::parameters
-                                                        ::DEFAULT_MIXIN);
-    }
-    catch (const std::runtime_error)
-    {
+    /* Can throw if it can't create - lol what are error codes - just catch it and assume we can't fusion anymore */
+    try {
+        return wallet.createFusionTransaction(bestThreshold, CryptoNote::parameters::DEFAULT_MIXIN);
+    } catch (const std::runtime_error) {
         return CryptoNote::WALLET_INVALID_TRANSACTION_ID;
     }
 }
 
-void quickOptimize(CryptoNote::WalletGreen &wallet)
-{
-    std::cout << "Attempting to optimize your wallet to allow you to send "
-              << "large amounts at once. " << std::endl 
-              << "You can run this command as many times as you like."
-              << std::endl << "You will be informed when your wallet is fully "
-              << "optimized." << std::endl
+void quickOptimize(CryptoNote::WalletGreen &wallet) {
+    std::cout << "Attempting to optimize your wallet to allow you to send large amounts at once. " << std::endl
+              << "You can run this command as many times as you like." << std::endl
+              << "You will be informed when your wallet is fully optimized." << std::endl
               << WarningMsg("This may take a long time!") << std::endl;
 
-    if (!confirm("Do you want to proceed?"))
-    {
+    if (!confirm("Do you want to proceed?")) {
         std::cout << WarningMsg("Cancelling optimization.") << std::endl;
         return;
     }
 
-    if (!optimize(wallet, wallet.getActualBalance()))
-    {
+    if (!optimize(wallet, wallet.getActualBalance())) {
         std::cout << SuccessMsg("Wallet fully optimized!") << std::endl;
-    }
-    else
-    {
+    } else {
         std::cout << SuccessMsg("Optimization completed!") << std::endl
-                  << "Your wallet can still be optimized more if you run "
-                  << "this command again." << std::endl << "Consider using "
-                  << "the " << SuggestionMsg("full_optimize") << " command to "
-                  << "automate the process." << std::endl;
+                  << "Your wallet can still be optimized more if you run this command again." << std::endl
+                  << "Consider using the " << SuggestionMsg("full_optimize") << " command to automate the process." << std::endl;
     }
 }
 
-void fullOptimize(CryptoNote::WalletGreen &wallet)
-{
-    std::cout << "Attempting to optimize your wallet to allow you to "
-              << "send large amounts at once. " << std::endl
+void fullOptimize(CryptoNote::WalletGreen &wallet) {
+    std::cout << "Attempting to optimize your wallet to allow you to send large amounts at once. " << std::endl
               << WarningMsg("This may take a very long time!") << std::endl;
 
-    if (!confirm("Do you want to proceed?"))
-    {
+    if (!confirm("Do you want to proceed?")) {
         std::cout << WarningMsg("Cancelling optimization.") << std::endl;
         return;
     }
 
-    for (int i = 1;;i++)
-    {
-        std::cout << InformationMsg("Running optimization round "
-                                  + std::to_string(i) + "...")
-                  << std::endl;
+    for (int i = 1;;i++) {
+        std::cout << InformationMsg("Running optimization round ") << SuccessMsg(std::to_string(i)) << InformationMsg("...") << std::endl;
 
-        /* Optimize as many times as possible until optimization is no longer
-           possible. */
-        if (!optimize(wallet, wallet.getActualBalance()))
-        {
+        /* Optimize as many times as possible until optimization is no longer possible. */
+        if (!optimize(wallet, wallet.getActualBalance())) {
             break;
         }
     }
@@ -379,9 +294,7 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
     std::vector<Crypto::Hash> fusionTransactionHashes;
 
     while (true) {
-        /* Create as many fusion transactions until we can't send anymore,
-           either because balance is locked too much or we can no longer
-           optimize anymore transactions */
+        /* Create as many fusion transactions until we can't send anymore, either because balance is locked too much or we can no longer optimize anymore transactions */
         size_t tmpFusionTxID = makeFusionTransaction(wallet, threshold);
 
         if (tmpFusionTxID == CryptoNote::WALLET_INVALID_TRANSACTION_ID) {
@@ -397,7 +310,7 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
             }
         }
     }
-    
+
     std::cout << std::endl;
 
     if (fusionTransactionHashes.empty()) {
@@ -409,7 +322,7 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
         std::cout << SuccessMsg("1 fusion transaction has been sent, waiting for balance to return and unlock...") << std::endl
                   << std::endl;
     } else {
-        std::cout << SuccessMsg(std::to_string(fusionTransactionHashes.size()) + " fusion transactions have been sent, waiting for balance to return and unlock...") << std::endl 
+        std::cout << SuccessMsg(std::to_string(fusionTransactionHashes.size()) + " fusion transactions have been sent, waiting for balance to return and unlock...") << std::endl
                   << std::endl;
     }
 
@@ -429,30 +342,25 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
         bool fusionCompleted = true;
 
-        /* Is our fusion transaction still unconfirmed? We can't gain the
-           benefits of fusioning if the balance hasn't unlocked, so we can
+        /* Is our fusion transaction still unconfirmed? We can't gain the benefits of fusioning if the balance hasn't unlocked, so we can
            send this new optimized balance */
         for (auto tx : fusionTransactionHashes) {
-            /* If the fusion transaction hash is present in the unconfirmed
-               transactions pool, we need to wait for it to complete. */
+            /* If the fusion transaction hash is present in the unconfirmed transactions pool, we need to wait for it to complete. */
             if (std::find(unconfirmedTxHashes.begin(), unconfirmedTxHashes.end(), tx) != unconfirmedTxHashes.end()) {
-                fusionCompleted = false; 
+                fusionCompleted = false;
             } else {
-                /* We can't find this transaction in the unconfirmed
-                   transaction pool anymore, so it has been confirmed. Remove
-                   it so we both have to check less transactions each time,
-                   and we can easily update the transactions left to confirm
-                   output message */
-                fusionTransactionHashes.erase(std::remove
-                    (fusionTransactionHashes.begin(),
-                     fusionTransactionHashes.end(), tx), 
-                     fusionTransactionHashes.end());
+                /* We can't find this transaction in the unconfirmed transaction pool anymore, so it has been confirmed.
+                   Remove it so we both have to check less transactions each time, and we can easily update the transactions left to confirm output message */
+                fusionTransactionHashes.erase(std::remove(fusionTransactionHashes.begin(), fusionTransactionHashes.end(), tx), fusionTransactionHashes.end());
             }
         }
 
         if (!fusionCompleted) {
             ++retryCounter;
-            std::cout << WarningMsg("\rWait... ") << InformationMsg(std::to_string(fusionTransactionHashes.size())) << (fusionTransactionHashes.size() == 1 ? WarningMsg(" fusion transaction still to be confirmed...") : WarningMsg(" fusion transactions still to be confirmed.")) << SuccessMsg(" Attempt ") << InformationMsg(std::to_string(retryCounter)) << SuccessMsg("... Retrying in 15 seconds") << std::flush;
+            std::cout << WarningMsg("\rWait... ") << InformationMsg(std::to_string(fusionTransactionHashes.size()))
+                      << (fusionTransactionHashes.size() == 1 ? WarningMsg(" fusion transaction still to be confirmed...")
+                                                              : WarningMsg(" fusion transactions still to be confirmed."))
+                      << SuccessMsg(" Attempt ") << InformationMsg(std::to_string(retryCounter)) << SuccessMsg("... Retrying in 15 seconds") << std::flush;
 
             std::this_thread::sleep_for(std::chrono::seconds(15));
 
@@ -470,12 +378,11 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 void fusionTX(CryptoNote::WalletGreen &wallet, CryptoNote::TransactionParameters p) {
     std::cout << WarningMsg("Your transaction is too large to be accepted by the network!") << std::endl
               << "We're attempting to optimize your wallet, which hopefully will make the transaction small enough to fit in a block." << std::endl
-              << "Please wait, this will take some time..." << std::endl 
+              << "Please wait, this will take some time..." << std::endl
               << std::endl;
 
-    /* We could check if optimization succeeded, but it's not really needed
-       because we then check if the transaction is too large... it could have
-       potentially become valid because another payment came in. */
+    /* We could check if optimization succeeded, but it's not really needed because we then check if the transaction is too large...
+       it could have  potentially become valid because another payment came in. */
     optimize(wallet, p.destinations[0].amount + p.fee);
 
     auto startTime = std::chrono::system_clock::now();
@@ -508,22 +415,18 @@ void fusionTX(CryptoNote::WalletGreen &wallet, CryptoNote::TransactionParameters
     catch (const std::system_error &e) {
         std::string errMsg = e.what();
 
-        /* The internal node error I believe is caused by the same issue as
-           the mixin error. Rocksteady explained this as not enough traffic
-           having occured on the network to allow your to mixin with.
-           Hopefully, this will only occur on the testnet and not the main
-           network. It seems sending multiple smaller transactions will
-           provide the network with more change to allow tx's to go through.
-           However, in some wallets that have only received one big single
-           transaction, they may be unable to send at all without lowering
-           their mixin count to 0 */
+        /* The internal node error I believe is caused by the same issue as the mixin error.
+           Rocksteady explained this as not enough traffic having occured on the network to allow your to mixin with.
+           Hopefully, this will only occur on the testnet and not the main network.
+           It seems sending multiple smaller transactions will provide the network with more change to allow tx's to go through.
+           However, in some wallets that have only received one big single transaction, they may be unable to send at all without lowering their mixin count to 0 */
         if (errMsg == "MixIn count is too big" || errMsg == "Internal node error") {
             std::cout << WarningMsg("Failed to send transaction!") << std::endl
-                      << "Unable to find enough outputs to mix with." << std::endl 
+                      << "Unable to find enough outputs to mix with." << std::endl
                       << "Try lowering the amount you are sending in one transaction." << std::endl
                       << "Alternatively, you can try lowering the mixin count to 0, but this will compromise privacy." << std::endl;
         } else {
-            std::cout << WarningMsg("Failed to send transaction!") << std::endl 
+            std::cout << WarningMsg("Failed to send transaction!") << std::endl
                       << "Error message: " << errMsg << std::endl;
         }
     }
@@ -573,10 +476,8 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo, std::vector<std::string> a
                     std::cout << WarningMsg("Failed to parse payment ID! Payment ID's are 64 character hexadecimal strings.") << std::endl;
                     return;
                 } else {
-                    /* Then convert the "extra" back into a string so we
-                       can pass the argument that walletgreen expects. 
-                       Note this string is not the same as the original
-                       paymentID string! */
+                    /* Then convert the "extra" back into a string so we can pass the argument that walletgreen expects.
+                       Note this string is not the same as the original paymentID string! */
                     for (auto i : extraVec) {
                         extraString += static_cast<char>(i);
                     }
@@ -716,9 +617,8 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
                 fusionTX(walletInfo->wallet, p);
             } else {
                 size_t id = walletInfo->wallet.transfer(p);
-                
-                CryptoNote::WalletTransaction tx 
-                    = walletInfo->wallet.getTransaction(id);
+
+                CryptoNote::WalletTransaction tx = walletInfo->wallet.getTransaction(id);
 
                 std::cout << SuccessMsg("Transaction has been sent!") << std::endl
                           << SuccessMsg("Hash: " + Common::podToHex(tx.hash)) << std::endl;
@@ -726,19 +626,15 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
         }
         catch (const std::system_error &e) {
             std::string errMsg = e.what();
-            /* For some reason we are unable to send our full balance when
-               I have tested. It looks possible it is due to dust amounts,
-               possibly these can't be sent? The relevant code can be found
-               in src/Wallet/WalletGreen.cpp in the function
-               selectTransfers() */
+            /* For some reason we are unable to send our full balance when I have tested. It looks possible it is due to dust amounts,
+               possibly these can't be sent? The relevant code can be found in src/Wallet/WalletGreen.cpp in the function selectTransfers() */
             if (errMsg == "Not enough money: Wrong amount" && !retried) {
                 std::cout << WarningMsg("Failed to send transaction - not enough funds!") << std::endl
                           << "You sometimes need to send a small amount less than your full balance to get the transfer to succeed." << std::endl
                           << "This is possibly due to dust in your wallet that is unable to be sent without a mixin of 0." << std::endl;
 
-                /* We can try and resend with a mixin of zero, but only retry
-                   once */
-                if(confirm("Retry transaction with mixin of 0? This will compromise privacy.")) {
+                /* We can try and resend with a mixin of zero, but only retry once */
+                if (confirm("Retry transaction with mixin of 0? This will compromise privacy.")) {
                     p.mixIn = 0;
                     retried = true;
                     continue;
@@ -746,22 +642,18 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
                     std::cout << WarningMsg("Cancelling transaction.") << std::endl;
                 }
             }
-            /* The internal node error I believe is caused by the same issue as
-               the mixin error. Rocksteady explained this as not enough traffic
-               having occured on the network to allow your to mixin with.
-               Hopefully, this will only occur on the testnet and not the main
-               network. It seems sending multiple smaller transactiosn will
-               provide the network with more change to allow tx's to go through.
-               However, in some wallets that have only recieved one big single
-               transaction, they may be unable to send at all without lowering
-               their mixin count to 0 */
+            /* The internal node error I believe is caused by the same issue as the mixin error.
+               Rocksteady explained this as not enough traffic having occured on the network to allow your to mixin with.
+               Hopefully, this will only occur on the testnet and not the main network.
+               It seems sending multiple smaller transactiosn will provide the network with more change to allow tx's to go through.
+               However, in some wallets that have only recieved one big single transaction, they may be unable to send at all without lowering their mixin count to 0 */
             else if ((errMsg == "MixIn count is too big" || errMsg == "Internal node error") && !retried) {
                 std::cout << WarningMsg("Failed to send transaction!") << std::endl
                           << "Unable to find enough outputs to mix with." << std::endl
                           << "Try lowering the amount you are sending in one transaction." << std::endl
                           << "Alternatively, you can try lowering the mixin count to 0, but this will compromise privacy." << std::endl;
 
-                if(confirm("Retry transaction with mixin of 0? This will compromise privacy.")) {
+                if (confirm("Retry transaction with mixin of 0? This will compromise privacy.")) {
                     p.mixIn = 0;
                     retried = true;
                     continue;
@@ -771,11 +663,11 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
 
             } else if (errMsg == "Network error") {
                 std::cout << WarningMsg("Couldn't connect to the network to send the transaction!") << std::endl
-                          << "Ensure Talleod or the remote node you are using is open and functioning." << std::endl;
+                          << "Ensure " << CryptoNote::CRYPTONOTE_NAME << "d or the remote node you are using is open and functioning." << std::endl;
             } else if (retried) {
                 std::cout << WarningMsg("Failed to send transaction with zero mixin! Try lowering the amount you are sending.") << std::endl;
             } else {
-                std::cout << WarningMsg("Failed to send transaction!") << std::endl 
+                std::cout << WarningMsg("Failed to send transaction!") << std::endl
                           << "Error message: " << errMsg << std::endl;
             }
         }
@@ -789,7 +681,7 @@ Maybe<std::string> getPaymentID() {
         std::string paymentID;
 
         std::cout << std::endl
-                  << InformationMsg("What payment ID do you want to use?") << std::endl 
+                  << InformationMsg("What payment ID do you want to use?") << std::endl
                   << "These are usually used for sending to exchanges." << std::endl
                   << WarningMsg("Warning: if you were given a payment ID,") << std::endl
                   << WarningMsg("you MUST use it, or your funds may be lost!") << std::endl
@@ -811,9 +703,8 @@ Maybe<std::string> getPaymentID() {
         if (!CryptoNote::createTxExtraWithPaymentId(paymentID, extra)) {
             std::cout << WarningMsg("Failed to parse! Payment ID's are 64 character hexadecimal strings.") << std::endl;
         } else {
-            /* Then convert the "extra" back into a string so we can pass
-               the argument that walletgreen expects. Note this string is not
-               the same as the original paymentID string! */
+            /* Then convert the "extra" back into a string so we can pass the argument that walletgreen expects.
+               Note this string is not the same as the original paymentID string! */
             std::string extraString;
 
             for (auto i : extra) {
@@ -825,12 +716,19 @@ Maybe<std::string> getPaymentID() {
     }
 }
 
+std::string convertAmount(int64_t amount) {
+  double divisor = pow(10, CryptoNote::parameters::CRYPTONOTE_DISPLAY_DECIMAL_POINT);
+  std::stringstream result;
+  result << std::fixed << std::setprecision(CryptoNote::parameters::CRYPTONOTE_DISPLAY_DECIMAL_POINT) << ((double)amount / divisor);
+  return result.str();
+}
+
 Maybe<uint64_t> getFee() {
     while (true) {
         std::string stringAmount;
-        std::cout << std::endl 
+        std::cout << std::endl
                   << InformationMsg("What fee do you want to use?") << std::endl
-                  << "Hit enter for the default fee of 0.01 TLO: ";
+                  << "Hit enter for the default fee of " << convertAmount(CryptoNote::parameters::MINIMUM_FEE) << " " << CryptoNote::CRYPTONOTE_TICKER << ": ";
 
         std::getline(std::cin, stringAmount);
 
@@ -877,7 +775,7 @@ Maybe<uint64_t> getTransferAmount() {
         std::string stringAmount;
 
         std::cout << std::endl
-                  << InformationMsg("How much TLO do you want to send?: ");
+                  << InformationMsg("How much " + std::string(CryptoNote::CRYPTONOTE_TICKER) + " do you want to send?: ");
 
         std::getline(std::cin, stringAmount);
 
@@ -918,11 +816,11 @@ bool parseFee(std::string feeString) {
 
     if (!parseAmount(feeString, fee)) {
         std::cout << WarningMsg("Failed to parse fee! Ensure you entered the value correctly.") << std::endl
-                  << "Please note, you can only use 2 decimal places." << std::endl;
+                  << "Please note, you can only use " << std::to_string(CryptoNote::parameters::CRYPTONOTE_DISPLAY_DECIMAL_POINT) << " decimal places." << std::endl;
 
         return false;
     } else if (fee < CryptoNote::parameters::MINIMUM_FEE) {
-        std::cout << WarningMsg("Fee must be at least 0.01 TLO!") << std::endl;
+        std::cout << WarningMsg("Fee must be at least " + convertAmount(CryptoNote::parameters::MINIMUM_FEE) + " " + CryptoNote::CRYPTONOTE_TICKER + "!") << std::endl;
         return false;
     }
 
@@ -943,7 +841,7 @@ bool parseAddress(std::string address) {
        address is correct */
     CryptoNote::KeyPair spendKey;
     Crypto::generate_keys(spendKey.publicKey, spendKey.secretKey);
-    
+
     CryptoNote::KeyPair viewKey;
     Crypto::generate_keys(viewKey.publicKey, viewKey.secretKey);
 
@@ -954,7 +852,7 @@ bool parseAddress(std::string address) {
     if (address.length() != expectedLen)
     {
         std::cout << WarningMsg("Address is wrong length!") << std::endl
-                  << "It should be " << expectedLen << " characters long, but it is " << address.length() << " characters long!" << std::endl 
+                  << "It should be " << expectedLen << " characters long, but it is " << address.length() << " characters long!" << std::endl
                   << std::endl;
 
         return false;
@@ -962,7 +860,7 @@ bool parseAddress(std::string address) {
     /* Can't see an easy way to go from prefix num -> prefix string, so for
        now just hard code "TA" - it will let testers send stuff at least */
     else if (prefix != expectedPrefix) {
-        std::cout << WarningMsg("Invalid address! It should start with \"TA\"!") << std::endl 
+        std::cout << WarningMsg("Invalid address! It should start with \"TA\"!") << std::endl
                   << std::endl;
 
         return false;
@@ -998,8 +896,8 @@ bool parseAmount(std::string amountString) {
 
     if (!parseAmount(amountString, amount)) {
         std::cout << WarningMsg("Failed to parse amount! Ensure you entered the value correctly.") << std::endl
-                  << "Please note, the minimum you can send is 0.01 TLO," << std::endl
-                  << "and you can only use 2 decimal places." << std::endl;
+                  << "Please note, the minimum you can send is " << convertAmount(CryptoNote::parameters::DEFAULT_DUST_THRESHOLD) << " " << CryptoNote::CRYPTONOTE_TICKER << "," << std::endl
+                  << "and you can only use " << std::to_string(CryptoNote::parameters::CRYPTONOTE_DISPLAY_DECIMAL_POINT) << " decimal places." << std::endl;
 
         return false;
     }

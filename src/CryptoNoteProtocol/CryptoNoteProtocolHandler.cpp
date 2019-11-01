@@ -582,17 +582,27 @@ bool CryptoNoteProtocolHandler::request_missing_objects(CryptoNoteConnectionCont
   return true;
 }
 
+std::string repeatChar(int count, char c) {
+  return std::string(count, c);
+}
+
 bool CryptoNoteProtocolHandler::on_connection_synchronized() {
   bool val_expected = false;
   if (m_synchronized.compare_exchange_strong(val_expected, true)) {
-    logger(Logging::INFO)
-      << ENDL ;
-      logger(INFO, BRIGHT_MAGENTA) << "===[ Talleo Tip! ]=================================" << ENDL ;
-      logger(INFO, WHITE) << " Always exit Talleod and Simplewallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
+    logger(Logging::INFO) << ENDL ;
+      // Try to center the text in first line
+      int num_chars = 43 - 9 - strlen(CryptoNote::CRYPTONOTE_NAME);
+      int num_chars1 = num_chars / 2;
+      int num_chars2 = num_chars / 2;
+      if (num_chars % 2 == 1) {
+         num_chars2++;
+      }
+      logger(INFO, BRIGHT_MAGENTA) << repeatChar(num_chars1, '=') << "[ " << CryptoNote::CRYPTONOTE_NAME << " Tip! ]" << repeatChar(num_chars2, '=') << ENDL ;
+      logger(INFO, WHITE) << " Always exit " << CryptoNote::CRYPTONOTE_NAME << "d and Simplewallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
       logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
       logger(INFO, WHITE) << " Use the \"export_keys\" command in Simplewallet to display your keys for restoring a corrupted wallet." << ENDL ;
-      logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the Talleo Discord Chat - https://discord.gg/aysnp8P" << ENDL ;
-      logger(INFO, BRIGHT_MAGENTA) << "===================================================" << ENDL << ENDL ;
+      logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the " << CryptoNote::CRYPTONOTE_NAME << " Discord Chat - https://discord.gg/aysnp8P" << ENDL ;
+      logger(INFO, BRIGHT_MAGENTA) << repeatChar(43, '=') << ENDL << ENDL ;
 
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, m_core.getTopBlockIndex());
   }
