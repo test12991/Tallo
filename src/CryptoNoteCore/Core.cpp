@@ -1196,10 +1196,10 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
       return false;
     }
 
-    if (b.majorVersion >= BLOCK_MAJOR_VERSION_3 && b.transactionHashes.size() < 1) {
+/*  if (b.majorVersion >= BLOCK_MAJOR_VERSION_3 && b.transactionHashes.size() < 1) {
       logger(Logging::ERROR, Logging::BRIGHT_RED) << "New block must have at least one transaction";
         return false;
-    }
+    } */
 
     return true;
   }
