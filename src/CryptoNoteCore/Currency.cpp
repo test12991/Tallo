@@ -110,7 +110,7 @@ bool Currency::generateGenesisBlock() {
 
   genesisBlockTemplate.majorVersion = BLOCK_MAJOR_VERSION_1;
   genesisBlockTemplate.minorVersion = BLOCK_MINOR_VERSION_0;
-  genesisBlockTemplate.timestamp = 0;
+  genesisBlockTemplate.timestamp = 1575158400;
   genesisBlockTemplate.nonce = 70;
   if (m_testnet) {
     ++genesisBlockTemplate.nonce;
@@ -160,10 +160,8 @@ size_t Currency::difficultyBlocksCountByBlockVersion(uint8_t blockMajorVersion, 
 }
 
 size_t Currency::blockGrantedFullRewardZoneByBlockVersion(uint8_t blockMajorVersion) const {
-  if (blockMajorVersion >= BLOCK_MAJOR_VERSION_3) {
+  if (blockMajorVersion >= BLOCK_MAJOR_VERSION_2) {
     return m_blockGrantedFullRewardZone;
-  } else if (blockMajorVersion == BLOCK_MAJOR_VERSION_2) {
-    return CryptoNote::parameters::CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2;
   } else {
     return CryptoNote::parameters::CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1;
   }
