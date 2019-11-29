@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -34,7 +35,7 @@
 #include "IUpgradeManager.h"
 #include <Logging/LoggerMessage.h>
 #include "MessageQueue.h"
-#include "TransactionValidatiorState.h"
+#include "TransactionValidatorState.h"
 #include "SwappedVector.h"
 
 #include "CryptoNoteCore/MinerConfig.h"

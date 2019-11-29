@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The Bittorium Project
+// Copyright (c) 2019, The Talleo Project
 //
 // This file is part of Bytecoin.
 //
@@ -25,7 +26,7 @@
 #include "CryptoNoteCore/CachedBlock.h"
 #include "CryptoNoteCore/CachedTransaction.h"
 #include "CryptoNoteCore/Difficulty.h"
-#include "CryptoNoteCore/TransactionValidatiorState.h"
+#include "CryptoNoteCore/TransactionValidatorState.h"
 #include "Common/ArrayView.h"
 #include <CryptoNoteCore/Difficulty.h>
 

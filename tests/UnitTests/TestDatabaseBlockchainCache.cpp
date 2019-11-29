@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -23,7 +24,7 @@
 #include "CryptoNoteCore/BlockchainCache.h"
 #include <CryptoNoteCore/DatabaseBlockchainCache.h>
 #include "CryptoNoteCore/CryptoNoteTools.h"
-#include "CryptoNoteCore/TransactionValidatiorState.h"
+#include "CryptoNoteCore/TransactionValidatorState.h"
 #include "DataBaseMock.h"
 #include <CryptoNoteCore/DBUtils.h>
 #include "CryptoNoteCore/MemoryBlockchainCacheFactory.h"

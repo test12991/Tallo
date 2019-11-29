@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -34,7 +35,7 @@
 #include "CryptoNoteCore/TransactionExtra.h"
 
 #include "Serialization/SerializationOverloads.h"
-#include "TransactionValidatiorState.h"
+#include "TransactionValidatorState.h"
 
 namespace CryptoNote {
 

@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -30,7 +31,7 @@
 #include "ITransactionPool.h"
 #include <Logging/LoggerMessage.h>
 #include <Logging/LoggerRef.h>
-#include "TransactionValidatiorState.h"
+#include "TransactionValidatorState.h"
 
 namespace CryptoNote {
 
