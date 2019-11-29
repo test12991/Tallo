@@ -20,8 +20,8 @@
 
 namespace CryptoNote {
 
-void mergeStates(TransactionValidatorState& destionation, const TransactionValidatorState& source) {
-  destionation.spentKeyImages.insert(source.spentKeyImages.begin(), source.spentKeyImages.end());
+void mergeStates(TransactionValidatorState& destination, const TransactionValidatorState& source) {
+  destination.spentKeyImages.insert(source.spentKeyImages.begin(), source.spentKeyImages.end());
 }
 
 bool hasIntersections(const TransactionValidatorState& destination, const TransactionValidatorState& source) {
