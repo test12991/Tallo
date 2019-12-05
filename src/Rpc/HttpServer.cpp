@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -92,6 +93,7 @@ void HttpServer::acceptLoop() {
   } catch (System::InterruptedException&) {
   } catch (std::exception& e) {
     logger(WARNING) << "Connection error: " << e.what();
+    workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));
   }
 }
 
