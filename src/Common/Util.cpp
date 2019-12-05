@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -75,6 +76,287 @@ namespace Tools
 
       // Test for the specific product.
 
+      if ( osvi.dwMajorVersion == 10 )
+      {
+        if ( osvi.dwMinorVersion == 0 )
+        {
+          if ( osvi.wProductType == VER_NT_WORKSTATION )
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows 10 "));
+          else
+          {
+            if (osvi.dwBuildNumber >= 17623)
+              StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2019 "));
+            else
+              StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2016 "));
+          }
+        }
+
+        pGPI = (PGPI) GetProcAddress(
+          GetModuleHandle(TEXT("kernel32.dll")),
+          "GetProductInfo");
+
+        pGPI( osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &dwType);
+
+        switch ( dwType )
+        {
+        case PRODUCT_BUSINESS:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Business"));
+          break;
+        case PRODUCT_BUSINESS_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Business N"));
+          break;
+        case PRODUCT_CLUSTER_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("HPC Edition"));
+          break;
+        case PRODUCT_CLUSTER_SERVER_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Hyper Core V"));
+          break;
+        case PRODUCT_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home"));
+          break;
+        case PRODUCT_CORE_COUNTRYSPECIFIC:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home China"));
+          break;
+        case PRODUCT_CORE_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home N"));
+          break;
+        case PRODUCT_CORE_SINGLELANGUAGE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home Single Language"));
+          break;
+        case PRODUCT_DATACENTER_EVALUATION_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Datacenter (evaluation installation)"));
+          break;
+        case PRODUCT_DATACENTER_A_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Datacenter, Semi-Annual Channel (core installation)"));
+          break;
+        case PRODUCT_STANDARD_A_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Standard, Semi-Annual Channel (core installation)"));
+          break;
+        case PRODUCT_DATACENTER_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Datacenter (full installation)"));
+          break;
+        case PRODUCT_DATACENTER_SERVER_CORE_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Datacenter without Hyper-V (core installation)"));
+          break;
+        case PRODUCT_DATACENTER_SERVER_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Datacenter without Hyper-V (full installation)"));
+          break;
+        case PRODUCT_EDUCATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Education"));
+          break;
+        case PRODUCT_EDUCATION_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Education N"));
+          break;
+        case PRODUCT_ENTERPRISE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise"));
+          break;
+        case PRODUCT_ENTERPRISE_E:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise E"));
+          break;
+        case PRODUCT_ENTERPRISE_EVALUATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise Evaluation"));
+          break;
+        case PRODUCT_ENTERPRISE_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise N"));
+          break;
+        case PRODUCT_ENTERPRISE_N_EVALUATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise N Evaluation"));
+          break;
+        case PRODUCT_ENTERPRISE_S:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise 2015 LTSB"));
+          break;
+        case PRODUCT_ENTERPRISE_S_EVALUATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise 2015 LTSB Evaluation"));
+          break;
+        case PRODUCT_ENTERPRISE_S_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise 2015 LTSB N"));
+          break;
+        case PRODUCT_ENTERPRISE_S_N_EVALUATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Enterprise 2015 LTSB N Evaluation"));
+          break;
+        case PRODUCT_ENTERPRISE_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Enterprise (full installation)"));
+          break;
+        case PRODUCT_ENTERPRISE_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Enterprise (core installation)"));
+          break;
+        case PRODUCT_ENTERPRISE_SERVER_CORE_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Enterprise without Hyper-V (core installation)"));
+          break;
+        case PRODUCT_ENTERPRISE_SERVER_IA64:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Enterprise for Itanium-based Systems"));
+          break;
+        case PRODUCT_ENTERPRISE_SERVER_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Enterprise without Hyper-V (full installation)"));
+          break;
+        case PRODUCT_ESSENTIALBUSINESS_SERVER_ADDL:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Server Solution Additional"));
+          break;
+        case PRODUCT_ESSENTIALBUSINESS_SERVER_ADDLSVC:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Server Solution Additional SVC"));
+          break;
+        case PRODUCT_ESSENTIALBUSINESS_SERVER_MGMT:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Server Solution Management"));
+          break;
+        case PRODUCT_ESSENTIALBUSINESS_SERVER_MGMTSVC:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Server Solution Management SVC"));
+          break;
+        case PRODUCT_HOME_BASIC:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home Basic"));
+          break;
+        case PRODUCT_HOME_BASIC_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home Basic N"));
+          break;
+        case PRODUCT_HOME_PREMIUM:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home Premium"));
+          break;
+        case PRODUCT_HOME_PREMIUM_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Home Premium N"));
+          break;
+        case PRODUCT_HYPERV:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Hyper-V Server"));
+          break;
+        case PRODUCT_IOTUAP:
+          StringCchCat(pszOS, BUFSIZE, TEXT("IoT Core"));
+          break;
+#ifdef PRODUCT_IOTUAPCOMMERCIAL
+        case PRODUCT_IOTUAPCOMMERCIAL:
+          StringCchCat(pszOS, BUFSIZE, TEXT("IoT Core Commercial"));
+          break;
+#endif
+        case PRODUCT_MEDIUMBUSINESS_SERVER_MANAGEMENT:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Business Server Management Server"));
+          break;
+        case PRODUCT_MEDIUMBUSINESS_SERVER_MESSAGING:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Business Server Messaging Server"));
+          break;
+        case PRODUCT_MEDIUMBUSINESS_SERVER_SECURITY:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Essential Business Server Security Server"));
+          break;
+#ifdef PRODUCT_MOBILE_CORE
+        case PRODUCT_MOBILE_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Mobile"));
+          break;
+#endif
+#ifdef PRODUCT_MOBILE_ENTERPRISE
+        case PRODUCT_MOBILE_ENTERPRISE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Mobile Enterprise"));
+          break;
+#endif
+        case PRODUCT_MULTIPOINT_PREMIUM_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("MultiPoint Server Premium (full installation)"));
+          break;
+        case PRODUCT_MULTIPOINT_STANDARD_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("MultiPoint Server Standard (full installation)"));
+          break;
+        case PRODUCT_PRO_WORKSTATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Pro for Workstations"));
+          break;
+        case PRODUCT_PRO_WORKSTATION_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Pro for Workstations N"));
+          break;
+        case PRODUCT_PROFESSIONAL:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Pro"));
+          break;
+        case PRODUCT_PROFESSIONAL_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Pro N"));
+          break;
+        case PRODUCT_PROFESSIONAL_WMC:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Professional with Media Center"));
+          break;
+        case PRODUCT_SB_SOLUTION_SERVER_EM:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server For SB Solutions EM"));
+          break;
+        case PRODUCT_SERVER_FOR_SB_SOLUTIONS:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server For SB Solutions"));
+          break;
+        case PRODUCT_SERVER_FOR_SB_SOLUTIONS_EM:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server For SB Solutions EM"));
+          break;
+        case PRODUCT_SERVER_FOUNDATION:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Foundation"));
+          break;
+        case PRODUCT_SMALLBUSINESS_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Small Business Server"));
+          break;
+        case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Small Business Server Premium"));
+          break;
+        case PRODUCT_SMALLBUSINESS_SERVER_PREMIUM_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Small Business Server Premium (core installation)"));
+          break;
+        case PRODUCT_SOLUTION_EMBEDDEDSERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("MultiPoint Server"));
+          break;
+        case PRODUCT_STANDARD_EVALUATION_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Standard (evaluation installation)"));
+          break;
+        case PRODUCT_STANDARD_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Standard (full installation)"));
+          break;
+        case PRODUCT_STANDARD_SERVER_CORE_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Standard without Hyper-V (core installation)"));
+          break;
+        case PRODUCT_STANDARD_SERVER_V:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Standard without Hyper-V"));
+          break;
+        case PRODUCT_STANDARD_SERVER_SOLUTIONS:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Solutions Premium"));
+          break;
+        case PRODUCT_STANDARD_SERVER_SOLUTIONS_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Server Solutions Premium (core installation)"));
+          break;
+        case PRODUCT_STARTER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Starter"));
+          break;
+        case PRODUCT_STARTER_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Starter N"));
+          break;
+        case PRODUCT_STORAGE_ENTERPRISE_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Enterprise"));
+          break;
+        case PRODUCT_STORAGE_ENTERPRISE_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Enterprise (core installation)"));
+          break;
+        case PRODUCT_STORAGE_EXPRESS_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Express"));
+          break;
+        case PRODUCT_STORAGE_EXPRESS_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Express (core installation)"));
+          break;
+        case PRODUCT_STORAGE_STANDARD_EVALUATION_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Standard (evaluation installation)"));
+          break;
+        case PRODUCT_STORAGE_STANDARD_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Standard"));
+          break;
+        case PRODUCT_STORAGE_STANDARD_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Standard (core installation)"));
+          break;
+        case PRODUCT_STORAGE_WORKGROUP_EVALUATION_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Workgroup (evaluation installation)"));
+          break;
+        case PRODUCT_STORAGE_WORKGROUP_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Workgroup"));
+          break;
+        case PRODUCT_STORAGE_WORKGROUP_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Storage Server Workgroup (core installation)"));
+          break;
+        case PRODUCT_ULTIMATE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Ultimate"));
+          break;
+        case PRODUCT_ULTIMATE_N:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Ultimate N"));
+          break;
+        case PRODUCT_WEB_SERVER:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Web Server (full installation)"));
+          break;
+        case PRODUCT_WEB_SERVER_CORE:
+          StringCchCat(pszOS, BUFSIZE, TEXT("Web Server (core installation)"));
+          break;
+        }
+      }
+
       if ( osvi.dwMajorVersion == 6 )
       {
         if( osvi.dwMinorVersion == 0 )
@@ -89,6 +371,29 @@ namespace Tools
           if( osvi.wProductType == VER_NT_WORKSTATION )
             StringCchCat(pszOS, BUFSIZE, TEXT("Windows 7 "));
           else StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2008 R2 " ));
+        }
+
+        if ( osvi.dwMinorVersion == 2 )
+        {
+          if( osvi.wProductType == VER_NT_WORKSTATION )
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows 8 "));
+          else StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2012 " ));
+        }
+
+        if ( osvi.dwMinorVersion == 3 )
+        {
+          if( osvi.wProductType == VER_NT_WORKSTATION )
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows 8.1 "));
+          else
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2012 R2 "));
+        }
+
+        if ( osvi.dwMinorVersion == 4 ) // Technical preview 1
+        {
+          if( osvi.wProductType == VER_NT_WORKSTATION )
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows 10 "));
+          else
+            StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2016 "));
         }
 
         pGPI = (PGPI) GetProcAddress(
@@ -153,6 +458,8 @@ namespace Tools
         case PRODUCT_WEB_SERVER:
           StringCchCat(pszOS, BUFSIZE, TEXT("Web Server Edition" ));
           break;
+        case PRODUCT_CORE: // This is returned by Windows 10 Home when manifest doesn't have OS version specified
+          StringCchCopy(pszOS, BUFSIZE, TEXT("Microsoft Windows 10 Home" ));
         }
       }
 
