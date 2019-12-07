@@ -63,11 +63,11 @@ void HttpServer::acceptLoop() {
     BOOST_SCOPE_EXIT_ALL(this, &connection) { 
       m_connections.erase(&connection); };
 
+    workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));
+
     auto addr = connection.getPeerAddressAndPort();
 
     logger(DEBUGGING) << "Incoming connection from " << addr.first.toDottedDecimal() << ":" << addr.second;
-
-    workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));
 
     System::TcpStreambuf streambuf(connection);
     std::iostream stream(&streambuf);
@@ -93,7 +93,6 @@ void HttpServer::acceptLoop() {
   } catch (System::InterruptedException&) {
   } catch (std::exception& e) {
     logger(WARNING) << "Connection error: " << e.what();
-    workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));
   }
 }
 
