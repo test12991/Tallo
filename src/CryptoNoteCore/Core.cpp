@@ -1328,6 +1328,10 @@ auto error = validateSemantic(transaction, fee, blockIndex);
   for (const auto& input : transaction.inputs) {
     if (input.type() == typeid(KeyInput)) {
       const KeyInput& in = boost::get<KeyInput>(input);
+      if (in.outputIndexes.size() > 50) {
+        return error::TransactionValidationError::MIXIN_TOO_BIG;
+      }
+
       if (!state.spentKeyImages.insert(in.keyImage).second) {
         return error::TransactionValidationError::INPUT_KEYIMAGE_ALREADY_SPENT;
       }
