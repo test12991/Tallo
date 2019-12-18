@@ -96,7 +96,7 @@ bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<Wal
     }
 
     std::cout << std::endl << std::endl
-              << "FROM: " << SuccessMsg(walletInfo->walletFileName) << std::endl
+              << "FROM: " << SuccessMsg(walletInfo->walletAddress) << std::endl
               << "TO: " << SuccessMsg(t.destinations[0].address) << std::endl
               << std::endl;
 
