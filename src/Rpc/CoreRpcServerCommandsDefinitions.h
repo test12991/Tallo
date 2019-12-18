@@ -371,6 +371,7 @@ struct COMMAND_RPC_GETBLOCKTEMPLATE {
   struct response {
     uint64_t difficulty;
     uint32_t height;
+    uint32_t num_transactions;
     uint64_t reserved_offset;
     std::string blocktemplate_blob;
     std::string status;
@@ -378,6 +379,7 @@ struct COMMAND_RPC_GETBLOCKTEMPLATE {
     void serialize(ISerializer &s) {
       KV_MEMBER(difficulty)
       KV_MEMBER(height)
+      KV_MEMBER(num_transactions)
       KV_MEMBER(reserved_offset)
       KV_MEMBER(blocktemplate_blob)
       KV_MEMBER(status)

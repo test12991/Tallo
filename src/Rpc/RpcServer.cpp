@@ -1120,7 +1120,7 @@ namespace {
 
 bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request& req, COMMAND_RPC_GETBLOCKTEMPLATE::response& res) {
   if (req.reserve_size > TX_EXTRA_NONCE_MAX_COUNT) {
-    throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_TOO_BIG_RESERVE_SIZE, "To big reserved size, maximum 255" };
+    throw JsonRpc::JsonRpcError{ CORE_RPC_ERROR_CODE_TOO_BIG_RESERVE_SIZE, "Too big reserved size, maximum 255" };
   }
 
   AccountPublicAddress acc = boost::value_initialized<AccountPublicAddress>();
@@ -1160,6 +1160,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     res.reserved_offset = 0;
   }
 
+  res.num_transactions = blockTemplate.transactionHashes.size();
   res.blocktemplate_blob = toHex(block_blob);
   res.status = CORE_RPC_STATUS_OK;
 
