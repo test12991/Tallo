@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2019, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -54,6 +55,10 @@ extern "C" {
   static void cn_lite_v1(const void *data, size_t length, char *hash) {
     cn_lite_slow_hash_v1(data, length, *reinterpret_cast<chash *>(hash));
   }
+
+  static void cn_turtle_v2(const void *data, size_t length, char *hash) {
+    cn_turtle_slow_hash_v2(data, length, *reinterpret_cast<chash *>(hash));
+  }
 }
 
 extern "C" typedef void hash_f(const void *, size_t, char *);
@@ -65,6 +70,7 @@ struct hash_func {
               {"cryptonight-v7", cn_v7},
               {"cryptonight-lite-v0", cn_lite_v0},
               {"cryptonight-lite-v1", cn_lite_v1},
+              {"cryptonight-turtle-v2", cn_turtle_v2},
               {"tree", hash_tree},
               {"extra-blake", Crypto::hash_extra_blake},
               {"extra-groestl", Crypto::hash_extra_groestl},
