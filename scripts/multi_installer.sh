@@ -2,7 +2,7 @@
 # Talleo Multi-installer
 # a one line clone-and-compile for Talleo:
 #
-#     ` $ curl -sL "https://raw.githubusercontent.com/TalleoProject/Talleo/master/multi_installer.sh" | bash
+#     ` $ curl -sL "https://raw.githubusercontent.com/TalleoProject/Talleo/master/scripts/multi_installer.sh" | bash
 #
 # Supports Ubuntu 16.04 LTS, OSX 10.10+
 # Supports building project from current directory (automatic detection)
