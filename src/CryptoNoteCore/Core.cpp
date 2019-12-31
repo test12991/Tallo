@@ -1328,7 +1328,7 @@ auto error = validateSemantic(transaction, fee, blockIndex);
   for (const auto& input : transaction.inputs) {
     if (input.type() == typeid(KeyInput)) {
       const KeyInput& in = boost::get<KeyInput>(input);
-      if (in.outputIndexes.size() > 50) {
+      if (blockIndex > 11367 && in.outputIndexes.size() > 50) {
         return error::TransactionValidationError::MIXIN_TOO_BIG;
       }
 
