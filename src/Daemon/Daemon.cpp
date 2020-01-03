@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbo developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -16,6 +17,11 @@
 //
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
+
+#if defined(WIN32)
+#define NOMINMAX
+#include <Windows.h>
+#endif
 
 #include <fstream>
 
@@ -158,6 +164,8 @@ int main(int argc, char* argv[])
 
 #ifdef WIN32
   _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+  std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " daemon v" + std::string(PROJECT_VERSION_LONG);
+  SetConsoleTitleA(consoletitle.c_str());
 #endif
 
   LoggerManager logManager;

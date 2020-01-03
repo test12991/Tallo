@@ -155,7 +155,7 @@ Config parseArguments(int argc, char **argv)
 }
 
 void versionMessage() {
-    std::cout << "Talleo v" << PROJECT_VERSION << " Simplewallet"
+    std::cout << "Talleo v" << PROJECT_VERSION << " SimpleWallet"
               << std::endl;
 }
 

@@ -598,9 +598,9 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
          num_chars2++;
       }
       logger(INFO, BRIGHT_MAGENTA) << repeatChar(num_chars1, '=') << "[ " << CryptoNote::CRYPTONOTE_NAME << " Tip! ]" << repeatChar(num_chars2, '=') << ENDL ;
-      logger(INFO, WHITE) << " Always exit " << CryptoNote::CRYPTONOTE_NAME << "d and Simplewallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
+      logger(INFO, WHITE) << " Always exit " << CryptoNote::CRYPTONOTE_NAME << "d and SimpleWallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
       logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
-      logger(INFO, WHITE) << " Use the \"export_keys\" command in Simplewallet to display your keys for restoring a corrupted wallet." << ENDL ;
+      logger(INFO, WHITE) << " Use the \"export_keys\" command in SimpleWallet to display your keys for restoring a corrupted wallet." << ENDL ;
       logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the " << CryptoNote::CRYPTONOTE_NAME << " Discord Chat - https://discord.gg/aysnp8P" << ENDL ;
       logger(INFO, BRIGHT_MAGENTA) << repeatChar(43, '=') << ENDL << ENDL ;
 

@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (c) 2018, The Karbo developers
-Copyright (C) 2019, The Talleo developers
+Copyright (C) 2019-2020, The Talleo developers
 
 
 This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,11 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 #include <SimpleWallet/SimpleWallet.h>
 #include <cstring>
 
@@ -35,6 +40,8 @@ int main(int argc, char **argv) {
        a hack, it disables that */
     #ifdef _WIN32
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
+    std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " SimpleWallet v" + std::string(PROJECT_VERSION_LONG);
+    SetConsoleTitleA(consoletitle.c_str());
     #endif
 
     Config config = parseArguments(argc, argv);
@@ -70,7 +77,7 @@ int main(int argc, char **argv) {
 
     std::promise<std::error_code> errorPromise;
     std::future<std::error_code> error = errorPromise.get_future();
-    auto callback = [&errorPromise](std::error_code e) 
+    auto callback = [&errorPromise](std::error_code e)
                     {errorPromise.set_value(e); };
 
     node->init(callback);
@@ -110,7 +117,7 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &confi
     std::string coinName(CryptoNote::CRYPTONOTE_NAME);
 
     do {
-        std::cout << InformationMsg(coinName + "d v" + std::string(PROJECT_VERSION) + " Simplewallet") << std::endl;
+        std::cout << InformationMsg(coinName + " v" + std::string(PROJECT_VERSION) + " SimpleWallet") << std::endl;
 
         /* Open/import/generate the wallet */
         action = getAction(config);

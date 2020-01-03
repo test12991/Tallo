@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -296,6 +297,10 @@ int unregisterService() {
 }
 
 int main(int argc, char** argv) {
+#ifdef WIN32
+  std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " wallet daemon v" + std::string(PROJECT_VERSION_LONG);
+  SetConsoleTitleA(consoletitle.c_str());
+#endif
   PaymentGateService pg; 
   ppg = &pg;
 
