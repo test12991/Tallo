@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018, The Bittorium developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -140,6 +140,9 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/getpeersgray", { jsonMethod<COMMAND_RPC_GET_PEERSGRAY>(&RpcServer::on_get_peersgray), true } },
   { "/get_generated_coins", { jsonMethod<COMMAND_RPC_GET_ISSUED_COINS>(&RpcServer::on_get_issued), true } },
   { "/get_amounts_for_account", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_OUT_AMOUNTS_FOR_ACCOUNT>(&RpcServer::on_get_transaction_out_amounts_for_account), true } },
+  { "/get_blocks_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_blocks_details_by_hashes), false } },
+  { "/get_transaction_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_transaction_details_by_hashes), false } },
+  { "/get_transaction_hashes_by_payment_id", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON>(&RpcServer::on_get_transaction_hashes_by_payment_id), false } },
 
   // json rpc
   { "/json_rpc", { std::bind(&RpcServer::processJsonRpcRequest, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), true } }
@@ -1367,6 +1370,63 @@ bool RpcServer::on_get_block_headers_range(const COMMAND_RPC_GET_BLOCK_HEADERS_R
 
 	res.status = CORE_RPC_STATUS_OK;
 	return true;
+}
+
+bool RpcServer::on_get_blocks_details_by_hashes(const COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON::request& req, COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON::response& rsp) {
+  try {
+    std::vector<BlockDetails> blockDetails;
+    for (const Crypto::Hash& hash : req.blockHashes) {
+      blockDetails.push_back(m_core.getBlockDetails(hash));
+    }
+
+    rsp.blocks = std::move(blockDetails);
+  } catch (std::system_error& e) {
+    rsp.status = e.what();
+    return false;
+  } catch (std::exception& e) {
+    rsp.status = "Error: " + std::string(e.what());
+    return false;
+  }
+
+  rsp.status = CORE_RPC_STATUS_OK;
+  return true;
+}
+
+bool RpcServer::on_get_transaction_details_by_hashes(const COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON::request& req, COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON::response& rsp) {
+  try {
+    std::vector<TransactionDetails> transactionDetails;
+    transactionDetails.reserve(req.transactionHashes.size());
+
+    for (const auto& hash: req.transactionHashes) {
+      transactionDetails.push_back(m_core.getTransactionDetails(hash));
+    }
+
+    rsp.transactions = std::move(transactionDetails);
+  } catch (std::system_error& e) {
+    rsp.status = e.what();
+    return false;
+  } catch (std::exception& e) {
+    rsp.status = "Error: " + std::string(e.what());
+    return false;
+  }
+
+  rsp.status = CORE_RPC_STATUS_OK;
+  return true;
+}
+
+bool RpcServer::on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::request& req, COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::response& rsp) {
+  try {
+    rsp.transactionHashes = m_core.getTransactionHashesByPaymentId(req.paymentId);
+  } catch (std::system_error& e) {
+    rsp.status = e.what();
+    return false;
+  } catch (std::exception& e) {
+    rsp.status = "Error: " + std::string(e.what());
+    return false;
+  }
+
+  rsp.status = CORE_RPC_STATUS_OK;
+  return true;
 }
 
 }

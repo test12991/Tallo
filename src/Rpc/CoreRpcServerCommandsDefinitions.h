@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2017-2018, The Karbo developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -792,6 +793,27 @@ struct COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES {
   };
 };
 
+struct COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON {
+  struct request {
+    std::vector<Crypto::Hash> blockHashes;
+
+    void serialize(ISerializer& s) {
+      KV_MEMBER(blockHashes)
+    }
+  };
+
+  struct response {
+    std::vector<BlockDetails> blocks;
+    std::string status;
+
+    void serialize(ISerializer& s) {
+      KV_MEMBER(status)
+      KV_MEMBER(blocks)
+    }
+  };
+};
+
+
 struct COMMAND_RPC_GET_BLOCK_DETAILS_BY_HEIGHT {
   struct request {
     uint32_t blockHeight;
@@ -854,12 +876,53 @@ struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID {
   };
 };
 
+struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON {
+  struct request {
+    Crypto::Hash paymentId;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(paymentId)
+    }
+  };
+
+  struct response {
+    std::vector<Crypto::Hash> transactionHashes;
+    std::string status;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(status)
+      KV_MEMBER(transactionHashes);
+    }
+  };
+};
+
+
 struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES {
   struct request {
     std::vector<Crypto::Hash> transactionHashes;
 
     void serialize(ISerializer &s) {
       serializeAsBinary(transactionHashes, "transactionHashes", s);
+    }
+  };
+
+  struct response {
+    std::vector<TransactionDetails> transactions;
+    std::string status;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(status)
+      KV_MEMBER(transactions)
+    }
+  };
+};
+
+struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON {
+  struct request {
+    std::vector<Crypto::Hash> transactionHashes;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(transactionHashes)
     }
   };
 

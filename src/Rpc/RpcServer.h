@@ -1,6 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018, The Bittorium developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -103,6 +104,9 @@ private:
   bool on_get_last_block_header(const COMMAND_RPC_GET_LAST_BLOCK_HEADER::request& req, COMMAND_RPC_GET_LAST_BLOCK_HEADER::response& res);
   bool on_get_block_header_by_hash(const COMMAND_RPC_GET_BLOCK_HEADER_BY_HASH::request& req, COMMAND_RPC_GET_BLOCK_HEADER_BY_HASH::response& res);
   bool on_get_block_header_by_height(const COMMAND_RPC_GET_BLOCK_HEADER_BY_HEIGHT::request& req, COMMAND_RPC_GET_BLOCK_HEADER_BY_HEIGHT::response& res);
+  bool on_get_blocks_details_by_hashes(const COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON::request& req, COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON::response& rsp);
+  bool on_get_transaction_details_by_hashes(const COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON::request& req, COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON::response& rsp);
+  bool on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::request& req, COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::response& rsp);
 
   void fill_block_header_response(const BlockTemplate& blk, bool orphan_status, uint32_t index, const Crypto::Hash& hash, block_header_response& responce);
   RawBlockLegacy prepareRawBlockLegacy(BinaryArray&& blockBlob);
