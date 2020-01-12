@@ -591,7 +591,7 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
   if (m_synchronized.compare_exchange_strong(val_expected, true)) {
     logger(Logging::INFO) << ENDL ;
       // Try to center the text in first line
-      int num_chars = 43 - 9 - strlen(CryptoNote::CRYPTONOTE_NAME);
+      int num_chars = 43 - 9 - (int)strlen(CryptoNote::CRYPTONOTE_NAME);
       int num_chars1 = num_chars / 2;
       int num_chars2 = num_chars / 2;
       if (num_chars % 2 == 1) {

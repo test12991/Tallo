@@ -1163,7 +1163,7 @@ bool RpcServer::on_getblocktemplate(const COMMAND_RPC_GETBLOCKTEMPLATE::request&
     res.reserved_offset = 0;
   }
 
-  res.num_transactions = blockTemplate.transactionHashes.size();
+  res.num_transactions = (uint32_t)blockTemplate.transactionHashes.size();
   res.blocktemplate_blob = toHex(block_blob);
   res.status = CORE_RPC_STATUS_OK;
 
