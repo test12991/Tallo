@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -87,7 +88,8 @@ public:
       new(valueString)String(value, size - 1);
       type = STRING;
     } else {
-      reinterpret_cast<String*>(valueString)->assign(value, size - 1);
+      String* pString = reinterpret_cast<String*>(valueString);
+      pString->assign(value, size - 1);
     }
 
     return *this;
