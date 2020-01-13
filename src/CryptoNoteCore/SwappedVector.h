@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2018-2019, The TurtleCoin developers
 //
 // This file is part of Bytecoin.
 //
@@ -217,7 +218,15 @@ template<class T> bool SwappedVector<T>::open(const std::string& itemFileName, c
       uint32_t itemSize;
       m_indexesFile.read(reinterpret_cast<char*>(&itemSize), sizeof itemSize);
       if (!m_indexesFile) {
-        return false;
+        if (m_indexesFile.eof()) {
+          m_indexesFile.clear(); //clear the error
+          m_indexesFile.seekp(0); //retain compability with C98
+          m_indexesFile.write(reinterpret_cast<char*>(&i), sizeof i); //update the count
+          m_indexesFile.flush(); //commit
+          break;
+        } else { //fail only if any other IO error than read past EOF occured
+          return false;
+        }
       }
 
       offsets.emplace_back(itemsFileSize);
