@@ -643,7 +643,17 @@ std::error_code Core::addBlock(const CachedBlock& cachedBlock, RawBlock&& rawBlo
     uint64_t fee = 0;
     auto transactionValidationResult = validateTransaction(transaction, validatorState, cache, fee, previousBlockIndex);
     if (transactionValidationResult) {
-      logger(Logging::DEBUGGING) << "Failed to validate transaction " << transaction.getTransactionHash() << ": " << transactionValidationResult.message();
+      const auto hash = transaction.getTransactionHash();
+
+      logger(Logging::DEBUGGING) << "Failed to validate transaction " << hash << ": " << transactionValidationResult.message();
+
+      if (transactionPool->checkIfTransactionPresent(hash))
+      {
+        logger(Logging::DEBUGGING) << "Removing invalid transaction " << hash << " from transaction pool...";
+        transactionPool->removeTransaction(hash);
+        notifyObservers(makeDelTransactionMessage({hash}, Messages::DeleteTransaction::Reason::NotActual));
+      }
+
       return transactionValidationResult;
     }
 
