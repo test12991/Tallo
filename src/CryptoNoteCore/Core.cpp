@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -2415,6 +2415,10 @@ uint64_t Core::get_current_blockchain_height() const
 {
 	// TODO: remove when GetCoreStatistics is implemented
 	return mainChainStorage->getBlockCount();
+}
+
+size_t Core::getMaximumTransactionSize() const {
+  return getMaximumTransactionAllowedSize(blockMedianSize, currency);
 }
 
 }

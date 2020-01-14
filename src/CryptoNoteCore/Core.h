@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -99,6 +99,8 @@ public:
   virtual bool getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, const BinaryArray& extraNonce, Difficulty& difficulty, uint32_t& height) const override;
 
   virtual CoreStatistics getCoreStatistics() const override;
+
+  size_t getMaximumTransactionSize() const;
 
   //ICoreInformation
   virtual size_t getPoolTransactionCount() const override;

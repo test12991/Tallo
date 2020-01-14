@@ -290,6 +290,7 @@ struct COMMAND_RPC_GET_INFO {
     bool synced;
     std::string fee_address;
     uint64_t max_block_size;
+    uint64_t max_tx_size;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
@@ -309,6 +310,7 @@ struct COMMAND_RPC_GET_INFO {
       KV_MEMBER(version)
       KV_MEMBER(fee_address)
       KV_MEMBER(max_block_size)
+      KV_MEMBER(max_tx_size)
     }
   };
 };
