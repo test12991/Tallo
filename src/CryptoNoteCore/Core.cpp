@@ -104,12 +104,6 @@ inline IBlockchainCache* findIndexInChain(IBlockchainCache* blockSegment, uint32
   return nullptr;
 }
 
-size_t getMaximumTransactionAllowedSize(size_t blockSizeMedian, const Currency& currency) {
-  assert(blockSizeMedian * 2 > currency.minerTxBlobReservedSize());
-
-  return blockSizeMedian * 2 - currency.minerTxBlobReservedSize();
-}
-
 BlockTemplate extractBlockTemplate(const RawBlock& block) {
   BlockTemplate blockTemplate;
   if (!fromBinaryArray(blockTemplate, block.block)) {
@@ -816,7 +810,7 @@ void Core::actualizePoolTransactionsLite(const TransactionValidatorState& valida
 
     auto txState = extractSpentOutputs(tx);
 
-    if (hasIntersections(validatorState, txState) || tx.getTransactionBinaryArray().size() > getMaximumTransactionAllowedSize(blockMedianSize, currency)) {
+    if (hasIntersections(validatorState, txState) || tx.getTransactionBinaryArray().size() > getMaximumTransactionSize()) {
       pool.removeTransaction(hash);
       notifyObservers(makeDelTransactionMessage({ hash }, Messages::DeleteTransaction::Reason::NotActual));
     }
@@ -1007,7 +1001,7 @@ bool Core::isTransactionValidForPool(const CachedTransaction& cachedTransaction,
     return false;
   }
 
-  auto maxTransactionSize = getMaximumTransactionAllowedSize(blockMedianSize, currency);
+  auto maxTransactionSize = getMaximumTransactionSize();
   if (cachedTransaction.getTransactionBinaryArray().size() > maxTransactionSize) {
     logger(Logging::WARNING) << "Transaction " << cachedTransaction.getTransactionHash()
       << " is not valid. Reason: transaction is too big (" << cachedTransaction.getTransactionBinaryArray().size()
@@ -2418,8 +2412,9 @@ uint64_t Core::get_current_blockchain_height() const
 }
 
 size_t Core::getMaximumTransactionSize() const {
-  return getMaximumTransactionAllowedSize(blockMedianSize, currency);
+  assert(blockMedianSize * 2 > currency.minerTxBlobReservedSize());
+  size_t maximumSize = std::min(blockMedianSize * 2, currency.maxBlockCumulativeSize(getTopBlockIndex() + 1)) - currency.minerTxBlobReservedSize();
+  return maximumSize;
 }
 
 }
-
