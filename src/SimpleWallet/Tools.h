@@ -37,7 +37,7 @@ std::string formatCents(uint64_t amount);
 class ColouredMsg
 {
     public:
-        ColouredMsg(std::string msg, Common::Console::Color colour) 
+        ColouredMsg(std::string msg, Common::Console::Color colour)
                   : msg(msg), colour(colour) {}
 
         ColouredMsg(std::string msg, int padding, Common::Console::Color colour)
@@ -78,7 +78,7 @@ class ColouredMsg
 
 class SuccessMsg : public ColouredMsg {
     public:
-        explicit SuccessMsg(std::string msg) 
+        explicit SuccessMsg(std::string msg)
                : ColouredMsg(msg, Common::Console::Color::Green) {}
 
         explicit SuccessMsg(std::string msg, int padding)
@@ -87,7 +87,7 @@ class SuccessMsg : public ColouredMsg {
 
 class InformationMsg : public ColouredMsg {
     public:
-        explicit InformationMsg(std::string msg) 
+        explicit InformationMsg(std::string msg)
                : ColouredMsg(msg, Common::Console::Color::BrightYellow) {}
 
         explicit InformationMsg(std::string msg, int padding)
@@ -96,7 +96,7 @@ class InformationMsg : public ColouredMsg {
 
 class SuggestionMsg : public ColouredMsg {
     public:
-        explicit SuggestionMsg(std::string msg) 
+        explicit SuggestionMsg(std::string msg)
                : ColouredMsg(msg, Common::Console::Color::BrightYellow) {}
 
         explicit SuggestionMsg(std::string msg, int padding)
@@ -105,7 +105,7 @@ class SuggestionMsg : public ColouredMsg {
 
 class WarningMsg : public ColouredMsg {
     public:
-        explicit WarningMsg(std::string msg) 
+        explicit WarningMsg(std::string msg)
                : ColouredMsg(msg, Common::Console::Color::BrightRed) {}
 
         explicit WarningMsg(std::string msg, int padding)

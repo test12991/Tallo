@@ -106,7 +106,7 @@ namespace CryptoNote
 
     mutable std::mutex m_observedHeightMutex;
     uint32_t m_observedHeight;
-    
+
     mutable std::mutex m_blockchainHeightMutex;
     uint32_t m_blockchainHeight;
 

@@ -45,7 +45,7 @@ bool toBinaryArray(const T& object, BinaryArray& binaryArray) {
 }
 
 template<>
-bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray); 
+bool toBinaryArray(const BinaryArray& object, BinaryArray& binaryArray);
 
 // throws exception if serialization failed
 template<class T>

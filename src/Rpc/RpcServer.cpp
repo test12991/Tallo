@@ -618,7 +618,7 @@ bool RpcServer::on_send_raw_tx(const COMMAND_RPC_SEND_RAW_TX::request& req, COMM
 
   if (!m_fee_address.empty() && m_view_key != NULL_SECRET_KEY) {
     if (!masternode_check_incoming_tx(transactions.back())) {
-      logger(INFO) << "Transaction not relayed due to lack of masternode fee";		
+      logger(INFO) << "Transaction not relayed due to lack of masternode fee";
       res.status = "Not relayed due to lack of node fee";
       return true;
     }
@@ -738,7 +738,7 @@ bool RpcServer::on_get_collateral_hash(const COMMAND_RPC_GET_COLLATERAL_HASH::re
     res.collateralHash = Common::toHex(&m_collateral_hash, sizeof(m_collateral_hash));
     res.status = CORE_RPC_STATUS_OK;
     return true;
-  } 
+  }
   res.status = "Collateral hash not set or invalid.";
   return false;
 }
@@ -878,11 +878,11 @@ bool RpcServer::f_on_block_json(const F_COMMAND_RPC_GET_BLOCK_DETAILS::request& 
   uint64_t maxReward = 0;
   uint64_t currentReward = 0;
   int64_t emissionChange = 0;
-  
+
   if (maxReward) {}
   if (currentReward) {}
   if (emissionChange) {}
-  
+
   size_t blockGrantedFullRewardZone = m_core.getCurrency().blockGrantedFullRewardZoneByBlockVersion(block_header.major_version);
   res.block.effectiveSizeMedian = std::max(res.block.sizeMedian, blockGrantedFullRewardZone);
 
@@ -1332,7 +1332,7 @@ bool RpcServer::on_get_block_headers_range(const COMMAND_RPC_GET_BLOCK_HEADERS_R
 	for (uint32_t h = static_cast<uint32_t>(req.start_height); h <= static_cast<uint32_t>(req.end_height); ++h) {
 		Crypto::Hash block_hash = m_core.getBlockHashByIndex(h);
 		CryptoNote::BlockTemplate blk = m_core.getBlockByHash(block_hash);
-		
+
 		res.headers.push_back(block_header_response());
 		fill_block_header_response(blk, false, h, block_hash, res.headers.back());
 

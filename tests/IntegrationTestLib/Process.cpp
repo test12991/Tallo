@@ -30,7 +30,7 @@
 namespace Tests {
 
   void Process::startChild(const std::string& executablePath, const std::vector<std::string>& args) {
-   
+
 #if defined WIN32
     std::stringstream ss;
     ss << "start /MIN " << executablePath;

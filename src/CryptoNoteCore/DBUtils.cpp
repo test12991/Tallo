@@ -28,7 +28,7 @@ namespace DB {
     std::stringstream ss;
     Common::StdOutputStream stream(ss);
     CryptoNote::BinaryOutputStreamSerializer serializer(stream);
-    
+
     serializer(const_cast<RawBlock&>(value).block, RAW_BLOCK_NAME);
     serializer(const_cast<RawBlock&>(value).transactions, RAW_TXS_NAME);
 

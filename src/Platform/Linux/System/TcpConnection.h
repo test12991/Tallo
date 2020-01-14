@@ -41,7 +41,7 @@ public:
 private:
   friend class TcpConnector;
   friend class TcpListener;
-  
+
   Dispatcher* dispatcher;
   int connection;
   ContextPair contextPair;

@@ -109,7 +109,7 @@ public:
   virtual PushedBlockInfo getPushedBlockInfo(uint32_t index) const override;
   bool checkIfSpent(const Crypto::KeyImage& keyImage, uint32_t blockIndex) const override;
   bool checkIfSpent(const Crypto::KeyImage& keyImage) const override;
-  
+
   bool isTransactionSpendTimeUnlocked(uint64_t unlockTime) const override;
   bool isTransactionSpendTimeUnlocked(uint64_t unlockTime, uint32_t blockIndex) const override;
 
@@ -149,7 +149,7 @@ public:
   std::vector<uint64_t> getLastUnits(size_t count, uint32_t blockIndex, UseGenesis use,
                                    std::function<uint64_t(const CachedBlockInfo&)> pred) const override;
 
-  Crypto::Hash getBlockHash(uint32_t blockIndex) const override;  
+  Crypto::Hash getBlockHash(uint32_t blockIndex) const override;
   virtual std::vector<Crypto::Hash> getBlockHashes(uint32_t startIndex, size_t maxCount) const override;
 
   virtual IBlockchainCache* getParent() const override;
@@ -288,7 +288,7 @@ private:
   std::unique_ptr<BlockchainStorage> storage;
 
   std::vector<IBlockchainCache*> children;
- 
+
   void serialize(ISerializer& s);
 
   void addSpentKeyImage(const Crypto::KeyImage& keyImage, uint32_t blockIndex);

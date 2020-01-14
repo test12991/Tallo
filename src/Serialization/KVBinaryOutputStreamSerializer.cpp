@@ -93,7 +93,7 @@ ISerializer::SerializerType KVBinaryOutputStreamSerializer::type() const {
 
 bool KVBinaryOutputStreamSerializer::beginObject(Common::StringView name) {
   checkArrayPreamble(BIN_KV_SERIALIZE_TYPE_OBJECT);
- 
+
   m_stack.push_back(Level(name));
   m_objectsStack.push_back(MemoryStream());
 
@@ -208,12 +208,12 @@ bool KVBinaryOutputStreamSerializer::binary(std::string& value, Common::StringVi
   return binary(const_cast<char*>(value.data()), value.size(), name);
 }
 
-void KVBinaryOutputStreamSerializer::writeElementPrefix(uint8_t type, Common::StringView name) {  
+void KVBinaryOutputStreamSerializer::writeElementPrefix(uint8_t type, Common::StringView name) {
   assert(m_stack.size());
 
   checkArrayPreamble(type);
   Level& level = m_stack.back();
-  
+
   if (level.state != State::Array) {
     if (!name.isEmpty()) {
       auto& s = stream();

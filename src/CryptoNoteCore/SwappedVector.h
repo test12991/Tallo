@@ -300,7 +300,7 @@ template<class T> const T& SwappedVector<T>::operator[](uint64_t index) {
 
   m_itemsFile.seekg(m_offsets[index]);
   T tempItem;
-  
+
   Common::StdInputStream stream(m_itemsFile);
   CryptoNote::BinaryInputStreamSerializer archive(stream);
   serialize(tempItem, archive);

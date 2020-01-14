@@ -43,7 +43,7 @@ using namespace CryptoNote;
 namespace CryptoNote {
   void serialize(BlockShortEntry& v, ISerializer& s) {
     s(v.blockHash, "hash");
-    
+
     if (s.type() == ISerializer::INPUT) {
       std::string blockBinary;
       if (s.binary(blockBinary, "block")) {
@@ -294,7 +294,7 @@ TEST_F(NodeTest, queryBlocks) {
   std::vector<BlockShortEntry> blocks;
 
   std::cout << "Requesting timestamp: " << timestamp << std::endl;
-  
+
   NodeCallback cb;
   mainNode->queryBlocks({ currency.genesisBlockHash() }, timestamp, blocks, startHeight, cb.callback());
   ASSERT_TRUE(!cb.get());

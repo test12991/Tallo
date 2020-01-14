@@ -63,7 +63,7 @@ void WalletUnconfirmedTransactions::erase(const Hash& hash) {
   m_unconfirmedTxs.erase(it);
 }
 
-void WalletUnconfirmedTransactions::add(const Transaction& tx, TransactionId transactionId, 
+void WalletUnconfirmedTransactions::add(const Transaction& tx, TransactionId transactionId,
   uint64_t amount, const std::list<TransactionOutputInformation>& usedOutputs) {
 
   UnconfirmedTransferDetails& utd = m_unconfirmedTxs[getObjectHash(tx)];

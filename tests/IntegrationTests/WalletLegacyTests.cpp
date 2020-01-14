@@ -60,6 +60,6 @@ TEST_F(WalletLegacyTests, checkNetworkShutdown) {
     System::Timer(dispatcher).sleep(std::chrono::seconds(10));
 
     // check that sync progress was not updated
-    ASSERT_EQ(syncProgress, observer.getSyncProgress()); 
+    ASSERT_EQ(syncProgress, observer.getSyncProgress());
   }
 }

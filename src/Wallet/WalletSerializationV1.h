@@ -43,7 +43,7 @@ public:
     UncommitedTransactions& uncommitedTransactions,
     uint32_t transactionSoftLockTime
   );
-  
+
   void load(const Crypto::chacha8_key& key, Common::IInputStream& source);
 
   struct CryptoContext {

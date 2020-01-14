@@ -28,9 +28,9 @@
 
 namespace CryptoNote {
 
-enum class TransactionRemoveReason : uint8_t 
-{ 
-  INCLUDED_IN_BLOCK = 0, 
+enum class TransactionRemoveReason : uint8_t
+{
+  INCLUDED_IN_BLOCK = 0,
   TIMEOUT = 1
 };
 
@@ -59,7 +59,7 @@ struct KeyInputDetails {
 typedef boost::variant<BaseInputDetails, KeyInputDetails> TransactionInputDetails;
 
 struct TransactionExtraDetails {
-  Crypto::PublicKey publicKey; 
+  Crypto::PublicKey publicKey;
   BinaryArray nonce;
   BinaryArray raw;
 };

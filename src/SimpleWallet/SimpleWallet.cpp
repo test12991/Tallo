@@ -181,9 +181,9 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &confi
         std::cout << std::endl;
     }
 
-    /* Scan the chain for new transactions. In the case of an imported 
-       wallet, we need to scan the whole chain to find any transactions. 
-       If we opened the wallet however, we just need to scan from when we 
+    /* Scan the chain for new transactions. In the case of an imported
+       wallet, we need to scan the whole chain to find any transactions.
+       If we opened the wallet however, we just need to scan from when we
        last had it open. If we are generating a wallet, there is no need
        to check for transactions as there is no way the wallet can have
        received any money yet. */
@@ -304,7 +304,7 @@ std::shared_ptr<WalletInfo> generateWallet(CryptoNote::WalletGreen &wallet) {
     std::string walletFileName = getNewWalletFileName();
     std::string walletPass = getWalletPassword(true);
 
-    
+
     CryptoNote::KeyPair spendKey;
     Crypto::SecretKey privateViewKey;
 
@@ -347,7 +347,7 @@ Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, C
             wallet.load(walletFileName, walletPass);
 
             std::string walletAddress = wallet.getAddress(0);
-            
+
             Crypto::SecretKey privateSpendKey = wallet.getAddressSpendKey(0).secretKey;
 
             if (privateSpendKey == CryptoNote::NULL_SECRET_KEY) {
@@ -365,7 +365,7 @@ Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, C
 
                 return Just<std::shared_ptr<WalletInfo>> (std::make_shared<WalletInfo>(walletFileName, walletPass, walletAddress, false, wallet));
             }
- 
+
             return Just<std::shared_ptr<WalletInfo>> (std::make_shared<WalletInfo>(walletFileName, walletPass, walletAddress, false, wallet));
         }
         catch (const std::system_error& e) {
@@ -385,7 +385,7 @@ Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, C
                 "Unsupported wallet version: Wrong version";
 
             std::string errorMsg = e.what();
-                
+
             /* There are three different error messages depending upon if we're
                opening a walletgreen or a walletlegacy wallet */
             if (errorMsg == walletSuccessBadPwdMsg || errorMsg == walletSuccessBadPwdMsg2 || errorMsg == walletLegacyBadPwdMsg) {
@@ -526,9 +526,9 @@ Action getAction(Config &config) {
     }
 
     while (true) {
-        std::cout << std::endl << "Welcome, please choose an option below:" << std::endl 
+        std::cout << std::endl << "Welcome, please choose an option below:" << std::endl
                   << std::endl
-                  << "\t[" << InformationMsg("G") << "] - " << "Generate a new wallet address" << std::endl 
+                  << "\t[" << InformationMsg("G") << "] - " << "Generate a new wallet address" << std::endl
                   << "\t[" << InformationMsg("O") << "] - " << "Open a wallet already on your system" << std::endl
                   << "\t[" << InformationMsg("S") << "] - " << "Regenerate your wallet using a seed phrase of words" << std::endl
                   << "\t[" << InformationMsg("I") << "] - " << "Import your wallet using a View Key and Spend Key" << std::endl
@@ -561,7 +561,7 @@ Action getAction(Config &config) {
 void promptSaveKeys(CryptoNote::WalletGreen &wallet) {
     std::cout << "Welcome to your new wallet, here is your payment address:" << std::endl
               << InformationMsg(wallet.getAddress(0)) << std::endl
-              << std::endl 
+              << std::endl
               << "Please " << SuccessMsg("copy your secret keys and mnemonic seed") << " and store them in a secure location!" << std::endl;
 
     printPrivateKeys(wallet, false);
@@ -658,7 +658,7 @@ std::string getInputAndDoWorkWhileIdle(std::shared_ptr<WalletInfo> &walletInfo) 
     }
 }
 
-void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node) { 
+void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node) {
     while (true) {
         std::cout << getPrompt(walletInfo);
 
@@ -1229,7 +1229,7 @@ void connectingMsg() {
 }
 
 void viewWalletMsg() {
-    std::cout << InformationMsg("Please remember that when using a view wallet you can only view incoming transactions!") << std::endl 
+    std::cout << InformationMsg("Please remember that when using a view wallet you can only view incoming transactions!") << std::endl
               << "This means if you received 100 " << CryptoNote::CRYPTONOTE_TICKER << " and then sent 50 " << CryptoNote::CRYPTONOTE_TICKER << ", "
               << "your balance would appear to still be 100 " << CryptoNote::CRYPTONOTE_TICKER << "." << std::endl
               << "To effectively use a view wallet, you should only deposit to this wallet." << std::endl

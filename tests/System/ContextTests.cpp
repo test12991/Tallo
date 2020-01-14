@@ -26,8 +26,8 @@ using namespace System;
 
 TEST(ContextTests, getReturnsResult) {
   Dispatcher dispatcher;
-  Context<int> context(dispatcher, [&] { 
-    return 2; 
+  Context<int> context(dispatcher, [&] {
+    return 2;
   });
 
   ASSERT_EQ(2, context.get());
@@ -36,7 +36,7 @@ TEST(ContextTests, getReturnsResult) {
 TEST(ContextTests, getRethrowsException) {
   Dispatcher dispatcher;
   Context<> context(dispatcher, [&] {
-    throw std::string("Hi there!"); 
+    throw std::string("Hi there!");
   });
 
   ASSERT_THROW(context.get(), std::string);

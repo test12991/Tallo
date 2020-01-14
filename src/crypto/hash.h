@@ -81,7 +81,7 @@ namespace Crypto
         cn_fast_hash(data, length, reinterpret_cast<char *>(&h));
         return h;
     }
-    
+
     // Standard CryptoNight
     inline void cn_slow_hash_v0(const void *data, size_t length, Hash &hash)
     {

@@ -33,8 +33,8 @@ public:
 
 TEST_F(OperationTimeoutTest, DISABLED_timeoutHappens) {
   OperationTimeout<Timer> op(dispatcher, timer, std::chrono::milliseconds(100));
-  contextGroup.spawn([&] { 
-    EXPECT_THROW(timer.sleep(std::chrono::milliseconds(200)), InterruptedException); 
+  contextGroup.spawn([&] {
+    EXPECT_THROW(timer.sleep(std::chrono::milliseconds(200)), InterruptedException);
   });
   contextGroup.wait();
 }
@@ -42,7 +42,7 @@ TEST_F(OperationTimeoutTest, DISABLED_timeoutHappens) {
 TEST_F(OperationTimeoutTest, DISABLED_timeoutSkipped) {
   {
     OperationTimeout<Timer> op(dispatcher, timer, std::chrono::milliseconds(200));
-    contextGroup.spawn([&] { 
+    contextGroup.spawn([&] {
       EXPECT_NO_THROW(timer.sleep(std::chrono::milliseconds(100)));
     });
     contextGroup.wait();

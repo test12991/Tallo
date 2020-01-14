@@ -360,7 +360,7 @@ uint32_t TransfersConsumer::onNewBlocks(const CompleteBlock* blocks, uint32_t st
 
 std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_ptr<ITransactionReader>>& addedTransactions, const std::vector<Hash>& deletedTransactions) {
   TransactionBlockInfo unconfirmedBlockInfo;
-  unconfirmedBlockInfo.timestamp = 0; 
+  unconfirmedBlockInfo.timestamp = 0;
   unconfirmedBlockInfo.height = WALLET_UNCONFIRMED_TRANSACTION_HEIGHT;
 
   std::error_code processingError;
@@ -375,7 +375,7 @@ std::error_code TransfersConsumer::onPoolUpdated(const std::vector<std::unique_p
       return processingError;
     }
   }
-  
+
   for (auto& deletedTxHash : deletedTransactions) {
     m_poolTxs.erase(deletedTxHash);
 
@@ -567,7 +567,7 @@ std::error_code TransfersConsumer::getGlobalIndices(const Hash& transactionHash,
   std::promise<std::error_code> prom;
   std::future<std::error_code> f = prom.get_future();
 
-  INode::Callback cb = [&prom](std::error_code ec) { 
+  INode::Callback cb = [&prom](std::error_code ec) {
     std::promise<std::error_code> p(std::move(prom));
     p.set_value(ec);
   };

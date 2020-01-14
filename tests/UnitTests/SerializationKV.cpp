@@ -37,10 +37,10 @@ struct TestElement {
   std::vector<uint32_t> u32array;
 
   bool operator == (const TestElement& other) const {
-    return 
-      name == other.name && 
+    return
+      name == other.name &&
       nonce == other.nonce &&
-      blob == other.blob && 
+      blob == other.blob &&
       u32array == other.u32array;
   }
 
@@ -68,7 +68,7 @@ struct TestStruct {
       u32 == other.u32 &&
       u64 == other.u64 &&
       vec1 == other.vec1 &&
-      vec2 == other.vec2 && 
+      vec2 == other.vec2 &&
       vecOfVec == other.vecOfVec;
   }
 
@@ -93,7 +93,7 @@ typedef std::chrono::high_resolution_clock hclock;
 
 class HiResTimer {
 public:
-  HiResTimer() : 
+  HiResTimer() :
     start(hclock::now()) {}
 
   std::chrono::duration<double> duration() {

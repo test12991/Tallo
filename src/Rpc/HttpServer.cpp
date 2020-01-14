@@ -60,7 +60,7 @@ void HttpServer::acceptLoop() {
     }
 
     m_connections.insert(&connection);
-    BOOST_SCOPE_EXIT_ALL(this, &connection) { 
+    BOOST_SCOPE_EXIT_ALL(this, &connection) {
       m_connections.erase(&connection); };
 
     workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));

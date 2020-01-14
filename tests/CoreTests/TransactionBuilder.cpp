@@ -97,7 +97,7 @@ void TransactionBuilder::fillInputs(Transaction& tx, std::vector<CryptoNote::Key
 
 void TransactionBuilder::fillOutputs(Transaction& tx) const {
   size_t output_index = 0;
-  
+
   for(const auto& dst_entr : m_destinations) {
     Crypto::KeyDerivation derivation;
     Crypto::PublicKey out_eph_public_key;
@@ -116,7 +116,7 @@ void TransactionBuilder::fillOutputs(Transaction& tx) const {
 
 
 void TransactionBuilder::signSources(const Crypto::Hash& prefixHash, const std::vector<CryptoNote::KeyPair>& contexts, Transaction& tx) const {
-  
+
   tx.signatures.clear();
 
   size_t i = 0;

@@ -776,7 +776,7 @@ void InProcessNode::getBlock(const uint32_t blockHeight, BlockDetails& block,
 
   executeInDispatcherThread([=, &blocks, &block] () {
     auto ec = doGetBlocks(blockHeights, blocks);
-    executeInRemoteThread([callback, ec, &block, &blocks] () { 
+    executeInRemoteThread([callback, ec, &block, &blocks] () {
         block = blocks[0][0];
         callback(ec);
     });

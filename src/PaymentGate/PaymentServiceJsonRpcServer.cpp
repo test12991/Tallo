@@ -29,7 +29,7 @@
 
 namespace PaymentService {
 
-PaymentServiceJsonRpcServer::PaymentServiceJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, WalletService& service, Logging::ILogger& loggerGroup, PaymentService::Configuration& config) 
+PaymentServiceJsonRpcServer::PaymentServiceJsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, WalletService& service, Logging::ILogger& loggerGroup, PaymentService::Configuration& config)
   : JsonRpcServer(sys, stopEvent, loggerGroup, config)
   , service(service)
   , logger(loggerGroup, "PaymentServiceJsonRpcServer")
@@ -64,13 +64,13 @@ PaymentServiceJsonRpcServer::PaymentServiceJsonRpcServer(System::Dispatcher& sys
 void PaymentServiceJsonRpcServer::processJsonRpcRequest(const Common::JsonValue& req, Common::JsonValue& resp) {
   try {
     prepareJsonResponse(req, resp);
-    
+
     if (!config.legacySecurity) {
       std::string clientPassword;
       if (!req.contains("password")) {
         makeInvalidPasswordResponse(resp);
         return;
-      }   
+      }
       if (!req("password").isString()) {
         makeInvalidPasswordResponse(resp);
         return;

@@ -301,7 +301,7 @@ template <class t_test_class>
 bool do_check_block_verification_context(std::error_code bve, size_t /*event_index*/,
                                          const CryptoNote::BlockTemplate& /*blk*/, t_test_class&, long) {
   // Default block verification context check
-  if (bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_MAIN && 
+  if (bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_MAIN &&
       bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE &&
       bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED)
     throw std::runtime_error("Block verification failed, " + bve.message());
@@ -312,7 +312,7 @@ template <class t_test_class>
 bool do_check_block_verification_context(std::error_code bve, size_t /*event_index*/,
                                          const CryptoNote::RawBlock& /*blk*/, t_test_class&, long) {
   // SFINAE in action
-  if (bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_MAIN && 
+  if (bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_MAIN &&
       bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE &&
       bve != CryptoNote::error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED)
     throw std::runtime_error("Block verification failed, " + bve.message());

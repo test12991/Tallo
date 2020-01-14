@@ -823,9 +823,9 @@ ExtractOutputKeysResult BlockchainCache::extractKeyOutputs(
                                  << " because global index is greater than the last available: " << (startGlobalIndex + outputs.size());
       return ExtractOutputKeysResult::INVALID_GLOBAL_INDEX;
     }
-    
+
     auto outputIndex = outputs[globalIndex - startGlobalIndex];
-    
+
     assert(outputIndex.blockIndex >= startIndex);
     assert(outputIndex.blockIndex <= blockIndex);
 

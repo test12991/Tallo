@@ -72,7 +72,7 @@ public:
 private:
   bool use = false;
 };
-  
+
 struct CachedBlockInfo;
 struct CachedTransactionInfo;
 class ITransactionPool;

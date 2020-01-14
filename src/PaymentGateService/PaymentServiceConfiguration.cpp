@@ -172,24 +172,24 @@ void Configuration::init(const boost::program_options::variables_map& options) {
       throw ConfigurationError("container-file parameter are required");
     }
   }
-  
+
   // If generating a container skip the authentication parameters.
   if (generateNewContainer) {
     return;
   }
-  
+
   // Check for the authentication parameters
   if ((options.count("rpc-password") == 0) && (options.count("rpc-legacy-security") == 0)) {
     throw ConfigurationError("Please specify an RPC password or use the --rpc-legacy-security flag.");
   }
-  
+
   if (options.count("rpc-legacy-security") != 0) {
     legacySecurity = true;
   }
   else {
     rpcPassword = options["rpc-password"].as<std::string>();
   }
-  
+
 }
 
 } //namespace PaymentService

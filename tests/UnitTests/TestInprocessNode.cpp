@@ -73,7 +73,7 @@ struct CallbackStatus {
 
   void setStatus(const std::error_code& ec) { code = ec; waiter.set(); }
 
-  void setStatusRemote(const std::error_code& ec) { 
+  void setStatusRemote(const std::error_code& ec) {
     System::Event e(dispatcher);
     {
       dispatcher.remoteSpawn([this, &ec, &e]() {

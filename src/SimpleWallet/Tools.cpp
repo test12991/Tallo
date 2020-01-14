@@ -55,7 +55,7 @@ std::string formatDollars(uint64_t amount) {
        using the locale method, without writing a pretty long boiler plate
        function. So, instead, we define our own locale, which just returns
        the values we want.
-       
+
        It's less internationally friendly than we would potentially like
        but that would require a ton of scrutinization which if not done could
        land us with quite a few issues and rightfully angry users.

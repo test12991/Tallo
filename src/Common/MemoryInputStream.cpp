@@ -22,7 +22,7 @@
 
 namespace Common {
 
-MemoryInputStream::MemoryInputStream(const void* buffer, size_t bufferSize) : 
+MemoryInputStream::MemoryInputStream(const void* buffer, size_t bufferSize) :
 buffer(static_cast<const char*>(buffer)), bufferSize(bufferSize), position(0) {}
 
 size_t MemoryInputStream::getPosition() const {
@@ -41,7 +41,7 @@ size_t MemoryInputStream::readSome(void* data, size_t size) {
     memcpy(data, buffer + position, readSize);
     position += readSize;
   }
-  
+
   return readSize;
 }
 

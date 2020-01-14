@@ -60,10 +60,10 @@ bool Checkpoints::loadCheckpointsFromFile(const std::string& fileName) {
   while (li != end) {
     std::string line = li->str();
     ++li;
- 
+
     boost::sregex_token_iterator ti(line.begin(), line.end(), fieldsregx, -1);
     boost::sregex_token_iterator end2;
- 
+
     std::vector<std::string> row;
     while (ti != end2) {
       std::string token = ti->str();

@@ -44,7 +44,7 @@ public:
   using Amount = uint64_t;
 
   /*
-   * Constructs new DatabaseBlockchainCache object. Currnetly, only factories that produce 
+   * Constructs new DatabaseBlockchainCache object. Currnetly, only factories that produce
    * BlockchainCache objects as children are supported.
    */
   DatabaseBlockchainCache(const Currency& currency, IDataBase& dataBase,

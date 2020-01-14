@@ -721,16 +721,16 @@ void CryptoNoteProtocolHandler::updateObservedHeight(uint32_t peerHeight, const 
       }
     }
   }
-  
+
   {
     std::lock_guard<std::mutex> lock(m_blockchainHeightMutex);
     if (peerHeight > m_blockchainHeight) {
       m_blockchainHeight = peerHeight;
-      logger(Logging::INFO, Logging::BRIGHT_GREEN) << "New Top Block Detected: " << peerHeight; 
+      logger(Logging::INFO, Logging::BRIGHT_GREEN) << "New Top Block Detected: " << peerHeight;
     }
   }
 
-  
+
   if (updated) {
     logger(TRACE) << "Observed height updated: " << m_observedHeight;
     m_observerManager.notify(&ICryptoNoteProtocolObserver::lastKnownBlockHeightUpdated, m_observedHeight);
@@ -759,7 +759,7 @@ uint32_t CryptoNoteProtocolHandler::getObservedHeight() const {
 
 uint32_t CryptoNoteProtocolHandler::getBlockchainHeight() const {
   std::lock_guard<std::mutex> lock(m_blockchainHeightMutex);
-  return m_blockchainHeight;  
+  return m_blockchainHeight;
 };
 
 bool CryptoNoteProtocolHandler::addObserver(ICryptoNoteProtocolObserver* observer) {

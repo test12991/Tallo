@@ -177,7 +177,7 @@ void Dispatcher::dispatch() {
 
       assert(context->inExecutionQueue);
       context->inExecutionQueue = false;
-      
+
       break;
     }
 

@@ -25,7 +25,7 @@ namespace System {
 
 namespace Detail {
 
-namespace { 
+namespace {
 
 enum class State : unsigned {
   STARTED,

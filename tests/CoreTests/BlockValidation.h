@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once 
+#pragma once
 
 #include "Chaingen.h"
 
@@ -164,7 +164,7 @@ struct gen_block_ts_in_future_accepted : public CheckBlockAccepted
 
 struct gen_block_invalid_prev_id : public CheckBlockPurged
 {
-  gen_block_invalid_prev_id(uint8_t blockMajorVersion) 
+  gen_block_invalid_prev_id(uint8_t blockMajorVersion)
     : CheckBlockPurged(1, blockMajorVersion) {}
 
   bool generate(std::vector<test_event_entry>& events) const;

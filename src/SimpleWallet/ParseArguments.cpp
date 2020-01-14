@@ -135,7 +135,7 @@ Config parseArguments(int argc, char **argv)
                 config.host = urlString.substr(0, splitter);
 
                 /* Port is everything after ":" */
-                std::string port = urlString.substr(splitter + 1,   
+                std::string port = urlString.substr(splitter + 1,
                                                     std::string::npos);
 
                 try

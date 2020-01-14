@@ -22,11 +22,11 @@
 
 using namespace CryptoNote;
 
-BlockchainStorage::BlockchainStorage(uint32_t reserveSize) : 
+BlockchainStorage::BlockchainStorage(uint32_t reserveSize) :
 internalStorage(new MemoryBlockchainStorage(reserveSize)) {
 }
 
-BlockchainStorage::BlockchainStorage(const std::string& indexFileName, const std::string& dataFileName) : 
+BlockchainStorage::BlockchainStorage(const std::string& indexFileName, const std::string& dataFileName) :
 internalStorage(new SwappedBlockchainStorage(indexFileName, dataFileName)) {
 }
 

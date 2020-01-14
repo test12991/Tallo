@@ -81,7 +81,7 @@ LoggerMessage::LoggerMessage(LoggerMessage&& other)
     char *_Gnext = gptr();
     char *_Gend = egptr();
     if (_Pnext) {}
-    
+
     setp(other.pbase(), other.epptr());
     other.setp(_Pfirst, _Pend);
 

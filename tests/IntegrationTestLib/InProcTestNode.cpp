@@ -43,7 +43,7 @@ bool parse_peer_from_string(NetworkAddress &pe, const std::string &node_addr) {
 }
 
 
-InProcTestNode::InProcTestNode(const TestNodeConfiguration& cfg, const CryptoNote::Currency& currency, System::Dispatcher& d) : 
+InProcTestNode::InProcTestNode(const TestNodeConfiguration& cfg, const CryptoNote::Currency& currency, System::Dispatcher& d) :
   m_cfg(cfg), m_currency(currency), dispatcher(d) {
 
   std::promise<std::string> initPromise;

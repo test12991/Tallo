@@ -28,7 +28,7 @@ struct CoreStatistics {
   uint64_t alternativeBlockCount;
   std::string topBlockHashString;
 
-  void serialize(ISerializer& s) {    
+  void serialize(ISerializer& s) {
     s(transactionPoolSize, "tx_pool_size");
     s(blockchainHeight, "blockchain_height");
     s(miningSpeed, "mining_speed");

@@ -109,8 +109,8 @@ void NodeRpcProxy::init(const INode::Callback& callback) {
 
   m_state = STATE_INITIALIZING;
   resetInternalState();
-  m_workerThread = std::thread([this, callback] { 
-    workerThread(callback); 
+  m_workerThread = std::thread([this, callback] {
+    workerThread(callback);
   });
 }
 

@@ -733,7 +733,7 @@ std::error_code Core::addBlock(const CachedBlock& cachedBlock, RawBlock&& rawBlo
           ret = error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED;
 
           logger(Logging::INFO) << "Switching to alt chain! New top block: " << blockStr
-                                << ", previous top block: " << chainsLeaves[endpointIndex]->getTopBlockIndex() << " (" 
+                                << ", previous top block: " << chainsLeaves[endpointIndex]->getTopBlockIndex() << " ("
                                 << chainsLeaves[endpointIndex]->getTopBlockHash() << ")";
         }
       }
@@ -2078,7 +2078,7 @@ BlockDetails Core::getBlockDetails(const Crypto::Hash& blockHash) const {
 
   uint32_t blockIndex = segment->getBlockIndex(blockHash);
   BlockTemplate blockTemplate = restoreBlockTemplate(segment, blockIndex);
-  
+
   BlockDetails blockDetails;
   blockDetails.majorVersion = blockTemplate.majorVersion;
   blockDetails.minorVersion = blockTemplate.minorVersion;
@@ -2231,7 +2231,7 @@ TransactionDetails Core::getTransactionDetails(const Crypto::Hash& transactionHa
   }
   transactionDetails.extra.publicKey = transaction->getTransactionPublicKey();
   transaction->getExtraNonce(transactionDetails.extra.nonce);
-  
+
   transactionDetails.signatures = rawTransaction.signatures;
 
   transactionDetails.inputs.reserve(transaction->getInputCount());

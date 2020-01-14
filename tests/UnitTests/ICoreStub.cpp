@@ -153,7 +153,7 @@ std::vector<Crypto::Hash> ICoreStub::buildSparseChain() const {
 CryptoNote::BlockTemplate ICoreStub::getBlockByIndex(uint32_t height) const {
   return blocks.at(blockHashByHeightIndex.at(height));
 }
-  
+
 uint64_t ICoreStub::getBlockTimestampByIndex(uint32_t blockIndex) const {
   return getBlockByIndex(blockIndex).timestamp;
 }
@@ -165,12 +165,12 @@ CryptoNote::BlockTemplate ICoreStub::getBlockByHash(const Crypto::Hash &h) const
   }
   return iter->second;
 }
-  
+
 Crypto::Hash ICoreStub::getBlockHashByIndex(uint32_t height) const {
   auto block = getBlockByIndex(height);
   return CryptoNote::CachedBlock(block).getBlockHash();
 }
-  
+
 bool ICoreStub::addMessageQueue(MessageQueue<BlockchainMessage>& messageQueue) {
   return queueList.insert(messageQueue);
 }
@@ -182,7 +182,7 @@ bool ICoreStub::removeMessageQueue(MessageQueue<BlockchainMessage>& messageQueue
 uint32_t ICoreStub::getTopBlockIndex() const {
   return topHeight;
 }
-  
+
 Crypto::Hash ICoreStub::getTopBlockHash() const {
   return topId;
 }
@@ -248,12 +248,12 @@ void ICoreStub::getBlocks(const std::vector<Crypto::Hash>& blockHashes, std::vec
   //TODO:
   assert(false);
 }
-  
+
 std::error_code ICoreStub::submitBlock(CryptoNote::BinaryArray&& rawBlockTemplate) {
   assert(false);
   return {};
 }
-  
+
 bool ICoreStub::getTransactionGlobalIndexes(const Crypto::Hash& transactionHash, std::vector<uint32_t>& globalIndexes) const {
   globalIndexes = globalIndices;
   return globalIndicesResult;
@@ -314,7 +314,7 @@ CryptoNote::Difficulty ICoreStub::getDifficultyForNextBlock() const {
   assert(false);
   return 0;
 }
-  
+
 std::error_code ICoreStub::addBlock(const CryptoNote::CachedBlock& cachedBlock, CryptoNote::RawBlock&& rawBlock) {
   assert(false);
   return {};

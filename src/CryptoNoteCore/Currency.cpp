@@ -356,7 +356,7 @@ bool Currency::isAmountApplicableInFusionTransactionInput(uint64_t amount, uint6
   auto it = std::lower_bound(PRETTY_AMOUNTS.begin(), PRETTY_AMOUNTS.end(), amount);
   if (it == PRETTY_AMOUNTS.end() || amount != *it) {
     return false;
-  } 
+  }
 
   amountPowerOfTen = static_cast<uint8_t>(std::distance(PRETTY_AMOUNTS.begin(), it) / 9);
   return true;
@@ -592,23 +592,23 @@ Difficulty Currency::nextDifficultyZawyLWMA2(uint8_t version, uint32_t blockInde
   int64_t T = parameters::DIFFICULTY_TARGET;
   int64_t N = parameters::DIFFICULTY_WINDOW_V3;
   int64_t FTL = 3 * T;
-  int64_t L(0), ST, sum_3_ST(0), next_D, prev_D; 
-        
+  int64_t L(0), ST, sum_3_ST(0), next_D, prev_D;
+
   if (timestamps.size() <= 10) {
     return 100;
   }
   if (timestamps.size() < static_cast<uint64_t>(parameters::DIFFICULTY_BLOCKS_COUNT_V3)) {
     N = timestamps.size()-1;
   }
-    
+
   assert(timestamps.size() == cumulativeDifficulties.size() && timestamps.size() <= static_cast<uint64_t>(N + 1));
 
-  for (int64_t i = 1; i <= N; i++) {  
+  for (int64_t i = 1; i <= N; i++) {
     ST = std::max(-FTL, std::min( static_cast<int64_t>(timestamps[i]) - static_cast<int64_t>(timestamps[i-1]), 6*T));
-    L += ST * i; 
+    L += ST * i;
     if (i > N-3) {
       sum_3_ST += ST;
-    } 
+    }
   }
   next_D = (static_cast<int64_t>(cumulativeDifficulties[N] - cumulativeDifficulties[0])*T*(N+1)*99)/(100*2*L);
 
@@ -837,7 +837,7 @@ Transaction CurrencyBuilder::generateGenesisTransaction() {
 }
  Transaction CurrencyBuilder::generateGenesisTransaction(const std::vector<AccountPublicAddress>& targets) {
     assert(!targets.empty());
- 
+
     CryptoNote::Transaction tx;
     tx.inputs.clear();
     tx.outputs.clear();

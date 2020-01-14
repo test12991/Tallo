@@ -62,7 +62,7 @@ namespace CryptoNote {
     for (auto pair : headers) {
       os << pair.first << ": " << pair.second << "\r\n";
     }
-    
+
     os << "\r\n";
     if (!body.empty()) {
       os << body;

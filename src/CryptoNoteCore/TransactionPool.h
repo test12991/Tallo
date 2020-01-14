@@ -110,7 +110,7 @@ private:
   TransactionsContainer::index<TransactionHashTag>::type& transactionHashIndex;
   TransactionsContainer::index<TransactionCostTag>::type& transactionCostIndex;
   TransactionsContainer::index<PaymentIdTag>::type& paymentIdIndex;
-  
+
   Logging::LoggerRef logger;
 };
 

@@ -54,7 +54,7 @@ namespace CryptoNote {
     TransactionImpl();
     TransactionImpl(const BinaryArray& txblob);
     TransactionImpl(const CryptoNote::Transaction& tx);
-  
+
     // ITransactionReader
     virtual Hash getTransactionHash() const override;
     virtual Hash getTransactionPrefixHash() const override;
@@ -94,7 +94,7 @@ namespace CryptoNote {
     virtual void setExtraNonce(const BinaryArray& nonce) override;
     virtual void appendExtra(const BinaryArray& extraData) override;
 
-    // Inputs/Outputs 
+    // Inputs/Outputs
     virtual size_t addInput(const KeyInput& input) override;
     virtual size_t addInput(const AccountKeys& senderKeys, const TransactionTypes::InputKeyInfo& info, KeyPair& ephKeys) override;
 
@@ -149,7 +149,7 @@ namespace CryptoNote {
     return std::unique_ptr<ITransaction>(new TransactionImpl(tx));
   }
 
-  TransactionImpl::TransactionImpl() {   
+  TransactionImpl::TransactionImpl() {
     CryptoNote::KeyPair txKeys(CryptoNote::generateKeyPair());
 
     TransactionExtraPublicKey pk = { txKeys.publicKey };
@@ -166,7 +166,7 @@ namespace CryptoNote {
     if (!fromBinaryArray(transaction, ba)) {
       throw std::runtime_error("Invalid transaction data");
     }
-    
+
     extra.parse(transaction.extra);
     transactionHash = getBinaryArrayHash(ba); // avoid serialization if we already have blob
   }
@@ -186,7 +186,7 @@ namespace CryptoNote {
       transactionHash = getObjectHash(transaction);
     }
 
-    return transactionHash.get();   
+    return transactionHash.get();
   }
 
   Hash TransactionImpl::getTransactionPrefixHash() const {

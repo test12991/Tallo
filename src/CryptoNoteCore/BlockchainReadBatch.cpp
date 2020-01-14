@@ -275,7 +275,7 @@ void BlockchainReadBatch::submitRawResult(const std::vector<std::string>& values
   DB::deserializeValue(state.transactionsCount, iter, DB::TRANSACTION_HASH_TO_TRANSACTION_INFO_PREFIX);
 
   assert(iter == range.end());
-  
+
   resultSubmitted = true;
 }
 

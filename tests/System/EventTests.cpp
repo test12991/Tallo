@@ -311,8 +311,8 @@ TEST(EventTests, waitIsInterruptibleOnFront) {
       interrupted = true;
     }
   });
-  
-  ASSERT_TRUE(interrupted);  
+
+  ASSERT_TRUE(interrupted);
 }
 
 TEST(EventTests, waitIsInterruptibleOnBody) {

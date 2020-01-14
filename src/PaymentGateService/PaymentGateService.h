@@ -39,7 +39,7 @@ public:
 
   void run();
   void stop();
-  
+
   Logging::ILogger& getLogger() { return logger; }
 
 private:
@@ -54,7 +54,7 @@ private:
   PaymentService::ConfigurationManager config;
   PaymentService::WalletService* service;
   CryptoNote::CurrencyBuilder currencyBuilder;
-  
+
   Logging::LoggerGroup logger;
   std::ofstream fileStream;
   Logging::StreamLogger fileLogger;

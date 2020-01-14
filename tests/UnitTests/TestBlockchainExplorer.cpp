@@ -755,7 +755,7 @@ TEST_F(BlockchainExplorerTests, blockchainUpdatedMany) {
   smartObserver observer;
   CallbackStatus status;
 
-  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb = 
+  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb =
     [&status, &blockHashes, this, NUMBER_OF_BLOCKS](const std::vector<BlockDetails>& newBlocks,
                                                             const std::vector<BlockDetails>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), NUMBER_OF_BLOCKS);
@@ -780,8 +780,8 @@ TEST_F(BlockchainExplorerTests, poolUpdatedEmpty) {
   smartObserver observer;
   CallbackStatus status;
 
-  std::function<void(const std::vector<TransactionDetails>& newTransactions, 
-      const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)> cb = 
+  std::function<void(const std::vector<TransactionDetails>& newTransactions,
+      const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)> cb =
     [&status, this](const std::vector<TransactionDetails>& newTransactions,
                             const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), 0);
@@ -819,7 +819,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
     smartObserver observer;
     CallbackStatus status;
 
-    std::function<void(const std::vector<TransactionDetails>& newTransactions, 
+    std::function<void(const std::vector<TransactionDetails>& newTransactions,
       const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)> cb =
         [&status, &poolTxs, this, POOL_TX_NUMBER](const std::vector<TransactionDetails>& newTransactions,
         const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions) {
@@ -870,7 +870,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedMany) {
     CallbackStatus status1;
 
     observer.setCallback(
-      static_cast<std::function<void(const std::vector<TransactionDetails>& newTransactions, 
+      static_cast<std::function<void(const std::vector<TransactionDetails>& newTransactions,
         const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)>>(
       [&](const std::vector<TransactionDetails>& newTransactions,
                              const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions) {
@@ -937,8 +937,8 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   smartObserver observer;
   CallbackStatus status;
 
-  std::function<void(const std::vector<TransactionDetails>& newTransactions, 
-      const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)> cb = 
+  std::function<void(const std::vector<TransactionDetails>& newTransactions,
+      const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions)> cb =
     [&status, &poolTxs, this, POOL_TX_NUMBER](const std::vector<TransactionDetails>& newTransactions,
       const std::vector<std::pair<Hash, TransactionRemoveReason>>& removedTransactions) {
     EXPECT_EQ(newTransactions.size(), POOL_TX_NUMBER);
@@ -960,7 +960,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
   };
   observer.setCallback(cb);
 
-  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb1 = 
+  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb1 =
     [&status, this](const std::vector<BlockDetails>& newBlocks,
     const std::vector<BlockDetails>& orphanedBlocks) {};
   observer.setCallback(cb1);
@@ -978,7 +978,7 @@ TEST_F(BlockchainExplorerTests, poolUpdatedManyNotSynchronized) {
 TEST_F(BlockchainExplorerTests, unexpectedTermination) {
   smartObserver observer;
 
-  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb = 
+  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb =
     [this](const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), 0);
     EXPECT_EQ(orphanedBlocks.size(), 0);
@@ -996,7 +996,7 @@ TEST_F(BlockchainExplorerTests, unexpectedExeption) {
   smartObserver observer;
   CallbackStatus status;
 
-  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb = 
+  std::function<void(const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks)> cb =
     [&status, this](const std::vector<BlockDetails>& newBlocks, const std::vector<BlockDetails>& orphanedBlocks) {
     EXPECT_EQ(newBlocks.size(), 1);
     EXPECT_EQ(orphanedBlocks.size(), 0);

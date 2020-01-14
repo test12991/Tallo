@@ -301,7 +301,7 @@ int main(int argc, char** argv) {
   std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " wallet daemon v" + std::string(PROJECT_VERSION_LONG);
   SetConsoleTitleA(consoletitle.c_str());
 #endif
-  PaymentGateService pg; 
+  PaymentGateService pg;
   ppg = &pg;
 
   try {

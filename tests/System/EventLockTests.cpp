@@ -72,7 +72,7 @@ TEST(EventLockTests, eventLockIsUnlockOnlyOnce) {
     dispatcher.yield();
     i += 2;
   });
-  
+
   event.set();
   dispatcher.yield();
   ASSERT_EQ(i, 1);

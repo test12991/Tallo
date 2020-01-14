@@ -336,7 +336,7 @@ bool BaseFunctionalTests::prepareAndSubmitBlock(TestNode& node, CryptoNote::Bloc
     blockTemplate.parentBlock.minorVersion = BLOCK_MINOR_VERSION_0;
     blockTemplate.parentBlock.transactionCount = 1;
 
-    
+
     CryptoNote::TransactionExtraMergeMiningTag mmTag;
     mmTag.depth = 0;
     //FIXME
@@ -408,7 +408,7 @@ void BaseFunctionalTests::stopTestnet() {
       daemon->stopDaemon();
     }
   }
-  
+
   // std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   nodeDaemons.clear();
@@ -454,9 +454,9 @@ namespace {
         } catch (System::InterruptedException&) {
         }
       });
-        
+
       cg.spawn([&] {
-        m_event.wait(); 
+        m_event.wait();
         cg.interrupt();
       });
 

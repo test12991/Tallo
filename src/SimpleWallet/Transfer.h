@@ -34,13 +34,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <boost/algorithm/string.hpp>
 
 struct WalletInfo {
-    WalletInfo(std::string walletFileName, 
-               std::string walletPass, 
+    WalletInfo(std::string walletFileName,
+               std::string walletPass,
                std::string walletAddress,
                bool viewWallet,
-               CryptoNote::WalletGreen &wallet) : 
-               walletFileName(walletFileName), 
-               walletPass(walletPass), 
+               CryptoNote::WalletGreen &wallet) :
+               walletFileName(walletFileName),
+               walletPass(walletPass),
                walletAddress(walletAddress),
                viewWallet(viewWallet),
                wallet(wallet) {}
@@ -65,7 +65,7 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
                 uint64_t fee, std::string extra,
                 std::shared_ptr<WalletInfo> walletInfo);
 
-void fusionTX(CryptoNote::WalletGreen &wallet, 
+void fusionTX(CryptoNote::WalletGreen &wallet,
               CryptoNote::TransactionParameters p);
 
 void sendMultipleTransactions(CryptoNote::WalletGreen &wallet,
@@ -102,5 +102,5 @@ Maybe<uint64_t> getTransferAmount();
 
 Maybe<uint16_t> getMixin();
 
-size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, 
+size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet,
                              uint64_t threshold);

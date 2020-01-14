@@ -45,9 +45,9 @@ namespace CryptoNote {
 
 class SyncStarter;
 
-class WalletLegacy : 
-  public IWalletLegacy, 
-  IBlockchainSynchronizerObserver,  
+class WalletLegacy :
+  public IWalletLegacy,
+  IBlockchainSynchronizerObserver,
   ITransfersObserver {
 
 public:

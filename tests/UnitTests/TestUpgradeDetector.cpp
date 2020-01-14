@@ -86,7 +86,7 @@ namespace {
       upgradeDetector.blockPopped();
     }
   }
-    
+
   TEST_F(UpgradeDetector_voting_init, handlesEmptyBlockchain) {
     CryptoNote::Currency currency = createCurrency();
     BlockVector blocks;

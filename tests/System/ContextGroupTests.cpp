@@ -74,7 +74,7 @@ TEST(ContextGroupTests, ContextGroupInterruptIsInterrupting) {
   cg1.wait();
 
   ASSERT_TRUE(interrupted);
-} 
+}
 
 TEST(ContextGroupTests, ContextGroupDestructorIsInterrupt_Waitable) {
   Dispatcher dispatcher;
@@ -96,7 +96,7 @@ TEST(ContextGroupTests, ContextGroupDestructorIsInterrupt_Waitable) {
 
 TEST(ContextGroupTests, TimerIsContextIntrerruptible) {
   Dispatcher dispatcher;
-  
+
   bool interrupted = false;
   {
     ContextGroup cg1(dispatcher);

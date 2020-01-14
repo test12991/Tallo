@@ -45,7 +45,7 @@ public:
   void getSubscriptions(std::vector<AccountPublicAddress>& subscriptions);
 
   void initTransactionPool(const std::unordered_set<Crypto::Hash>& uncommitedTransactions);
-  
+
   // IBlockchainConsumer
   virtual SynchronizationStart getSyncStart() override;
   virtual void onBlockchainDetach(uint32_t height) override;

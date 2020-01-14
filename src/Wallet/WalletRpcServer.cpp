@@ -113,7 +113,7 @@ void wallet_rpc_server::processRequest(const CryptoNote::HttpRequest& request, C
   try {
     jsonRequest.parseRequest(request.getBody());
     jsonResponse.setId(jsonRequest.getId());
-	
+
     if (!m_legacy) {
       const JsonRpc::OptionalPassword& clientPasswordObject = jsonRequest.getPassword();
       if (!clientPasswordObject.is_initialized()) {
@@ -166,11 +166,11 @@ bool wallet_rpc_server::on_getbalance(const wallet_rpc::COMMAND_RPC_GET_BALANCE:
 }
 //------------------------------------------------------------------------------------------------------------------------------
 bool wallet_rpc_server::on_transfer(const wallet_rpc::COMMAND_RPC_TRANSFER::request& req, wallet_rpc::COMMAND_RPC_TRANSFER::response& res) {
-  
+
   if(!m_allow_extended_rpc) {
     throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_METHOD_RESTRICTED, "Unable to invoke extended RPC method without explicit --allow-extended-rpc flag.");
   }
-  
+
   std::vector<CryptoNote::WalletLegacyTransfer> transfers;
   for (auto it = req.destinations.begin(); it != req.destinations.end(); it++) {
     CryptoNote::WalletLegacyTransfer transfer;
@@ -330,7 +330,7 @@ bool wallet_rpc_server::on_reset(const wallet_rpc::COMMAND_RPC_RESET::request& r
 
 //------------------------------------------------------------------------------------------------------------------------------
 bool wallet_rpc_server::on_stop_wallet(const wallet_rpc::COMMAND_RPC_STOP::request& req, wallet_rpc::COMMAND_RPC_STOP::response& res) {
-  
+
   if(m_allow_extended_rpc) {
     try {
       WalletHelper::storeWallet(m_wallet, m_walletFilename);
@@ -344,11 +344,11 @@ bool wallet_rpc_server::on_stop_wallet(const wallet_rpc::COMMAND_RPC_STOP::reque
     throw JsonRpc::JsonRpcError(WALLET_RPC_ERROR_METHOD_RESTRICTED, "Unable to invoke extended RPC method without explicit --allow-extended-rpc flag.");
   }
   return true;
-  
+
 }
 
 bool wallet_rpc_server::on_get_address(const wallet_rpc::COMMAND_RPC_GET_ADDRESS::request& req, wallet_rpc::COMMAND_RPC_GET_ADDRESS::response& res) {
-  
+
   if(m_allow_extended_rpc) {
     res.address = m_wallet.getAddress();
   }
@@ -360,7 +360,7 @@ bool wallet_rpc_server::on_get_address(const wallet_rpc::COMMAND_RPC_GET_ADDRESS
 }
 
 bool wallet_rpc_server::on_view_keys(const wallet_rpc::COMMAND_RPC_VIEW_KEYS::request& req, wallet_rpc::COMMAND_RPC_VIEW_KEYS::response& res) {
-  
+
   if(m_allow_extended_rpc) {
     AccountKeys keys;
     m_wallet.getAccountKeys(keys);

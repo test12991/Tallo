@@ -46,9 +46,9 @@ public:
     }
 
     launchTestnet(m_nodeCount, Tests::Common::BaseFunctionalTests::Line);
-    
+
     createWallets();
-    
+
     miningTest();
 
     // create some address for mining
@@ -183,10 +183,10 @@ public:
       auto pending = w->pendingBalance();
       auto actual = w->actualBalance();
 
-      logger(INFO, BRIGHT_GREEN) << 
-        "Wallet " << shortAddress(w->getAddress()) << 
-        ": " << m_currency.formatAmount(actual) << 
-        " / " << m_currency.formatAmount(pending) << 
+      logger(INFO, BRIGHT_GREEN) <<
+        "Wallet " << shortAddress(w->getAddress()) <<
+        ": " << m_currency.formatAmount(actual) <<
+        " / " << m_currency.formatAmount(pending) <<
         " total = " << m_currency.formatAmount(pending + actual);
     }
   }
@@ -195,7 +195,7 @@ public:
     for (auto& daemon : nodeDaemons) {
       std::unique_ptr<INode> node;
       std::unique_ptr<IWalletLegacy> wallet;
-      
+
       daemon->makeINode(node);
       makeWallet(wallet, node);
 
