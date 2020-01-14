@@ -141,7 +141,8 @@ bool SpentOutputDescriptor::operator==(const SpentOutputDescriptor& other) const
 size_t SpentOutputDescriptor::hash() const {
   if (m_type == TransactionTypes::OutputType::Key) {
     static_assert(sizeof(size_t) < sizeof(*m_keyImage), "sizeof(size_t) < sizeof(*m_keyImage)");
-    return *reinterpret_cast<const size_t*>(m_keyImage->data);
+    const size_t* hash = reinterpret_cast<const size_t*>(m_keyImage->data);
+    return *hash;
   } else {
     assert(false);
     return 0;
