@@ -554,6 +554,7 @@ bool RpcServer::on_get_info(const COMMAND_RPC_GET_INFO::request& req, COMMAND_RP
   res.hashrate = (uint32_t)round(res.difficulty / CryptoNote::parameters::DIFFICULTY_TARGET);
   res.synced = ((uint32_t)res.height == (uint32_t)res.network_height);
   res.version = PROJECT_VERSION;
+  res.max_block_size = m_core.getCurrency().maxBlockCumulativeSize(res.height);
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }
