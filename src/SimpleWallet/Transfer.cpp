@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
-Copyright (C) 2019, The Talleo developers
+Copyright (C) 2019-2020, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -319,10 +319,10 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
     /* Hurr durr grammar */
     if (fusionTransactionHashes.size() == 1) {
-        std::cout << SuccessMsg("1 fusion transaction has been sent, waiting for balance to return and unlock...") << std::endl
+        std::cout << InformationMsg("1") << SuccessMsg(" fusion transaction has been sent, waiting for balance to return and unlock...") << std::endl
                   << std::endl;
     } else {
-        std::cout << SuccessMsg(std::to_string(fusionTransactionHashes.size()) + " fusion transactions have been sent, waiting for balance to return and unlock...") << std::endl
+        std::cout << InformationMsg(std::to_string(fusionTransactionHashes.size())) << SuccessMsg(" fusion transactions have been sent, waiting for balance to return and unlock...") << std::endl
                   << std::endl;
     }
 
