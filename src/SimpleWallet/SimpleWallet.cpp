@@ -685,9 +685,9 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
         } else if (command == "exit") {
             return;
         } else if (command == "save") {
-            std::cout << InformationMsg("Saving...") << std::endl;
+            std::cout << InformationMsg("Saving...") << std::flush;
             walletInfo->wallet.save();
-            std::cout << InformationMsg("Saved.") << std::endl;
+            std::cout << InformationMsg("\rSaved.   ") << std::endl;
         } else if (command == "bc_height") {
             blockchainHeight(node, walletInfo->wallet);
         } else if (command == "reset") {
