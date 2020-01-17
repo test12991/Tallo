@@ -367,23 +367,12 @@ Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, C
             }
 
             return Just<std::shared_ptr<WalletInfo>> (std::make_shared<WalletInfo>(walletFileName, walletPass, walletAddress, false, wallet));
-        }
-        catch (const std::system_error& e) {
-            std::string walletSuccessBadPwdMsg =
-                "Restored view public key doesn't correspond to secret key: The password is wrong";
-
-            std::string walletSuccessBadPwdMsg2 =
-                "Restored spend public key doesn't correspond to secret key: The password is wrong";
-
-            std::string walletLegacyBadPwdMsg =
-                ": The password is wrong";
-
-            std::string alreadyOpenMsg =
-                "MemoryMappedFile::open: The process cannot access the file because it is being used by another process.";
-
-            std::string notAWalletMsg =
-                "Unsupported wallet version: Wrong version";
-
+        } catch (const std::system_error& e) {
+            std::string walletSuccessBadPwdMsg = "Restored view public key doesn't correspond to secret key: The password is wrong";
+            std::string walletSuccessBadPwdMsg2 = "Restored spend public key doesn't correspond to secret key: The password is wrong";
+            std::string walletLegacyBadPwdMsg = ": The password is wrong";
+            std::string alreadyOpenMsg = "MemoryMappedFile::open: The process cannot access the file because it is being used by another process.";
+            std::string notAWalletMsg = "Unsupported wallet version: Wrong version";
             std::string errorMsg = e.what();
 
             /* There are three different error messages depending upon if we're
@@ -664,9 +653,8 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
 
         std::string command = getInputAndDoWorkWhileIdle(walletInfo);
 
-        /* Split into args to support legacy transfer command, for example
-           transfer 5 TAxyzbf... 100, sends 100 TLO to TAxyzbf... with a mixin
-           of 5 */
+        /* Split into args to support legacy transfer command, for example transfer 5 TAxyzbf... 100,
+           sends 100 TLO to TAxyzbf... with a mixin of 5 */
         std::vector<std::string> words;
         words = boost::split(words, command, ::isspace);
 
@@ -728,40 +716,24 @@ void help(bool viewWallet) {
         std::cout << InformationMsg("Please note you are using a view only wallet and cannot transfer " + coinTicker + ".") << std::endl;
     }
     std::cout << "Available commands:" << std::endl
-              << SuccessMsg("help", 25)
-              << "List this help message" << std::endl
-              << SuccessMsg("address", 25)
-              << "Displays your payment address" << std::endl
-              << SuccessMsg("balance", 25)
-              << "Display how much " << coinTicker << " you have" << std::endl
-              << SuccessMsg("bc_height", 25)
-              << "Show the blockchain height" << std::endl
-              << SuccessMsg("change_password", 25)
-              << "Change password of current wallet file" << std::endl
-              << SuccessMsg("export_keys", 25)
-              << "Export your private keys" << std::endl;
+              << SuccessMsg("help", 25) << "List this help message" << std::endl
+              << SuccessMsg("address", 25) << "Displays your payment address" << std::endl
+              << SuccessMsg("balance", 25) << "Display how much " << coinTicker << " you have" << std::endl
+              << SuccessMsg("bc_height", 25) << "Show the blockchain height" << std::endl
+              << SuccessMsg("change_password", 25) << "Change password of current wallet file" << std::endl
+              << SuccessMsg("export_keys", 25) << "Export your private keys" << std::endl;
     if (!viewWallet) {
-        std::cout << SuccessMsg("transfer", 25)
-                  << "Send " << coinTicker << " to someone" << std::endl
-                  << SuccessMsg("list_transfers", 25)
-
-                  << "Show all transfers" << std::endl
-                  << SuccessMsg("quick_optimize", 25)
-                  << "Quickly optimize your wallet to send large amounts" << std::endl
-                  << SuccessMsg("full_optimize", 25)
-                  << "Fully optimize your wallet to send large amounts" << std::endl
-                  << SuccessMsg("outgoing_transfers", 25)
-                  << "Show outgoing transfers" << std::endl;
+        std::cout << SuccessMsg("transfer", 25) << "Send " << coinTicker << " to someone" << std::endl
+                  << SuccessMsg("list_transfers", 25) << "Show all transfers" << std::endl
+                  << SuccessMsg("quick_optimize", 25) << "Quickly optimize your wallet to send large amounts" << std::endl
+                  << SuccessMsg("full_optimize", 25) << "Fully optimize your wallet to send large amounts" << std::endl
+                  << SuccessMsg("outgoing_transfers", 25) << "Show outgoing transfers" << std::endl;
                   ;
     }
-    std::cout << SuccessMsg("incoming_transfers", 25)
-              << "Show incoming transfers" << std::endl
-              << SuccessMsg("reset", 25)
-              << "Discard cached data and recheck for transactions" << std::endl
-              << SuccessMsg("save", 25)
-              << "Save your wallet state" << std::endl
-              << SuccessMsg("exit", 25)
-              << "Exit and save your wallet" << std::endl;
+    std::cout << SuccessMsg("incoming_transfers", 25) << "Show incoming transfers" << std::endl
+              << SuccessMsg("reset", 25) << "Discard cached data and recheck for transactions" << std::endl
+              << SuccessMsg("save", 25) << "Save your wallet state" << std::endl
+              << SuccessMsg("exit", 25) << "Exit and save your wallet" << std::endl;
 }
 
 void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool viewWallet) {
@@ -1015,8 +987,8 @@ void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo) {
 
     walletInfo->knownTransactionCount = 0;
 
-    /* Wallet is now unitialized. You must reinit with load, initWithKeys,
-       or whatever. This function wipes the cache, then saves the wallet. */
+    /* Wallet is now unitialized. You must reinit with load, initWithKeys, or whatever.
+       This function wipes the cache, then saves the wallet. */
     walletInfo->wallet.clearCacheAndShutdown();
 
     /* Now, we reopen the wallet. It now has no cached tx's, and balance */
@@ -1135,16 +1107,12 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
             if (stuckCounter > 20) {
                 std::string warning =
                     "Syncing may be stuck. Try restarting " + std::string(CryptoNote::CRYPTONOTE_NAME) + "d.\n"
-                    "If this persists, visit "
-                    "https://bitcointalk.org/index.php?topic=5195073"
-                    " for support.";
+                    "If this persists, visit https://bitcointalk.org/index.php?topic=5195073 for support.";
                 std::cout << WarningMsg(warning) << std::endl;
             } else if (stuckCounter > 19) {
                 /*
-                   Calling save has the side-effect of starting
-                   and stopping blockchainSynchronizer, which seems
-                   to sometimes force the sync to resume properly.
-                   So we'll try this before warning the user.
+                   Calling save has the side-effect of starting and stopping blockchainSynchronizer, which seems
+                   to sometimes force the sync to resume properly. So we'll try this before warning the user.
                 */
                 std::cout << InformationMsg("Saving wallet...") << std::endl;
                 walletInfo->wallet.save();
@@ -1187,8 +1155,7 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
               << SuccessMsg("Finished scanning blockchain!") << std::endl
               << std::endl;
 
-    /* In case the user force closes, we don't want them to have to rescan
-       the whole chain. */
+    /* In case the user force closes, we don't want them to have to rescan the whole chain. */
     walletInfo->wallet.save();
 
     walletInfo->knownTransactionCount = transactionCount;
@@ -1250,8 +1217,7 @@ bool processServerFeeAddressResponse(const std::string& response, std::string& f
         }
 
         fee_address = rootIt->second.getString();
-    }
-    catch (std::exception&) {
+    } catch (std::exception&) {
         return false;
     }
 
@@ -1260,29 +1226,27 @@ bool processServerFeeAddressResponse(const std::string& response, std::string& f
 
 //----------------------------------------------------------------------------------------------------
 std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port) {
+    CryptoNote::HttpClient httpClient(dispatcher, daemon_host, daemon_port);
+    CryptoNote::HttpRequest req;
+    CryptoNote::HttpResponse res;
 
-  CryptoNote::HttpClient httpClient(dispatcher, daemon_host, daemon_port);
+    req.setUrl("/feeaddress");
 
-  CryptoNote::HttpRequest req;
-  CryptoNote::HttpResponse res;
+    try {
+        httpClient.request(req, res);
+    } catch (const std::exception& e) {
+        std::string errorMsg = e.what();
+        std::cout << WarningMsg("Error connecting to the remote node: " + errorMsg) << std::endl;
+    }
 
-  req.setUrl("/feeaddress");
-  try {
-	  httpClient.request(req, res);
-  }
-  catch (const std::exception& e) {
-      std::string errorMsg = e.what();
-	  std::cout << WarningMsg("Error connecting to the remote node: " + errorMsg) << std::endl;
-  }
+    if (res.getStatus() != CryptoNote::HttpResponse::STATUS_200) {
+        std::cout << WarningMsg("Remote node returned code " + std::to_string(res.getStatus())) << std::endl;
+    }
 
-  if (res.getStatus() != CryptoNote::HttpResponse::STATUS_200) {
-	  std::cout << WarningMsg("Remote node returned code " + std::to_string(res.getStatus())) << std::endl;
-  }
+    std::string address;
+    if (!processServerFeeAddressResponse(res.getBody(), address)) {
+        std::cout << WarningMsg("Failed to parse remote node response") << std::endl;
+    }
 
-  std::string address;
-  if (!processServerFeeAddressResponse(res.getBody(), address)) {
-	  std::cout << WarningMsg("Failed to parse remote node response") << std::endl;
-  }
-
-  return address;
+    return address;
 }
