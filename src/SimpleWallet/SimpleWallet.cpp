@@ -679,7 +679,8 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
 #endif
             std::cout << InformationMsg("Saving...") << std::flush;
             walletInfo->wallet.save();
-            std::cout << InformationMsg("\rSaved.   ") << std::endl;
+            Common::Console::clearLine();
+            std::cout << InformationMsg("\rSaved.") << std::endl;
 #ifdef WIN32
             showcursor();
 #endif
@@ -972,6 +973,7 @@ void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
 
             /* Don't print outgoing or fusion transfers */
             if (t.totalAmount > 0) {
+                Common::Console::clearLine();
                 std::cout << "\r"
                           << InformationMsg("New incoming transaction!") << std::endl
                           << SuccessMsg("Hash: " + Common::podToHex(t.hash)) << std::endl

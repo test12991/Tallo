@@ -370,7 +370,8 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
         if (!fusionCompleted) {
             ++retryCounter;
-            std::cout << WarningMsg("  \rWait... ") << InformationMsg(std::to_string(fusionTransactionHashes.size()))
+            Common::Console::clearLine();
+            std::cout << WarningMsg("\rWait... ") << InformationMsg(std::to_string(fusionTransactionHashes.size()))
                       << (fusionTransactionHashes.size() == 1 ? WarningMsg(" fusion transaction still to be confirmed...")
                                                               : WarningMsg(" fusion transactions still to be confirmed."))
                       << SuccessMsg(" Attempt ") << InformationMsg(std::to_string(retryCounter)) << SuccessMsg("... Retrying in 15 seconds...") << std::flush;

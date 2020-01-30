@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -42,6 +43,7 @@ enum class Color : uint8_t {
 };
 
 void setTextColor(Color color);
+void clearLine();
 bool isConsoleTty();
 
 }}

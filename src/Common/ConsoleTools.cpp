@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -102,6 +103,42 @@ void setTextColor(Color color) {
 
 #endif
 
+}
+
+void clearLine() {
+  if (!isConsoleTty()) {
+    return;
+  }
+
+#ifdef _WIN32
+  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+  COORD coordLine;
+  DWORD cCharsWritten;
+  CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+  if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+    return;
+  }
+
+  coordLine.X = 0;
+  coordLine.Y = csbi.dwCursorPosition.Y;
+
+  if (!FillConsoleOutputCharacter(hConsole, (TCHAR) ' ', csbi.dwSize.X, coordLine, &cCharsWritten)) {
+    return;
+  }
+
+  if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+    return;
+  }
+
+  if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, csbi.dwSize.X, coordLine, &cCharsWritten)) {
+    return;
+  }
+
+  SetConsoleCursorPosition(hConsole, coordLine);
+#else
+  std::cout << "\r\033[0K";
+#endif
 }
 
 }}
