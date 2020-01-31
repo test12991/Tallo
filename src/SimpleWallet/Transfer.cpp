@@ -22,12 +22,13 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #ifdef WIN32
 #define NOMINMAX
 #include <windows.h>
-#include "Cursor.h"
 #endif
 
 #include <SimpleWallet/Transfer.h>
 
 #include <math.h>
+
+#include "Cursor.h"
 
 // Forward declaration
 extern std::string remote_fee_address;
@@ -299,9 +300,7 @@ void fullOptimize(CryptoNote::WalletGreen &wallet) {
 bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
     std::vector<Crypto::Hash> fusionTransactionHashes;
 
-#ifdef WIN32
     hidecursor();
-#endif
 
     while (true) {
         /* Create as many fusion transactions until we can't send anymore, either because balance is locked too much or we can no longer optimize anymore transactions */
@@ -324,9 +323,7 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
     std::cout << std::endl;
 
     if (fusionTransactionHashes.empty()) {
-#ifdef WIN32
         showcursor();
-#endif
         return false;
     }
 
@@ -386,9 +383,7 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
         }
     }
 
-#ifdef WIN32
     showcursor();
-#endif
     return true;
 }
 

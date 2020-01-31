@@ -23,7 +23,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #ifdef WIN32
 #define NOMINMAX
 #include <windows.h>
-#include "Cursor.h"
 #endif
 
 #include <SimpleWallet/SimpleWallet.h>
@@ -31,6 +30,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include "Common/JsonValue.h"
 #include "Rpc/HttpClient.h"
+#include "Cursor.h"
 
 // Fee address is declared here so we can access it from other source files
 std::string remote_fee_address;
@@ -674,16 +674,12 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
         } else if (command == "exit") {
             return;
         } else if (command == "save") {
-#ifdef WIN32
             hidecursor();
-#endif
             std::cout << InformationMsg("Saving...") << std::flush;
             walletInfo->wallet.save();
             Common::Console::clearLine();
             std::cout << InformationMsg("\rSaved.") << std::endl;
-#ifdef WIN32
             showcursor();
-#endif
         } else if (command == "bc_height") {
             blockchainHeight(node, walletInfo->wallet);
         } else if (command == "reset") {
@@ -960,9 +956,7 @@ void listTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &wallet
 }
 
 void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
-#ifdef WIN32
     hidecursor();
-#endif
     walletInfo->wallet.updateInternalCache();
 
     size_t newTransactionCount = walletInfo->wallet.getTransactionCount();
@@ -991,9 +985,7 @@ void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
 
         walletInfo->knownTransactionCount = newTransactionCount;
     }
-#ifdef WIN32
     showcursor();
-#endif
 }
 
 void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo) {
@@ -1092,9 +1084,7 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
                   << std::endl;
     }
 
-#ifdef WIN32
     hidecursor();
-#endif
 
     while (walletHeight < localHeight) {
         int counter = 1;
@@ -1173,9 +1163,7 @@ void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &w
               << SuccessMsg("Finished scanning blockchain!") << std::endl
               << std::endl;
 
-#ifdef WIN32
     showcursor();
-#endif
 
     /* In case the user force closes, we don't want them to have to rescan the whole chain. */
     walletInfo->wallet.save();

@@ -15,20 +15,32 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef WIN32
 #include <windows.h>
+#else
+#include <iostream>
+#endif
 
 inline void hidecursor() {
+#ifdef WIN32
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursor;
     GetConsoleCursorInfo(hdl, &cursor);
     cursor.bVisible = false;
     SetConsoleCursorInfo(hdl, &cursor);
+#else
+    std::cout << "\033[?25l" << std::flush;
+#endif
 }
 
 inline void showcursor() {
+#ifdef WIN32
     HANDLE hdl = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursor;
     GetConsoleCursorInfo(hdl, &cursor);
     cursor.bVisible = true;
     SetConsoleCursorInfo(hdl, &cursor);
+#else
+    std::cout << "\033[?25h" << std::flush;
+#endif
 }
