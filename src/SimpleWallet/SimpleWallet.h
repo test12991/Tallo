@@ -81,6 +81,8 @@ void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet);
 
 void listTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node);
 
+void estimateFusion(std::shared_ptr<WalletInfo> &walletInfo);
+
 void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);
 
 void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);

@@ -687,6 +687,8 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
         } else if (words[0] == "change_password") {
             words.erase(words.begin());
             changePassword(walletInfo, words);
+        } else if (words[0] == "outputs") {
+            estimateFusion(walletInfo);
         } else if (!walletInfo->viewWallet) {
             if (command == "outgoing_transfers") {
                 listTransfers(false, true, walletInfo->wallet, node);
@@ -735,6 +737,7 @@ void help(bool viewWallet) {
                   ;
     }
     std::cout << SuccessMsg("incoming_transfers", 25) << "Show incoming transfers" << std::endl
+              << SuccessMsg("outputs", 25) << "Show number of optimizable and all outputs" << std::endl
               << SuccessMsg("reset", 25) << "Discard cached data and recheck for transactions" << std::endl
               << SuccessMsg("save", 25) << "Save your wallet state" << std::endl
               << SuccessMsg("exit", 25) << "Exit and save your wallet" << std::endl;
@@ -1045,6 +1048,15 @@ void changePassword(std::shared_ptr<WalletInfo> &walletInfo, std::vector<std::st
    } catch (std::exception&) {
         std::cout << WarningMsg("Password change failed.") << std::endl;
    }
+}
+
+void estimateFusion(std::shared_ptr<WalletInfo> &walletInfo) {
+    std::vector<std::string> addresses;
+    addresses.push_back(walletInfo->walletAddress);
+    walletInfo->wallet.updateInternalCache();
+    auto result = walletInfo->wallet.estimate(walletInfo->wallet.getActualBalance(), addresses);
+    std::cout << "Optimizable outputs: " << InformationMsg(std::to_string(result.fusionReadyCount)) << std::endl
+              << "Total outputs: " << InformationMsg(std::to_string(result.totalOutputCount)) << std::endl;
 }
 
 void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo) {
