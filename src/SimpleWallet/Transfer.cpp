@@ -385,8 +385,8 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
             wallet.updateInternalCache();
         } else {
-            std::cout << std::endl
-                      << SuccessMsg("All fusion transactions confirmed!") << std::endl;
+            Common::Console::clearLine();
+            std::cout << SuccessMsg("\rAll fusion transactions confirmed!") << std::endl;
             break;
         }
     }
