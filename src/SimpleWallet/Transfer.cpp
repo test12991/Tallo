@@ -385,6 +385,33 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
             wallet.updateInternalCache();
         } else {
+            uint64_t pending = wallet.getPendingBalance();
+            if (pending > 0) {
+                int attemptCounter = 0;
+                while (true) {
+                    int secs = 15;
+                    attemptCounter++;
+                    while (secs > 0) {
+                        Common::Console::clearLine();
+                        std::cout << WarningMsg("\rWaiting for balance to unlock...")
+                                  << SuccessMsg(" Attempt " ) << InformationMsg(std::to_string(attemptCounter)) << SuccessMsg(" of ") << InformationMsg("20")
+                                  << SuccessMsg("... Retrying in ") << InformationMsg(std::to_string(secs))
+                                  << (secs == 1 ? SuccessMsg(" second...")
+                                                : SuccessMsg(" seconds..."))
+                          << std::flush;
+                        std::this_thread::sleep_for(std::chrono::seconds(1));
+                        secs--;
+                    }
+                    wallet.updateInternalCache();
+                    uint64_t pending2 = wallet.getPendingBalance();
+                    if (pending2 != pending) {
+                        break;
+                    }
+                    if (attemptCounter == 20) {
+                        break;
+                    }
+                };
+            }
             Common::Console::clearLine();
             std::cout << SuccessMsg("\rAll fusion transactions confirmed!") << std::endl;
             break;
