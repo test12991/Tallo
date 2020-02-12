@@ -256,7 +256,19 @@ size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, uint64_t threshold
     }
 }
 
+size_t getFusionReadyCount(CryptoNote::WalletGreen &wallet) {
+    std::vector<std::string> addresses;
+    addresses.push_back(wallet.getAddress(0));
+    wallet.updateInternalCache();
+    auto result = wallet.estimate(wallet.getActualBalance(), addresses);
+    return result.fusionReadyCount;
+}
+
 void quickOptimize(CryptoNote::WalletGreen &wallet) {
+    if (getFusionReadyCount(wallet) == 0) {
+        std::cout << SuccessMsg("Wallet fully optimized!") << std::endl;
+        return;
+    }
     std::cout << "Attempting to optimize your wallet to allow you to send large amounts at once. " << std::endl
               << "You can run this command as many times as you like." << std::endl
               << "You will be informed when your wallet is fully optimized." << std::endl
@@ -277,6 +289,10 @@ void quickOptimize(CryptoNote::WalletGreen &wallet) {
 }
 
 void fullOptimize(CryptoNote::WalletGreen &wallet) {
+    if (getFusionReadyCount(wallet) == 0) {
+        std::cout << SuccessMsg("Wallet fully optimized!") << std::endl;
+        return;
+    }
     std::cout << "Attempting to optimize your wallet to allow you to send large amounts at once. " << std::endl
               << WarningMsg("This may take a very long time!") << std::endl;
 
