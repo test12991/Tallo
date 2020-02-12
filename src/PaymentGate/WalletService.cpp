@@ -1153,6 +1153,10 @@ std::error_code WalletService::sendFusionTransaction(uint64_t threshold, uint32_
     }
 
     size_t transactionId = fusionManager.createFusionTransaction(threshold, anonymity, addresses, destinationAddress);
+    if (transactionId == CryptoNote::WALLET_INVALID_TRANSACTION_ID) {
+      logger(Logging::WARNING) << "Unable to create fusion transaction";
+      return make_error_code(CryptoNote::error::TX_TRANSFER_IMPOSSIBLE);
+    }
     transactionHash = Common::podToHex(wallet.getTransaction(transactionId).hash);
 
     logger(Logging::DEBUGGING) << "Fusion transaction " << transactionHash << " has been sent";
