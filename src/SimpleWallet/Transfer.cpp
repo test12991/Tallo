@@ -403,29 +403,19 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
         } else {
             uint64_t pending = wallet.getPendingBalance();
             if (pending > 0) {
-                int attemptCounter = 0;
-                while (true) {
-                    int secs = 15;
-                    attemptCounter++;
-                    while (secs > 0) {
-                        Common::Console::clearLine();
-                        std::cout << WarningMsg("\rWaiting for balance to unlock...")
-                                  << SuccessMsg(" Attempt " ) << InformationMsg(std::to_string(attemptCounter)) << SuccessMsg(" of ") << InformationMsg("20")
-                                  << SuccessMsg("... Retrying in ") << InformationMsg(std::to_string(secs))
-                                  << (secs == 1 ? SuccessMsg(" second...")
-                                                : SuccessMsg(" seconds..."))
-                          << std::flush;
-                        std::this_thread::sleep_for(std::chrono::seconds(1));
-                        secs--;
-                    }
+                for (int secs = 300; secs > 0; secs--) {
+                    Common::Console::clearLine();
+                    std::cout << WarningMsg("\rWaiting for balance to unlock...")
+                              << SuccessMsg(" Timeout in ") << InformationMsg(std::to_string(secs))
+                              << (secs == 1 ? SuccessMsg(" second...")
+                                            : SuccessMsg(" seconds..."))
+                              << std::flush;
                     wallet.updateInternalCache();
                     uint64_t pending2 = wallet.getPendingBalance();
                     if (pending2 != pending) {
                         break;
                     }
-                    if (attemptCounter == 20) {
-                        break;
-                    }
+                    std::this_thread::sleep_for(std::chrono::seconds(1));
                 };
             }
             Common::Console::clearLine();
