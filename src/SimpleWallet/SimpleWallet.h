@@ -3,6 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
+Copyright (C) 2020, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,6 +79,8 @@ void exportKeys(std::shared_ptr<WalletInfo> &walletInfo);
 void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config);
 
 void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet);
+
+void listOutputs(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node);
 
 void listTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node);
 

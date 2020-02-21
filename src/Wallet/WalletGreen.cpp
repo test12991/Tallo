@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -1232,6 +1233,13 @@ uint64_t WalletGreen::getPendingBalance(const std::string& address) const {
 
   const auto& wallet = getWalletRecord(address);
   return wallet.pendingBalance;
+}
+
+WalletGreen::WalletOuts WalletGreen::getUnspentOutputs(const std::string& address) const {
+  throwIfNotInitialized();
+  throwIfStopped();
+
+  return pickWallet(address);
 }
 
 size_t WalletGreen::getTransactionCount() const {

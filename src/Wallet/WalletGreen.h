@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -67,6 +68,13 @@ public:
   virtual uint64_t getActualBalance(const std::string& address) const override;
   virtual uint64_t getPendingBalance() const override;
   virtual uint64_t getPendingBalance(const std::string& address) const override;
+
+  struct WalletOuts {
+    WalletRecord* wallet;
+    std::vector<TransactionOutputInformation> outs;
+  };
+
+  virtual WalletOuts getUnspentOutputs(const std::string& address) const;
 
   virtual size_t getTransactionCount() const override;
   virtual WalletTransaction getTransaction(size_t transactionIndex) const override;
@@ -144,11 +152,6 @@ protected:
   struct ReceiverAmounts {
     CryptoNote::AccountPublicAddress receiver;
     std::vector<uint64_t> amounts;
-  };
-
-  struct WalletOuts {
-    WalletRecord* wallet;
-    std::vector<TransactionOutputInformation> outs;
   };
 
   typedef std::pair<WalletTransfers::const_iterator, WalletTransfers::const_iterator> TransfersRange;

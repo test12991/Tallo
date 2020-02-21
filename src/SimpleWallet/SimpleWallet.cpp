@@ -692,6 +692,8 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
         } else if (!walletInfo->viewWallet) {
             if (command == "outgoing_transfers") {
                 listTransfers(false, true, walletInfo->wallet, node);
+            } else if (command == "list_outputs") {
+                listOutputs(walletInfo->wallet, node);
             } else if (command == "list_transfers") {
                 listTransfers(true, true, walletInfo->wallet, node);
             } else if (command == "transfer") {
@@ -730,6 +732,7 @@ void help(bool viewWallet) {
               << SuccessMsg("export_keys", 25) << "Export your private keys" << std::endl;
     if (!viewWallet) {
         std::cout << SuccessMsg("transfer", 25) << "Send " << coinTicker << " to someone" << std::endl
+                  << SuccessMsg("list_outputs", 25) << "Show unspent outputs" << std::endl
                   << SuccessMsg("list_transfers", 25) << "Show all transfers" << std::endl
                   << SuccessMsg("quick_optimize", 25) << "Quickly optimize your wallet to send large amounts" << std::endl
                   << SuccessMsg("full_optimize", 25) << "Fully optimize your wallet to send large amounts" << std::endl
@@ -930,6 +933,19 @@ void printIncomingTransfer(CryptoNote::WalletTransaction t, CryptoNote::INode &n
     }
 
     std::cout << std::endl;
+}
+
+void listOutputs(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node) {
+    auto outs = wallet.getUnspentOutputs(wallet.getAddress(0)).outs;
+    size_t numOutputs = outs.size();
+    if (numOutputs > 0) {
+        std::cout << InformationMsg("Transaction hash", 65) << std::right << std::setw(18) << InformationMsg("Amount") << std::endl;
+        for (size_t i = 0; i < numOutputs; i++) {
+            std::cout << Common::podToHex(outs[i].transactionHash) << " " << std::right << std::setw(18) << formatAmount(outs[i].amount) << std::endl;
+        }
+    } else {
+        std::cout << WarningMsg("No unspent outputs!") << std::endl;
+    }
 }
 
 void listTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node) {
