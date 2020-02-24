@@ -939,9 +939,13 @@ void listOutputs(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node) {
     auto outs = wallet.getUnspentOutputs(wallet.getAddress(0)).outs;
     size_t numOutputs = outs.size();
     if (numOutputs > 0) {
-        std::cout << InformationMsg("Transaction hash", 65) << std::right << std::setw(18) << InformationMsg("Amount") << std::endl;
+        std::sort(outs.begin(), outs.end(), [](const CryptoNote::TransactionOutputInformation& a, const CryptoNote::TransactionOutputInformation& b) {
+            return a.amount < b.amount;
+        });
+        size_t aWidth = formatAmount(outs.back().amount).length();
+        std::cout << InformationMsg("Transaction hash", 65) << std::right << std::setw(aWidth) << InformationMsg("Amount") << std::endl;
         for (size_t i = 0; i < numOutputs; i++) {
-            std::cout << Common::podToHex(outs[i].transactionHash) << " " << std::right << std::setw(18) << formatAmount(outs[i].amount) << std::endl;
+            std::cout << Common::podToHex(outs[i].transactionHash) << " " << std::right << std::setw(aWidth) << formatAmount(outs[i].amount) << std::endl;
         }
     } else {
         std::cout << WarningMsg("No unspent outputs!") << std::endl;
