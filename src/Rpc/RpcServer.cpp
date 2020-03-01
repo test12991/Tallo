@@ -139,6 +139,7 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/getpeers", { jsonMethod<COMMAND_RPC_GET_PEERS>(&RpcServer::on_get_peers), true } },
   { "/getpeersgray", { jsonMethod<COMMAND_RPC_GET_PEERSGRAY>(&RpcServer::on_get_peersgray), true } },
   { "/get_generated_coins", { jsonMethod<COMMAND_RPC_GET_ISSUED_COINS>(&RpcServer::on_get_issued), true } },
+  { "/get_total_coins", { jsonMethod<COMMAND_RPC_GET_TOTAL_COINS>(&RpcServer::on_get_total), true } },
   { "/get_amounts_for_account", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_OUT_AMOUNTS_FOR_ACCOUNT>(&RpcServer::on_get_transaction_out_amounts_for_account), true } },
   { "/get_blocks_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_blocks_details_by_hashes), false } },
   { "/get_transaction_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_transaction_details_by_hashes), false } },
@@ -571,6 +572,12 @@ bool RpcServer::on_get_issued(const COMMAND_RPC_GET_ISSUED_COINS::request& req, 
     Hash hash = m_core.getBlockHashByIndex(m_core.getTopBlockIndex());
     BlockDetails blkDetails = m_core.getBlockDetails(hash);
     res.alreadyGeneratedCoins = std::to_string(blkDetails.alreadyGeneratedCoins);
+    res.status = CORE_RPC_STATUS_OK;
+    return true;
+}
+
+bool RpcServer::on_get_total(const COMMAND_RPC_GET_TOTAL_COINS::request& req, COMMAND_RPC_GET_TOTAL_COINS::response& res) {
+    res.totalCoins = std::to_string(CryptoNote::parameters::MONEY_SUPPLY);
     res.status = CORE_RPC_STATUS_OK;
     return true;
 }

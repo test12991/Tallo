@@ -983,6 +983,20 @@ struct COMMAND_RPC_GET_ISSUED_COINS {
   };
 };
 
+struct COMMAND_RPC_GET_TOTAL_COINS {
+  typedef EMPTY_STRUCT request;
+
+  struct response {
+    std::string totalCoins;
+    std::string status;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(totalCoins)
+      KV_MEMBER(status)
+    }
+  };
+};
+
 struct COMMAND_RPC_GET_TRANSACTION_OUT_AMOUNTS_FOR_ACCOUNT {
   struct request {
     std::string transaction;
