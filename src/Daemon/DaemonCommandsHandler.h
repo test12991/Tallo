@@ -64,10 +64,8 @@ private:
   bool print_pl_gray(const std::vector<std::string>& args);
   bool show_hr(const std::vector<std::string>& args);
   bool hide_hr(const std::vector<std::string>& args);
-  bool print_bc_outs(const std::vector<std::string>& args);
   bool print_cn(const std::vector<std::string>& args);
   bool print_bc(const std::vector<std::string>& args);
-  bool print_bci(const std::vector<std::string>& args);
   bool set_log(const std::vector<std::string>& args);
   bool print_alternate_chains(const std::vector<std::string>& args);
   bool print_block(const std::vector<std::string>& args);

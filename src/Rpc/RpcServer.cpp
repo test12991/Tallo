@@ -650,7 +650,7 @@ bool RpcServer::on_stop_daemon(const COMMAND_RPC_STOP_DAEMON::request& req, COMM
     m_p2p.sendStopSignal();
     res.status = CORE_RPC_STATUS_OK;
   } else {
-    res.status = CORE_RPC_ERROR_CODE_INTERNAL_ERROR;
+    res.status = CORE_RPC_STATUS_INTERNAL_ERROR;
     return false;
   }
 

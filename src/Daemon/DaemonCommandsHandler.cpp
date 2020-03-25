@@ -64,8 +64,6 @@ DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::Core& core, CryptoNote:
   m_consoleHandler.setHandler("print_pl_gray", boost::bind(&DaemonCommandsHandler::print_pl_gray, this, _1), "Print gray peer list");
   m_consoleHandler.setHandler("print_cn", boost::bind(&DaemonCommandsHandler::print_cn, this, _1), "Print connections");
   m_consoleHandler.setHandler("print_bc", boost::bind(&DaemonCommandsHandler::print_bc, this, _1), "Print blockchain info in a given blocks range, print_bc <begin_height> [<end_height>]");
-  //m_consoleHandler.setHandler("print_bci", boost::bind(&DaemonCommandsHandler::print_bci, this, _1));
-  //m_consoleHandler.setHandler("print_bc_outs", boost::bind(&DaemonCommandsHandler::print_bc_outs, this, _1));
   m_consoleHandler.setHandler("print_block", boost::bind(&DaemonCommandsHandler::print_block, this, _1), "Print block, print_block <block_hash> | <block_height>");
   m_consoleHandler.setHandler("print_tx", boost::bind(&DaemonCommandsHandler::print_tx, this, _1), "Print transaction, print_tx <transaction_hash>");
   m_consoleHandler.setHandler("print_pool", boost::bind(&DaemonCommandsHandler::print_pool, this, _1), "Print transaction pool (long format)");
@@ -112,17 +110,6 @@ bool DaemonCommandsHandler::print_pl_white(const std::vector<std::string>& args)
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::print_pl_gray(const std::vector<std::string>& args) {
   m_srv.log_peerlist_gray();
-  return true;
-}
-//--------------------------------------------------------------------------------
-bool DaemonCommandsHandler::print_bc_outs(const std::vector<std::string>& args)
-{
-  if (args.size() != 1) {
-    std::cout << "need file path as parameter" << ENDL;
-    return true;
-  }
-
-  //TODO m_core.print_blockchain_outs(args[0]);
   return true;
 }
 //--------------------------------------------------------------------------------
@@ -199,12 +186,6 @@ bool DaemonCommandsHandler::print_bc(const std::vector<std::string> &args) {
 	return true;
 }
 //--------------------------------------------------------------------------------
-bool DaemonCommandsHandler::print_bci(const std::vector<std::string>& args)
-{
-  //TODO m_core.print_blockchain_index();
-  return true;
-}
-
 bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
 {
   if (args.size() != 1) {

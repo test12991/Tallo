@@ -34,6 +34,7 @@ namespace CryptoNote {
 //-----------------------------------------------
 #define CORE_RPC_STATUS_OK "OK"
 #define CORE_RPC_STATUS_BUSY "BUSY"
+#define CORE_RPC_STATUS_INTERNAL_ERROR "INTERNAL ERROR"
 
 struct EMPTY_STRUCT {
   void serialize(ISerializer &s) {}
