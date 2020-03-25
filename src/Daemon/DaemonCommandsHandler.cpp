@@ -179,8 +179,11 @@ bool DaemonCommandsHandler::print_bc(const std::vector<std::string> &args) {
 			<< "height: " << header.height << ", timestamp: " << header.timestamp << ", difficulty: " << header.difficulty
 			<< ", size: " << header.block_size << ", transactions: " << header.num_txes << ENDL
 			<< "major version: " << unsigned(header.major_version) << ", minor version: " << unsigned(header.minor_version) << ENDL
-			<< "block id: " << header.hash << ", previous block id: " << header.prev_hash << ENDL
-			<< "difficulty: " << header.difficulty << ", nonce: " << header.nonce << ", reward: " << currency.formatAmount(header.reward) << ENDL;
+			<< "block id: " << header.hash << ENDL;
+		if (header.prev_hash != "0000000000000000000000000000000000000000000000000000000000000000") {
+			std::cout << "previous block id: " << header.prev_hash << ENDL;
+		}
+		std::cout << "difficulty: " << header.difficulty << ", nonce: " << header.nonce << ", reward: " << currency.formatAmount(header.reward) << ENDL;
 	}
 
 	return true;
