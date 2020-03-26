@@ -571,17 +571,17 @@ bool RpcServer::on_get_height(const COMMAND_RPC_GET_HEIGHT::request& req, COMMAN
 }
 
 bool RpcServer::on_get_issued(const COMMAND_RPC_GET_ISSUED_COINS::request& req, COMMAND_RPC_GET_ISSUED_COINS::response& res) {
-    Hash hash = m_core.getBlockHashByIndex(m_core.getTopBlockIndex());
-    BlockDetails blkDetails = m_core.getBlockDetails(hash);
-    res.alreadyGeneratedCoins = std::to_string(blkDetails.alreadyGeneratedCoins);
-    res.status = CORE_RPC_STATUS_OK;
-    return true;
+  Hash hash = m_core.getBlockHashByIndex(m_core.getTopBlockIndex());
+  BlockDetails blkDetails = m_core.getBlockDetails(hash);
+  res.alreadyGeneratedCoins = std::to_string(blkDetails.alreadyGeneratedCoins);
+  res.status = CORE_RPC_STATUS_OK;
+  return true;
 }
 
 bool RpcServer::on_get_total(const COMMAND_RPC_GET_TOTAL_COINS::request& req, COMMAND_RPC_GET_TOTAL_COINS::response& res) {
-    res.totalCoins = std::to_string(CryptoNote::parameters::MONEY_SUPPLY);
-    res.status = CORE_RPC_STATUS_OK;
-    return true;
+  res.totalCoins = std::to_string(CryptoNote::parameters::MONEY_SUPPLY);
+  res.status = CORE_RPC_STATUS_OK;
+  return true;
 }
 
 bool RpcServer::on_get_transactions(const COMMAND_RPC_GET_TRANSACTIONS::request& req, COMMAND_RPC_GET_TRANSACTIONS::response& res) {
