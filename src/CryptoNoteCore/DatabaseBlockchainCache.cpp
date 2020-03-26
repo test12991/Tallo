@@ -1002,18 +1002,18 @@ DatabaseBlockchainCache::extractKeyOutputKeys(uint64_t amount, uint32_t blockInd
   });
 }
 
-ExtractOutputKeysResult DatabaseBlockchainCache::extractKeyOtputIndexes(uint64_t amount,
-                                                                        Common::ArrayView<uint32_t> globalIndexes,
-                                                                        std::vector<PackedOutIndex>& outIndexes) const {
+ExtractOutputKeysResult DatabaseBlockchainCache::extractKeyOutputIndexes(uint64_t amount,
+                                                                         Common::ArrayView<uint32_t> globalIndexes,
+                                                                         std::vector<PackedOutIndex>& outIndexes) const {
   if (!requestPackedOutputs(amount, globalIndexes, database, outIndexes)) {
-    logger(Logging::ERROR) << "extractKeyOtputIndexes failed: failed to read database";
+    logger(Logging::ERROR) << "extractKeyOutputIndexes failed: failed to read database";
     return ExtractOutputKeysResult::INVALID_GLOBAL_INDEX;
   }
 
   return ExtractOutputKeysResult::SUCCESS;
 }
 
-ExtractOutputKeysResult DatabaseBlockchainCache::extractKeyOtputReferences(
+ExtractOutputKeysResult DatabaseBlockchainCache::extractKeyOutputReferences(
     uint64_t amount, Common::ArrayView<uint32_t> globalIndexes,
     std::vector<std::pair<Crypto::Hash, size_t>>& outputReferences) const {
 
@@ -1552,7 +1552,7 @@ std::vector<uint32_t> DatabaseBlockchainCache::getRandomOutsByAmount(uint64_t am
     }
 
     std::vector<PackedOutIndex> outputs;
-    if (extractKeyOtputIndexes(amount, Common::ArrayView<uint32_t>(globalIndexes.data(), globalIndexes.size()), outputs) != ExtractOutputKeysResult::SUCCESS) {
+    if (extractKeyOutputIndexes(amount, Common::ArrayView<uint32_t>(globalIndexes.data(), globalIndexes.size()), outputs) != ExtractOutputKeysResult::SUCCESS) {
       logger(Logging::DEBUGGING) << "getRandomOutsByAmount: failed to extract key output indexes";
       throw std::runtime_error("Invalid output index"); //TODO: make error code
     }

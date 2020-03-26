@@ -776,8 +776,8 @@ ExtractOutputKeysResult BlockchainCache::extractKeyOutputKeys(uint64_t amount, u
 }
 
 ExtractOutputKeysResult
-BlockchainCache::extractKeyOtputReferences(uint64_t amount, Common::ArrayView<uint32_t> globalIndexes,
-                                           std::vector<std::pair<Crypto::Hash, size_t>>& outputReferences) const {
+BlockchainCache::extractKeyOutputReferences(uint64_t amount, Common::ArrayView<uint32_t> globalIndexes,
+                                            std::vector<std::pair<Crypto::Hash, size_t>>& outputReferences) const {
   assert(!globalIndexes.isEmpty());
   assert(std::is_sorted(globalIndexes.begin(), globalIndexes.end()));                            // sorted
   assert(std::adjacent_find(globalIndexes.begin(), globalIndexes.end()) == globalIndexes.end()); // unique
@@ -893,9 +893,9 @@ std::vector<Crypto::Hash> BlockchainCache::getBlockHashesByTimestamps(uint64_t t
   return blockHashes;
 }
 
-ExtractOutputKeysResult BlockchainCache::extractKeyOtputIndexes(uint64_t amount,
-                                                                Common::ArrayView<uint32_t> globalIndexes,
-                                                                std::vector<PackedOutIndex>& outIndexes) const {
+ExtractOutputKeysResult BlockchainCache::extractKeyOutputIndexes(uint64_t amount,
+                                                                 Common::ArrayView<uint32_t> globalIndexes,
+                                                                 std::vector<PackedOutIndex>& outIndexes) const {
   assert(!globalIndexes.isEmpty());
   return extractKeyOutputs(amount, getTopBlockIndex(), globalIndexes,
                            [&](const CachedTransactionInfo& info, PackedOutIndex index, uint32_t globalIndex) {

@@ -2245,7 +2245,7 @@ TransactionDetails Core::getTransactionDetails(const Crypto::Hash& transactionHa
       std::vector<std::pair<Crypto::Hash, size_t>> outputReferences;
       outputReferences.reserve(txInToKeyDetails.input.outputIndexes.size());
       std::vector<uint32_t> globalIndexes = relativeOutputOffsetsToAbsolute(txInToKeyDetails.input.outputIndexes);
-      ExtractOutputKeysResult result = segment->extractKeyOtputReferences(txInToKeyDetails.input.amount, { globalIndexes.data(), globalIndexes.size() }, outputReferences);
+      ExtractOutputKeysResult result = segment->extractKeyOutputReferences(txInToKeyDetails.input.amount, { globalIndexes.data(), globalIndexes.size() }, outputReferences);
 #ifdef NDEBUG
       (void)result;
 #endif
