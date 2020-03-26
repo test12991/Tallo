@@ -901,6 +901,45 @@ struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON {
   };
 };
 
+struct COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES {
+  struct request {
+    std::vector<Crypto::Hash> transactionHashes;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(transactionHashes)
+    }
+  };
+
+  struct response {
+    std::vector<Crypto::Hash> blockHashes;
+    std::string status;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(blockHashes)
+      KV_MEMBER(status)
+    }
+  };
+};
+
+struct COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON {
+  struct request {
+    Crypto::Hash paymentId;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(paymentId)
+    }
+  };
+
+  struct response {
+    std::vector<Crypto::Hash> blockHashes;
+    std::string status;
+
+    void serialize(ISerializer &s) {
+      KV_MEMBER(status)
+      KV_MEMBER(blockHashes);
+    }
+  };
+};
 
 struct COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES {
   struct request {

@@ -141,6 +141,8 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/get_generated_coins", { jsonMethod<COMMAND_RPC_GET_ISSUED_COINS>(&RpcServer::on_get_issued), true } },
   { "/get_total_coins", { jsonMethod<COMMAND_RPC_GET_TOTAL_COINS>(&RpcServer::on_get_total), true } },
   { "/get_amounts_for_account", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_OUT_AMOUNTS_FOR_ACCOUNT>(&RpcServer::on_get_transaction_out_amounts_for_account), true } },
+  { "/get_block_hashes_by_payment_id", { jsonMethod<COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON>(&RpcServer::on_get_block_hashes_by_payment_id), false } },
+  { "/get_block_hashes_by_transaction_hashes", { jsonMethod<COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES>(&RpcServer::on_get_block_hashes_by_transaction_hashes), false } },
   { "/get_blocks_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_BLOCKS_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_blocks_details_by_hashes), false } },
   { "/get_transaction_details_by_hashes", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_DETAILS_BY_HASHES_JSON>(&RpcServer::on_get_transaction_details_by_hashes), false } },
   { "/get_transaction_hashes_by_payment_id", { jsonMethod<COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON>(&RpcServer::on_get_transaction_hashes_by_payment_id), false } },
@@ -1434,6 +1436,74 @@ bool RpcServer::on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TR
     return false;
   }
 
+  rsp.status = CORE_RPC_STATUS_OK;
+  return true;
+}
+
+bool RpcServer::on_get_block_hashes_by_transaction_hashes(const COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::request& req, COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::response& rsp) {
+  // Get details of all transactions so we can get the hashes of blocks the transactions are in
+  std::vector<TransactionDetails> transactionDetails;
+  try {
+    transactionDetails.reserve(req.transactionHashes.size());
+
+    for (const auto& hash: req.transactionHashes) {
+      transactionDetails.push_back(m_core.getTransactionDetails(hash));
+    }
+  } catch (std::system_error& e) {
+    rsp.status = e.what();
+    return false;
+  } catch (std::exception& e) {
+    rsp.status = "Error: " + std::string(e.what());
+    return false;
+  }
+
+  // Get the block hashes
+  std::vector<Crypto::Hash> blockHashes;
+  try {
+    blockHashes.reserve(transactionDetails.size());
+
+    for (const auto& details: transactionDetails) {
+      if (details.inBlockchain) {
+        blockHashes.push_back(details.blockHash);
+      }
+    }
+  } catch (std::system_error& e) {
+    rsp.status = e.what();
+    return false;
+  } catch (std::exception& e) {
+    rsp.status = "Error: " + std::string(e.what());
+    return false;
+  }
+
+  // Remove duplicates
+  auto last = std::unique(blockHashes.begin(), blockHashes.end());
+  blockHashes.erase(last, blockHashes.end());
+
+  rsp.blockHashes = std::move(blockHashes);
+  rsp.status = CORE_RPC_STATUS_OK;
+  return true;
+}
+
+bool RpcServer::on_get_block_hashes_by_payment_id(const COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON::request& req, COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON::response& rsp) {
+  COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::request req1;
+  COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::response rsp1;
+  req1.paymentId = req.paymentId;
+  bool status = on_get_transaction_hashes_by_payment_id(req1, rsp1);
+  if (!status) {
+    rsp.status = rsp1.status;
+    return false;
+  }
+
+  COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::request req2;
+  COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::response rsp2;
+  req2.transactionHashes = std::move(rsp1.transactionHashes);
+  status = on_get_block_hashes_by_transaction_hashes(req2, rsp2);
+  if (!status) {
+    rsp.status = rsp2.status;
+    return false;
+  }
+
+  rsp.blockHashes = std::move(rsp2.blockHashes);
   rsp.status = CORE_RPC_STATUS_OK;
   return true;
 }
