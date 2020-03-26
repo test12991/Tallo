@@ -2192,10 +2192,12 @@ TransactionDetails Core::getTransactionDetails(const Crypto::Hash& transactionHa
     transactionDetails.inBlockchain = false;
     transactionDetails.timestamp = transactionPool->getTransactionReceiveTime(transactionHash);
 
-    transactionDetails.size = transactionPool->getTransaction(transactionHash).getTransactionBinaryArray().size();
-    transactionDetails.fee = transactionPool->getTransaction(transactionHash).getTransactionFee();
+    const CachedTransaction& poolTransaction = transactionPool->getTransaction(transactionHash);
 
-    rawTransaction = transactionPool->getTransaction(transactionHash).getTransaction();
+    transactionDetails.size = poolTransaction.getTransactionBinaryArray().size();
+    transactionDetails.fee = poolTransaction.getTransactionFee();
+
+    rawTransaction = poolTransaction.getTransaction();
     transaction = createTransaction(rawTransaction);
   }
 
@@ -2244,7 +2246,9 @@ TransactionDetails Core::getTransactionDetails(const Crypto::Hash& transactionHa
       outputReferences.reserve(txInToKeyDetails.input.outputIndexes.size());
       std::vector<uint32_t> globalIndexes = relativeOutputOffsetsToAbsolute(txInToKeyDetails.input.outputIndexes);
       ExtractOutputKeysResult result = segment->extractKeyOtputReferences(txInToKeyDetails.input.amount, { globalIndexes.data(), globalIndexes.size() }, outputReferences);
-      if (result == result) {}
+#ifdef NDEBUG
+      (void)result;
+#endif
       assert(result == ExtractOutputKeysResult::SUCCESS);
       assert(txInToKeyDetails.input.outputIndexes.size() == outputReferences.size());
 
