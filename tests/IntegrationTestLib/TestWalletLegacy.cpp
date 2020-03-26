@@ -117,6 +117,9 @@ AccountPublicAddress TestWalletLegacy::address() const {
   std::string addressString = m_wallet->getAddress();
   AccountPublicAddress address;
   bool ok = m_currency.parseAccountAddressString(addressString, address);
+#ifdef NDEBUG
+  (void)ok;
+#endif
   assert(ok);
   return address;
 }

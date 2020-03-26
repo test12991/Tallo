@@ -234,6 +234,9 @@ void BaseFunctionalTests::startNode(size_t index) {
 void BaseFunctionalTests::stopNode(size_t index) {
   assert(nodeDaemons[index].get() != nullptr);
   bool ok = nodeDaemons[index]->stopDaemon();
+#ifdef NDEBUG
+  (void)ok;
+#endif
   assert(ok);
   std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
