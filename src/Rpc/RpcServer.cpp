@@ -40,6 +40,17 @@
 
 #undef ERROR
 
+template <typename T>
+const T& clamp(const T& v, const T& lo, const T& hi) {
+  if (v < lo) {
+    return lo;
+  }
+  if (v > hi) {
+    return hi;
+  }
+  return v;
+}
+
 using namespace Logging;
 using namespace Crypto;
 using namespace Common;
@@ -1442,6 +1453,10 @@ bool RpcServer::on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TR
 }
 
 bool RpcServer::on_get_block_hashes_by_transaction_hashes(const COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::request& req, COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::response& rsp) {
+  if (req.startIndex > req.endIndex) {
+    rsp.status = CORE_RPC_STATUS_INTERNAL_ERROR;
+    return false;
+  }
   // Get details of all transactions so we can get the hashes of blocks the transactions are in
   std::vector<TransactionDetails> transactionDetails;
   try {
@@ -1464,7 +1479,7 @@ bool RpcServer::on_get_block_hashes_by_transaction_hashes(const COMMAND_RPC_GET_
     blockHashes.reserve(transactionDetails.size());
 
     for (const auto& details: transactionDetails) {
-      if (details.inBlockchain) {
+      if (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) {
         blockHashes.push_back(details.blockHash);
       }
     }
@@ -1486,6 +1501,10 @@ bool RpcServer::on_get_block_hashes_by_transaction_hashes(const COMMAND_RPC_GET_
 }
 
 bool RpcServer::on_get_block_hashes_by_payment_id(const COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON::request& req, COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON::response& rsp) {
+  if (req.startIndex > req.endIndex) {
+    rsp.status = CORE_RPC_STATUS_INTERNAL_ERROR;
+    return false;
+  }
   COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::request req1;
   COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::response rsp1;
   req1.paymentId = req.paymentId;
@@ -1498,6 +1517,8 @@ bool RpcServer::on_get_block_hashes_by_payment_id(const COMMAND_RPC_GET_BLOCK_HA
   COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::request req2;
   COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES::response rsp2;
   req2.transactionHashes = std::move(rsp1.transactionHashes);
+  req2.startIndex = req.startIndex;
+  req2.endIndex = req.endIndex;
   status = on_get_block_hashes_by_transaction_hashes(req2, rsp2);
   if (!status) {
     rsp.status = rsp2.status;
@@ -1510,6 +1531,10 @@ bool RpcServer::on_get_block_hashes_by_payment_id(const COMMAND_RPC_GET_BLOCK_HA
 }
 
 bool RpcServer::on_get_block_indexes_by_transaction_hashes(const COMMAND_RPC_GET_BLOCK_INDEXES_BY_TRANSACTION_HASHES::request& req, COMMAND_RPC_GET_BLOCK_INDEXES_BY_TRANSACTION_HASHES::response& rsp) {
+  if (req.startIndex > req.endIndex) {
+    rsp.status = CORE_RPC_STATUS_INTERNAL_ERROR;
+    return false;
+  }
   // Get details of all transactions so we can get the hashes of blocks the transactions are in
   std::vector<TransactionDetails> transactionDetails;
   try {
@@ -1532,7 +1557,7 @@ bool RpcServer::on_get_block_indexes_by_transaction_hashes(const COMMAND_RPC_GET
     blockIndexes.reserve(transactionDetails.size());
 
     for (const auto& details: transactionDetails) {
-      if (details.inBlockchain) {
+      if (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) {
         blockIndexes.push_back(details.blockIndex);
       }
     }

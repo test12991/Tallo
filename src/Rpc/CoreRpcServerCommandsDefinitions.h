@@ -904,9 +904,13 @@ struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON {
 struct COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES {
   struct request {
     std::vector<Crypto::Hash> transactionHashes;
+    uint32_t startIndex = 0;
+    uint32_t endIndex = UINT32_MAX;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(transactionHashes)
+      KV_MEMBER(startIndex)
+      KV_MEMBER(endIndex)
     }
   };
 
@@ -924,9 +928,13 @@ struct COMMAND_RPC_GET_BLOCK_HASHES_BY_TRANSACTION_HASHES {
 struct COMMAND_RPC_GET_BLOCK_INDEXES_BY_TRANSACTION_HASHES {
   struct request {
     std::vector<Crypto::Hash> transactionHashes;
+    uint32_t startIndex = 0;
+    uint32_t endIndex = UINT32_MAX;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(transactionHashes)
+      KV_MEMBER(startIndex)
+      KV_MEMBER(endIndex)
     }
   };
 
@@ -944,9 +952,13 @@ struct COMMAND_RPC_GET_BLOCK_INDEXES_BY_TRANSACTION_HASHES {
 struct COMMAND_RPC_GET_BLOCK_HASHES_BY_PAYMENT_ID_JSON {
   struct request {
     Crypto::Hash paymentId;
+    uint32_t startIndex = 0;
+    uint32_t endIndex = UINT32_MAX;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(paymentId)
+      KV_MEMBER(startIndex)
+      KV_MEMBER(endIndex)
     }
   };
 
