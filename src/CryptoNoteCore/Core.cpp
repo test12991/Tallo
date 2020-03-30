@@ -1099,7 +1099,7 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
   b.previousBlockHash = getTopBlockHash();
   b.timestamp = time(nullptr);
 
-  uint64_t blockchain_timestamp_check_window;
+  uint32_t blockchain_timestamp_check_window;
   if (height >= parameters::LWMA_2_DIFFICULTY_BLOCK_INDEX)
   {
       blockchain_timestamp_check_window = parameters::BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW_V3;
@@ -1113,7 +1113,7 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
   {
       std::vector<uint64_t> timestamps;
       /* For the last N blocks, get their timestamps */
-      for (size_t offset = height - blockchain_timestamp_check_window; offset < height; offset++)
+      for (uint32_t offset = height - blockchain_timestamp_check_window; offset < height; offset++)
       {
           timestamps.push_back(getBlockTimestampByIndex(offset));
       }
