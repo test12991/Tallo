@@ -884,9 +884,15 @@ struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID {
 struct COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON {
   struct request {
     Crypto::Hash paymentId;
+    uint32_t startIndex = 0;
+    uint32_t endIndex = UINT32_MAX;
+    bool includeUnconfirmed = true;
 
     void serialize(ISerializer &s) {
       KV_MEMBER(paymentId)
+      KV_MEMBER(startIndex)
+      KV_MEMBER(endIndex)
+      KV_MEMBER(includeUnconfirmed)
     }
   };
 

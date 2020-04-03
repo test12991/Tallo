@@ -1438,14 +1438,43 @@ bool RpcServer::on_get_transaction_details_by_hashes(const COMMAND_RPC_GET_TRANS
 }
 
 bool RpcServer::on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::request& req, COMMAND_RPC_GET_TRANSACTION_HASHES_BY_PAYMENT_ID_JSON::response& rsp) {
+  if (req.startIndex > req.endIndex) {
+    rsp.status = CORE_RPC_STATUS_INTERNAL_ERROR;
+    return false;
+  }
+  std::vector<Crypto::Hash> transactionHashes;
   try {
-    rsp.transactionHashes = m_core.getTransactionHashesByPaymentId(req.paymentId);
+    transactionHashes = m_core.getTransactionHashesByPaymentId(req.paymentId);
   } catch (std::system_error& e) {
     rsp.status = e.what();
     return false;
   } catch (std::exception& e) {
     rsp.status = "Error: " + std::string(e.what());
     return false;
+  }
+  if (req.startIndex > 0 || req.endIndex < m_core.getTopBlockIndex() || (!req.includeUnconfirmed)) {
+    // Get details of all transactions so we can get the heights of blocks the transactions are in
+    try {
+      std::vector<Crypto::Hash> hashes;
+      hashes.reserve(transactionHashes.size());
+
+      for (const auto& hash: transactionHashes) {
+        const TransactionDetails& details = m_core.getTransactionDetails(hash);
+        if ( (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) ||
+             ((!details.inBlockchain) && req.includeUnconfirmed) ) {
+          hashes.push_back(hash);
+        }
+      }
+      rsp.transactionHashes = std::move(hashes);
+    } catch (std::system_error& e) {
+      rsp.status = e.what();
+      return false;
+    } catch (std::exception& e) {
+      rsp.status = "Error: " + std::string(e.what());
+      return false;
+    }
+  } else {
+    rsp.transactionHashes = std::move(transactionHashes);
   }
 
   rsp.status = CORE_RPC_STATUS_OK;
