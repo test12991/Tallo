@@ -2,6 +2,7 @@
 #define STR(x) STR_HELPER(x)
 
 #define PROJECT_NAME "Talleo"
+#define PROJECT_COMPANY "Talleo Project"
 #define PROJECT_SITE "https://talleo.org/"
 #define PROJECT_COPYRIGHT "Copyright 2019-2020, The Talleo Developers"
 #define APP_VER_MAJOR 0

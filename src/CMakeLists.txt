@@ -59,6 +59,7 @@ add_library(PaymentGate ${PaymentGate})
 add_library(JsonRpcServer ${JsonRpcServer})
 
 if(MSVC)
+  set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /DUNICODE /D_UNICODE")
   set(DAEMON_SOURCES_OS
     BinaryInfo/daemon.rc
   )
