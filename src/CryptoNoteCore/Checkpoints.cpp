@@ -51,7 +51,7 @@ bool Checkpoints::loadCheckpointsFromFile(const std::string& fileName) {
     return false;
   }
   const char* data = buff.c_str();
-  unsigned int length = strlen(data);
+  size_t length = strlen(data);
 
   boost::cregex_token_iterator li(data, data + length, linesregx, -1);
   boost::cregex_token_iterator end;
