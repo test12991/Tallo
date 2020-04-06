@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -51,7 +52,11 @@
 using namespace PaymentService;
 
 void changeDirectory(const std::string& path) {
+#ifdef _MSC_VER
+  if (_chdir(path.c_str())) {
+#else
   if (chdir(path.c_str())) {
+#endif
     throw std::runtime_error("Couldn't change directory to \'" + path + "\': " + strerror(errno));
   }
 }
