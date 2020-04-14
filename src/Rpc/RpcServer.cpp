@@ -41,14 +41,14 @@
 #undef ERROR
 
 template <typename T>
-const T& clamp(const T& v, const T& lo, const T& hi) {
+bool in_range(const T& v, const T& lo, const T& hi) {
   if (v < lo) {
-    return lo;
+    return false;
   }
   if (v > hi) {
-    return hi;
+    return false;
   }
-  return v;
+  return true;
 }
 
 using namespace Logging;
@@ -1460,7 +1460,7 @@ bool RpcServer::on_get_transaction_hashes_by_payment_id(const COMMAND_RPC_GET_TR
 
       for (const auto& hash: transactionHashes) {
         const TransactionDetails& details = m_core.getTransactionDetails(hash);
-        if ( (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) ||
+        if ( (details.inBlockchain && in_range(details.blockIndex, req.startIndex, req.endIndex)) ||
              ((!details.inBlockchain) && req.includeUnconfirmed) ) {
           hashes.push_back(hash);
         }
@@ -1508,7 +1508,7 @@ bool RpcServer::on_get_block_hashes_by_transaction_hashes(const COMMAND_RPC_GET_
     blockHashes.reserve(transactionDetails.size());
 
     for (const auto& details: transactionDetails) {
-      if (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) {
+      if (details.inBlockchain && in_range(details.blockIndex, req.startIndex, req.endIndex)) {
         blockHashes.push_back(details.blockHash);
       }
     }
@@ -1586,7 +1586,7 @@ bool RpcServer::on_get_block_indexes_by_transaction_hashes(const COMMAND_RPC_GET
     blockIndexes.reserve(transactionDetails.size());
 
     for (const auto& details: transactionDetails) {
-      if (details.inBlockchain && details.blockIndex == clamp(details.blockIndex, req.startIndex, req.endIndex)) {
+      if (details.inBlockchain && in_range(details.blockIndex, req.startIndex, req.endIndex)) {
         blockIndexes.push_back(details.blockIndex);
       }
     }
