@@ -63,7 +63,7 @@ public:
   JsonValue(const String& value);
   JsonValue(String&& value);
   template<size_t size> JsonValue(const char(&value)[size]) {
-    new(valueString)String(value, size - 1);
+    valueString = new String(value, size - 1);
     type = STRING;
   }
 
@@ -73,7 +73,6 @@ public:
   JsonValue& operator=(JsonValue&& other);
   JsonValue& operator=(const Array& value);
   JsonValue& operator=(Array&& value);
-  //JsonValue& operator=(Bool value);
   JsonValue& operator=(Integer value);
   JsonValue& operator=(Nil value);
   JsonValue& operator=(const Object& value);
@@ -84,12 +83,10 @@ public:
   template<size_t size> JsonValue& operator=(const char(&value)[size]) {
     if (type != STRING) {
       destructValue();
-      type = NIL;
-      new(valueString)String(value, size - 1);
+      valueString = new String(value, size - 1);
       type = STRING;
     } else {
-      String* pString = reinterpret_cast<String*>(valueString);
-      pString->assign(value, size - 1);
+      valueString->assign(value, size - 1);
     }
 
     return *this;
@@ -142,12 +139,12 @@ public:
 private:
   Type type;
   union {
-    uint8_t valueArray[sizeof(Array)];
+    Array* valueArray;
     Bool valueBool;
     Integer valueInteger;
-    uint8_t valueObject[sizeof(Object)];
+    Object* valueObject;
     Real valueReal;
-    uint8_t valueString[sizeof(std::string)];
+    std::string* valueString;
   };
 
   void destructValue();
