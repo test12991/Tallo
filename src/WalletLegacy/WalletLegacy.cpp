@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -31,7 +32,7 @@ using namespace Crypto;
 
 namespace {
 
-const uint64_t ACCOUN_CREATE_TIME_ACCURACY = 24 * 60 * 60;
+const uint64_t ACCOUNT_CREATE_TIME_ACCURACY = 24 * 60 * 60;
 
 void throwNotDefined() {
   throw std::runtime_error("The behavior is not defined!");
@@ -174,7 +175,7 @@ void WalletLegacy::initWithKeys(const AccountKeys& accountKeys, const std::strin
     }
 
     m_account.setAccountKeys(accountKeys);
-    m_account.set_createtime(ACCOUN_CREATE_TIME_ACCURACY);
+    m_account.set_createtime(ACCOUNT_CREATE_TIME_ACCURACY);
     m_password = password;
 
     initSync();
@@ -200,10 +201,10 @@ void WalletLegacy::initAndLoad(std::istream& source, const std::string& password
 
 void WalletLegacy::initSync() {
   AccountSubscription sub;
-  sub.keys = reinterpret_cast<const AccountKeys&>(m_account.getAccountKeys());
+  sub.keys = m_account.getAccountKeys();
   sub.transactionSpendableAge = 1;
   sub.syncStart.height = 0;
-  sub.syncStart.timestamp = std::max(m_account.get_createtime(), ACCOUN_CREATE_TIME_ACCURACY) - ACCOUN_CREATE_TIME_ACCURACY;
+  sub.syncStart.timestamp = std::max(m_account.get_createtime(), ACCOUNT_CREATE_TIME_ACCURACY) - ACCOUNT_CREATE_TIME_ACCURACY;
   if (m_syncAll == 1) {
     sub.syncStart.timestamp = 0;
     if (m_syncStartHeight) {
