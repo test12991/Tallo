@@ -79,7 +79,8 @@ namespace
   const command_line::arg_descriptor<bool>        arg_console     = {"no-console", "Disable daemon console commands"};
   const command_line::arg_descriptor<bool>        arg_print_genesis_tx = { "print-genesis-tx", "Prints genesis' block tx hex to insert it to config and exits" };
   const command_line::arg_descriptor<std::vector<std::string>> arg_genesis_block_reward_address = { "genesis-block-reward-address", "" };
-  const command_line::arg_descriptor<bool> arg_blockexplorer_on = {"enable_blockexplorer", "Enable blockchain explorer RPC", false};
+  const command_line::arg_descriptor<bool> arg_blockexplorer_on = {"enable-blockexplorer", "Enable blockchain explorer RPC", false};
+  const command_line::arg_descriptor<bool> arg_blockexplorer_old_on = {"enable_blockexplorer", "Enable blockchain explorer RPC (deprecated)", false};
   const command_line::arg_descriptor<std::vector<std::string>>        arg_enable_cors = { "enable-cors", "Adds header 'Access-Control-Allow-Origin' to the daemon's RPC responses. Uses the value as domain. Use * for all" };
   const command_line::arg_descriptor<std::string> arg_set_fee_address = { "fee-address", "Sets fee address for light wallets to the daemon's RPC responses.", "" };
   const command_line::arg_descriptor<std::string> arg_set_view_key = { "view-key", "Sets private view key to check for masternode's fee.", "" };
@@ -94,7 +95,7 @@ void print_genesis_tx_hex(const po::variables_map& vm, LoggerManager& logManager
   std::vector<CryptoNote::AccountPublicAddress> targets;
   auto genesis_block_reward_addresses = command_line::get_arg(vm, arg_genesis_block_reward_address);
   CryptoNote::CurrencyBuilder currencyBuilder(logManager);
-bool blockexplorer_mode = command_line::get_arg(vm, arg_blockexplorer_on);
+bool blockexplorer_mode = command_line::get_arg(vm, arg_blockexplorer_on) || command_line::get_arg(vm, arg_blockexplorer_old_on);
 currencyBuilder.isBlockexplorer(blockexplorer_mode);
   CryptoNote::Currency currency = currencyBuilder.currency();
   for (const auto& address_string : genesis_block_reward_addresses) {
@@ -191,6 +192,7 @@ int main(int argc, char* argv[])
     command_line::add_arg(desc_cmd_sett, arg_set_view_key);
     command_line::add_arg(desc_cmd_sett, arg_set_collateral_hash);
     command_line::add_arg(desc_cmd_sett, arg_blockexplorer_on);
+    command_line::add_arg(desc_cmd_sett, arg_blockexplorer_old_on);
     command_line::add_arg(desc_cmd_sett, arg_print_genesis_tx);
     command_line::add_arg(desc_cmd_sett, arg_genesis_block_reward_address);
     command_line::add_arg(desc_cmd_sett, arg_load_checkpoints);
@@ -267,7 +269,7 @@ int main(int argc, char* argv[])
 
     //create objects and link them
     CryptoNote::CurrencyBuilder currencyBuilder(logManager);
-    bool blockexplorer_mode = command_line::get_arg(vm, arg_blockexplorer_on);
+    bool blockexplorer_mode = command_line::get_arg(vm, arg_blockexplorer_on) || command_line::get_arg(vm, arg_blockexplorer_old_on);
     currencyBuilder.isBlockexplorer(blockexplorer_mode);
     currencyBuilder.testnet(testnet_mode);
     try {
