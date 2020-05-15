@@ -995,6 +995,13 @@ bool Core::addTransactionToPool(CachedTransaction&& cachedTransaction) {
 bool Core::isTransactionValidForPool(const CachedTransaction& cachedTransaction, TransactionValidatorState& validatorState) {
   uint64_t fee;
 
+  /* If there are already a certain number of fusion transactions in the pool, then do not try to add another */
+  if (cachedTransaction.getTransactionFee() == 0 && transactionPool->getFusionTransactionCount() >= CryptoNote::parameters::FUSION_TX_MAX_POOL_COUNT)
+  {
+    logger(Logging::DEBUGGING) << "Pool already contains the maximum amount of fusion transactions";
+    return false;
+  }
+
   if (auto validationResult = validateTransaction(cachedTransaction, validatorState, chainsLeaves[0], fee, getTopBlockIndex())) {
     logger(Logging::DEBUGGING) << "Transaction " << cachedTransaction.getTransactionHash()
       << " is not valid. Reason: " << validationResult.message();

@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -42,6 +42,8 @@ public:
   virtual bool pushTransaction(CachedTransaction&& transaction, TransactionValidatorState&& transactionState) override;
   virtual const CachedTransaction& getTransaction(const Crypto::Hash& hash) const override;
   virtual bool removeTransaction(const Crypto::Hash& hash) override;
+
+  virtual size_t getFusionTransactionCount() const override;
 
   virtual size_t getTransactionCount() const override;
   virtual std::vector<Crypto::Hash> getTransactionHashes() const override;

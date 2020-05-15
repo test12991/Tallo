@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -107,6 +108,20 @@ bool TransactionPool::removeTransaction(const Crypto::Hash& hash) {
 
   logger(Logging::DEBUGGING) << "transaction " << hash << " removed from pool";
   return true;
+}
+
+size_t TransactionPool::getFusionTransactionCount() const {
+  size_t fusionTransactionCount = 0;
+
+  for (auto it = transactionCostIndex.begin(); it != transactionCostIndex.end(); ++it) {
+    size_t transactionFee = it->cachedTransaction.getTransactionFee();
+
+    if (transactionFee == 0) {
+      fusionTransactionCount++;
+    }
+  }
+
+  return fusionTransactionCount;
 }
 
 size_t TransactionPool::getTransactionCount() const {
