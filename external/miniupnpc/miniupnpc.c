@@ -529,7 +529,7 @@ upnpDiscover(int delay, const char * multicastif,
 			} else {
 #ifdef HAS_IP_MREQN
 				/* was not an ip address, try with an interface name */
-				struct ip_mreqn reqn;	/* only defined with -D_BSD_SOURCE or -D_GNU_SOURCE */
+				struct ip_mreqn reqn;	/* only defined with -D_BSD_SOURCE, -D_DEFAULT_SOURCE or -D_GNU_SOURCE */
 				memset(&reqn, 0, sizeof(struct ip_mreqn));
 				reqn.imr_ifindex = if_nametoindex(multicastif);
 				if(setsockopt(sudp, IPPROTO_IP, IP_MULTICAST_IF, (const char *)&reqn, sizeof(reqn)) < 0)
