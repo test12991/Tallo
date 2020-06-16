@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -237,12 +238,21 @@ BlockMiningParameters MinerManager::requestMiningParameters(System::Dispatcher& 
 
     COMMAND_RPC_GETBLOCKTEMPLATE::response response;
 
-    System::EventLock lk(m_httpEvent);
-    JsonRpc::invokeJsonRpcCommand(client, "getblocktemplate", request, response);
+    do {
+      System::EventLock lk(m_httpEvent);
+      JsonRpc::invokeJsonRpcCommand(client, "getblocktemplate", request, response);
 
-    if (response.status != CORE_RPC_STATUS_OK) {
-      throw std::runtime_error("Core responded with wrong status: " + response.status);
-    }
+      if (response.status != CORE_RPC_STATUS_OK) {
+        throw std::runtime_error("Core responded with wrong status: " + response.status);
+      }
+
+      if (response.height > 10000 && response.num_transactions == 0) {
+        m_logger(Logging::WARNING) << "Core responded with invalid block template, not enough transactions";
+        System::Timer timer(m_dispatcher);
+        timer.sleep(std::chrono::seconds(1));
+        continue;
+      }
+    } while (false);
 
     BlockMiningParameters params;
     params.difficulty = response.difficulty;
