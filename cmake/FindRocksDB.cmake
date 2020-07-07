@@ -17,6 +17,16 @@
 #  ROCKSDB_LIBRARIES           The RocksDB library.
 #  ROCKSDB_INCLUDE_DIRS        The location of RocksDB headers.
 
+# Support preference of static libs by adjusting CMAKE_FIND_LIBRARY_SUFFIXES
+if( RocksDB_USE_STATIC_LIBS )
+  set( _rocksdb_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+  if(WIN32)
+    list(INSERT CMAKE_FIND_LIBRARY_SUFFIXES 0 .lib .a)
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+  endif()
+endif()
+
 find_path(ROCKSDB_ROOT_DIR
     NAMES include/rocksdb/db.h
 )
@@ -36,6 +46,10 @@ find_package_handle_standard_args(RocksDB DEFAULT_MSG
     ROCKSDB_LIBRARIES
     ROCKSDB_INCLUDE_DIRS
 )
+
+if( RocksDB_USE_STATIC_LIBS )
+  set( CMAKE_FIND_LIBRARY_SUFFIXES ${_rocksdb_ORIG_CMAKE_LIBRARY_SUFFIXES})
+endif()
 
 mark_as_advanced(
     ROCKSDB_ROOT_DIR

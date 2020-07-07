@@ -11,6 +11,16 @@
 
 include(FindPackageHandleStandardArgs)
 
+# Support preference of static libs by adjusting CMAKE_FIND_LIBRARY_SUFFIXES
+if( GFlags_USE_STATIC_LIBS )
+  set( _gflags_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+  if(WIN32)
+    list(INSERT CMAKE_FIND_LIBRARY_SUFFIXES 0 .lib .a)
+  else()
+    set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+  endif()
+endif()
+
 set(GFLAGS_ROOT_DIR "" CACHE PATH "Folder contains Gflags")
 
 # We are testing only a couple of files in the include directories
@@ -40,6 +50,9 @@ endif()
 
 find_package_handle_standard_args(GFlags DEFAULT_MSG GFLAGS_INCLUDE_DIR GFLAGS_LIBRARY)
 
+if( GFlags_USE_STATIC_LIBS )
+  set( CMAKE_FIND_LIBRARY_SUFFIXES ${_gflags_ORIG_CMAKE_LIBRARY_SUFFIXES})
+endif()
 
 if(GFLAGS_FOUND)
     set(GFLAGS_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIR})
