@@ -1,12 +1,21 @@
 
 ### How To Compile
 
-#### Ubuntu 16.04/18.04
+#### Ubuntu 16.04 or newer
 
 ##### Prerequisites
 
-- You will need the following packages: boost (1.55 or higher), rocksdb, cmake, git, gcc (4.9 or higher), g++ (4.9 or higher), make, and python. Most of these should already be installed on your system.
+###### Ubuntu 16.04 or 18.04
+- You will need the following packages: boost (1.55 or higher), cmake, git, gcc (4.9 or higher), g++ (4.9 or higher), make, and python. Most of these should already be installed on your system.
 - `sudo apt-get -y install build-essential python-dev gcc g++ git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
+
+###### Ubuntu 20.04
+
+- You will need the following packages: boost (1.67), cmake, git, gcc (7.x), g++ (7.x), make, and python3.
+- `sudo apt-get update`
+- `sudo apt-get -y install build-essential python3-dev gcc-7 g++-7 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
+- `sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70`
+- `sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 70`
 
 ##### Building
 
