@@ -25,6 +25,16 @@
 - `cmake -D STATIC=ON -D ARCH="default" -D CMAKE_BUILD_TYPE=Release ../..`
 - `cmake --build .`
 
+##### Known issues
+- gcc-7 under Ubuntu 18.04 on some machines can cause memory management errors due to signed integer wraparound while compiling and running the executables
+  1. Install `gcc-6` and `g++-6` using apt-get:
+    - `sudo apt-get -y install gcc-6 g++-6`
+  2. Switch default compiler using update-alternatives:
+    - `sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-6 60 --slave /usr/bin/g++ g++ /usr/bin/g++-6`
+    - `sudo update-alternatives --set gcc /usr/bin/gcc-6`
+  3. Cleanup build tree by removing all files in directory `build/release` and its subdirectories, reconfigure and recompile
+- Ubuntu packages for rocksdb can be incompatible with Talleo as sometimes those are built without RTTI, RTTI is required by Talleo, uninstalling `librocksdb-dev` will make the build system use rocksdb from source tree
+
 #### Apple
 
 ##### Prerequisites
