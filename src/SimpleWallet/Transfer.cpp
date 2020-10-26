@@ -251,7 +251,7 @@ size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, uint64_t threshold
     /* Can throw if it can't create - lol what are error codes - just catch it and assume we can't fusion anymore */
     try {
         return wallet.createFusionTransaction(bestThreshold, CryptoNote::parameters::DEFAULT_MIXIN);
-    } catch (const std::runtime_error) {
+    } catch (const std::runtime_error&) {
         return CryptoNote::WALLET_INVALID_TRANSACTION_ID;
     }
 }
@@ -938,7 +938,7 @@ bool parseMixin(std::string mixinString) {
 
         return true;
     }
-    catch (const std::invalid_argument) {
+    catch (const std::invalid_argument&) {
         std::cout << WarningMsg("Failed to parse mixin! Ensure you entered the value correctly.") << std::endl;
         return false;
     }

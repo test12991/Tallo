@@ -142,7 +142,7 @@ Config parseArguments(int argc, char **argv)
                 {
                     config.port = std::stoi(port);
                 }
-                catch (const std::invalid_argument)
+                catch (const std::invalid_argument&)
                 {
                     std::cout << "Failed to parse daemon port!" << std::endl;
                     config.exit = true;
