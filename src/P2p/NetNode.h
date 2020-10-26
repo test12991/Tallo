@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -123,6 +124,7 @@ namespace CryptoNote
   class NodeServer :  public IP2pEndpoint
   {
   public:
+    virtual ~NodeServer();
 
     static void init_options(boost::program_options::options_description& desc);
 

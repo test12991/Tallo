@@ -111,7 +111,7 @@ public:
   virtual std::vector<BlockTemplate> getAlternativeBlocks() const override;
 
   virtual bool hasPoolTransaction(const Crypto::Hash& transactionHash) const override;
-  virtual bool getPoolTransaction(const Crypto::Hash& transactionHash, Transaction& transaction) const;
+  virtual bool getPoolTransaction(const Crypto::Hash& transactionHash, Transaction& transaction) const override;
   virtual std::vector<Transaction> getPoolTransactions() const override;
 
   const Currency& getCurrency() const;

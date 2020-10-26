@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -102,10 +103,14 @@ void Timer::sleep(std::chrono::nanoseconds duration) {
         if (!timerContext->interrupted) {
           uint64_t value = 0;
           if(::read(timer, &value, sizeof value) == -1 ){
+#ifndef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlogical-op"
+#endif
             if(errno == EAGAIN || errno == EWOULDBLOCK) {
+#ifndef __clang__
 #pragma GCC diagnostic pop
+#endif
               timerContext->interrupted = true;
               dispatcher->pushContext(timerContext->context);
             } else {

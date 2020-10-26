@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -143,6 +143,9 @@ CryptoNoteProtocolHandler::CryptoNoteProtocolHandler(const Currency& currency, S
   if (!m_p2p) {
     m_p2p = &m_p2p_stub;
   }
+}
+
+CryptoNoteProtocolHandler::~CryptoNoteProtocolHandler() {
 }
 
 size_t CryptoNoteProtocolHandler::getPeerCount() const {

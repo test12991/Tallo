@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -24,6 +25,7 @@ namespace Logging {
 
 class CommonLogger : public ILogger {
 public:
+  virtual ~CommonLogger();
 
   virtual void operator()(const std::string& category, Level level, boost::posix_time::ptime time, const std::string& body) override;
   virtual void enableCategory(const std::string& category);

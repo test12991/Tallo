@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -216,6 +217,9 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     // m_peer_handshake_idle_maker_interval(CryptoNote::P2P_DEFAULT_HANDSHAKE_INTERVAL),
     m_connections_maker_interval(1),
     m_peerlist_store_interval(60*30, false) {
+  }
+
+  NodeServer::~NodeServer() {
   }
 
   void NodeServer::serialize(ISerializer& s) {

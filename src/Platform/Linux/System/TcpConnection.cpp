@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -82,10 +83,14 @@ size_t TcpConnection::read(uint8_t* data, size_t size) {
   std::string message;
   ssize_t transferred = ::recv(connection, (void *)data, size, 0);
   if (transferred == -1) {
+#ifndef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlogical-op"
+#endif
     if (errno != EAGAIN  && errno != EWOULDBLOCK) {
+#ifndef __clang__
 #pragma GCC diagnostic pop
+#endif
       message = "recv failed, " + lastErrorMessage();
     } else {
       epoll_event connectionEvent;
@@ -181,10 +186,14 @@ std::size_t TcpConnection::write(const uint8_t* data, size_t size) {
 
   ssize_t transferred = ::send(connection, (void *)data, size, MSG_NOSIGNAL);
   if (transferred == -1) {
+#ifndef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wlogical-op"
+#endif
     if (errno != EAGAIN  && errno != EWOULDBLOCK) {
+#ifndef __clang__
 #pragma GCC diagnostic pop
+#endif
       message = "send failed, " + lastErrorMessage();
     } else {
       epoll_event connectionEvent;

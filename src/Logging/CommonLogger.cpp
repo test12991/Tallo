@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -53,6 +54,9 @@ std::string formatPattern(const std::string& pattern, const std::string& categor
   return s.str();
 }
 
+}
+
+CommonLogger::~CommonLogger() {
 }
 
 void CommonLogger::operator()(const std::string& category, Level level, boost::posix_time::ptime time, const std::string& body) {

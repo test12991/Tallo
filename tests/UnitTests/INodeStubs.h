@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -73,11 +74,11 @@ public:
     callback(std::error_code());
   }
 
-  virtual void getFeeAddress(std::string& feeAddress, const Callback& callback) {
+  virtual void getFeeAddress(std::string& feeAddress, const Callback& callback) override {
     callback(std::error_code());
   }
 
-  virtual void getCollateralHash(std::string& collateralHash, const Callback& callback) {
+  virtual void getCollateralHash(std::string& collateralHash, const Callback& callback) override {
     callback(std::error_code());
   }
 
