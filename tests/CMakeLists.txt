@@ -58,7 +58,7 @@ target_link_libraries(HashTargetTests CryptoNoteCore Crypto)
 target_link_libraries(HashTests Crypto)
 
 if(NOT MSVC)
-  set_property(TARGET gtest gtest_main IntegrationTestLibrary IntegrationTests TestGenerator UnitTests SystemTests HashTargetTests TransfersTests APPEND_STRING PROPERTY COMPILE_FLAGS " -Wno-undef -Wno-sign-compare")
+  set_property(TARGET gtest gtest_main IntegrationTestLibrary IntegrationTests TestGenerator UnitTests UnitTestsLib SystemTests HashTargetTests TransfersTests APPEND PROPERTY COMPILE_OPTIONS "-Wno-undef" "-Wno-sign-compare")
 endif()
 
 add_custom_target(tests DEPENDS IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests DifficultyTests HashTargetTests)
