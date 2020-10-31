@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -18,6 +19,7 @@
 #include "Serialization/SerializationOverloads.h"
 
 #include <limits>
+#include <stdexcept>
 
 namespace CryptoNote {
 
