@@ -365,7 +365,8 @@ Status DBImpl::Recover(
       s = env_->NewRandomAccessFile(IdentityFileName(dbname_), &idfile,
                                     customized_env);
       if (!s.ok()) {
-        const char* error_msg = s.ToString().c_str();
+        std::string status = s.ToString();
+        const char* error_msg = status.c_str();
         // Check if unsupported Direct I/O is the root cause
         customized_env.use_direct_reads = false;
         s = env_->NewRandomAccessFile(IdentityFileName(dbname_), &idfile,

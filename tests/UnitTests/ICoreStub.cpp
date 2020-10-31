@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -97,7 +98,7 @@ bool ICoreStub::getPoolChanges(const Crypto::Hash& tailBlockId, const std::vecto
     knownSet.insert(txId);
   }
 
-  for (const std::pair<Crypto::Hash, CryptoNote::BinaryArray>& poolEntry : transactionPool) {
+  for (const std::pair<const Crypto::Hash, CryptoNote::BinaryArray>& poolEntry : transactionPool) {
     if (knownSet.find(poolEntry.first) == knownSet.end()) {
       addedTxs.push_back(poolEntry.second);
     }

@@ -38,6 +38,11 @@ struct FileDescriptor {
   uint64_t file_size;  // File size in bytes
 
   FileDescriptor() : FileDescriptor(0, 0, 0) {}
+  FileDescriptor(const FileDescriptor& fd) {
+    table_reader = fd.table_reader;
+    packed_number_and_path_id = fd.packed_number_and_path_id;
+    file_size = fd.file_size;
+  }
 
   FileDescriptor(uint64_t number, uint32_t path_id, uint64_t _file_size)
       : table_reader(nullptr),
