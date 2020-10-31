@@ -59,6 +59,9 @@ target_link_libraries(HashTests Crypto)
 
 if(NOT MSVC)
   set_property(TARGET gtest gtest_main IntegrationTestLibrary IntegrationTests TestGenerator UnitTests UnitTestsLib SystemTests HashTargetTests TransfersTests APPEND PROPERTY COMPILE_OPTIONS "-Wno-undef" "-Wno-sign-compare")
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set_property(TARGET CryptoTests APPEND PROPERTY COMPILE_OPTIONS "-Wno-maybe-uninitialized")
+  endif()
 endif()
 
 add_custom_target(tests DEPENDS IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests DifficultyTests HashTargetTests)
