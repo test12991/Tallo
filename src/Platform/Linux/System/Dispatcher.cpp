@@ -85,7 +85,8 @@ Dispatcher::Dispatcher() {
         if (epoll_ctl(epoll, EPOLL_CTL_ADD, remoteSpawnEvent, &remoteSpawnEventEpollEvent) == -1) {
           message = "epoll_ctl failed, " + lastErrorMessage();
         } else {
-          *reinterpret_cast<pthread_mutex_t*>(this->mutex) = pthread_mutex_t(PTHREAD_MUTEX_INITIALIZER);
+          pthread_mutex_t* _mutex = reinterpret_cast<pthread_mutex_t*>(this->mutex);
+          *_mutex = pthread_mutex_t(PTHREAD_MUTEX_INITIALIZER);
 
           mainContext.interrupted = false;
           mainContext.group = &contextGroup;
@@ -147,7 +148,8 @@ Dispatcher::~Dispatcher() {
   assert(result == 0);
   result = close(remoteSpawnEvent);
   assert(result == 0);
-  result = pthread_mutex_destroy(reinterpret_cast<pthread_mutex_t*>(this->mutex));
+  pthread_mutex_t* _mutex = reinterpret_cast<pthread_mutex_t*>(this->mutex);
+  result = pthread_mutex_destroy(_mutex);
   assert(result == 0);
 }
 
@@ -194,7 +196,8 @@ void Dispatcher::dispatch() {
             throw std::runtime_error("Dispatcher::dispatch, read(remoteSpawnEvent) failed, " + lastErrorMessage());
         }
 
-        MutextGuard guard(*reinterpret_cast<pthread_mutex_t*>(this->mutex));
+        pthread_mutex_t* _mutex = reinterpret_cast<pthread_mutex_t*>(this->mutex);
+        MutextGuard guard(*_mutex);
         while (!remoteSpawningProcedures.empty()) {
           spawn(std::move(remoteSpawningProcedures.front()));
           remoteSpawningProcedures.pop();
@@ -281,7 +284,8 @@ void Dispatcher::pushContext(NativeContext* context) {
 
 void Dispatcher::remoteSpawn(std::function<void()>&& procedure) {
   {
-    MutextGuard guard(*reinterpret_cast<pthread_mutex_t*>(this->mutex));
+    pthread_mutex_t* _mutex = reinterpret_cast<pthread_mutex_t*>(this->mutex);
+    MutextGuard guard(*_mutex);
     remoteSpawningProcedures.push(std::move(procedure));
   }
   uint64_t one = 1;
@@ -329,7 +333,8 @@ void Dispatcher::yield() {
             throw std::runtime_error("Dispatcher::dispatch, read(remoteSpawnEvent) failed, " + lastErrorMessage());
           }
 
-          MutextGuard guard(*reinterpret_cast<pthread_mutex_t*>(this->mutex));
+          pthread_mutex_t* _mutex = reinterpret_cast<pthread_mutex_t*>(this->mutex);
+          MutextGuard guard(*_mutex);
           while (!remoteSpawningProcedures.empty()) {
             spawn(std::move(remoteSpawningProcedures.front()));
             remoteSpawningProcedures.pop();
