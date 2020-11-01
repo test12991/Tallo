@@ -13,20 +13,10 @@ endif()
 
 if(MSVC)
     include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ../version)
-    add_subdirectory(rocksDB EXCLUDE_FROM_ALL)
+    add_subdirectory(rocksdb EXCLUDE_FROM_ALL)
     set_property(TARGET rocksdb PROPERTY FOLDER "external")
-elseif(ROCKSDB_FOUND)
-    add_library(rocksdblib SHARED IMPORTED GLOBAL)
-    set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${ROCKSDB_LIBRARIES})
-elseif(NOT MSVC)
-    add_custom_target(
-       rocksdb
-       COMMAND $(MAKE) rocksdb
-       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rocksdb
-    )
-    add_library(rocksdblib STATIC IMPORTED GLOBAL)
-    set_target_properties(rocksdblib PROPERTIES IMPORTED_LOCATION ${PROJECT_BINARY_DIR}/rocksdb/librocksdb.a)
-    add_dependencies(rocksdblib rocksdb)
+elseif(NOT ROCKSDB_FOUND)
+    add_subdirectory(rocksdb EXCLUDE_FROM_ALL)
 endif()
 
 if(MINIUPNPC_FOUND)
