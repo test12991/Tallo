@@ -1,0 +1,91 @@
+name: CI CMake
+on: [push, pull_request]
+jobs:
+  ci-cmake:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Ubuntu 18.04 GCC 6
+            os: ubuntu-18.04
+            c_compiler: gcc-6
+            cxx_compiler: g++-6
+            packages: build-essential python-dev gcc-6 g++-6 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 18.04 GCC 7
+            os: ubuntu-18.04
+            c_compiler: gcc-7
+            cxx_compiler: g++-7
+            packages: build-essential python-dev gcc-7 g++-7 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 18.04 GCC 8
+            os: ubuntu-18.04
+            c_compiler: gcc-8
+            cxx_compiler: g++-8
+            packages: build-essential python-dev gcc-8 g++-8 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 18.04 Clang 6.0
+            os: ubuntu-18.04
+            c_compiler: clang-6.0
+            cxx_compiler: clang++-6.0
+            packages: build-essential python-dev clang-6.0 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 18.04 Clang 7
+            os: ubuntu-18.04
+            c_compiler: clang-7
+            cxx_compiler: clang++-7
+            packages: build-essential python-dev clang-7 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 18.04 Clang 8
+            os: ubuntu-18.04
+            c_compiler: clang-8
+            cxx_compiler: clang++-8
+            packages: build-essential python-dev clang-8 git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 20.04 GCC 9
+            os: ubuntu-20.04
+            c_compiler: gcc-9
+            cxx_compiler: g++-9
+            packages: build-essential python3-dev gcc-9 g++-9 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 20.04 GCC 10
+            os: ubuntu-20.04
+            c_compiler: gcc-10
+            cxx_compiler: g++-10
+            packages: build-essential python3-dev gcc-10 g++-10 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 20.04 Clang 9
+            os: ubuntu-20.04
+            c_compiler: clang-9
+            cxx_compiler: clang++-9
+            packages: build-essential python3-dev clang-9 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 20.04 Clang 10
+            os: ubuntu-20.04
+            c_compiler: clang-10
+            cxx_compiler: clang++-10
+            packages: build-essential python3-dev clang-10 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install packages
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ${{ matrix.packages }}
+
+    - name: Generate project files
+      run: |
+        mkdir -p build
+        cd build
+        cmake ..
+      env:
+        CC: ${{ matrix.c_compiler }}
+        CXX: ${{ matrix.cxx_compiler }}
+
+    - name: Compile source code
+      run: |
+        cd build
+        cmake --build .
