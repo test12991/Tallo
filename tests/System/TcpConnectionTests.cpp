@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2020, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -44,15 +45,6 @@ void fillRandomString(std::string& buf) {
   for (size_t i = 0; i < buf.size(); ++i) {
     buf[i] = static_cast<uint8_t>(rand() & 0xff);
   }
-}
-
-std::string removePort(const std::string& address) {
-  size_t colonPosition = address.rfind(':');
-  if (colonPosition == std::string::npos) {
-    throw std::runtime_error("removePort");
-  }
-
-  return address.substr(0, colonPosition);
 }
 
 }
