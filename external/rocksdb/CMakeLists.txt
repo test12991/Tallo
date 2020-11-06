@@ -432,7 +432,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/third-party/gtest-1.7.0/fused-src)
 find_package(Threads REQUIRED)
 
-if(WITH_TESTS)
+if(WITH_TESTS AND NOT DO_TESTS)
   add_subdirectory(third-party/gtest-1.7.0/fused-src/gtest)
 endif()
 
