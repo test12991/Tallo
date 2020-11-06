@@ -814,7 +814,7 @@ inline std::string ZSTD_TrainDictionary(const std::string& samples,
                                         size_t max_dict_bytes) {
   // Dictionary trainer is available since v0.6.1, but ZSTD was marked stable
   // only since v0.8.0. For now we enable the feature in stable versions only.
-#if ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
+#if defined(ZSTD) && ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
   std::string dict_data(max_dict_bytes, '\0');
   size_t dict_len = ZDICT_trainFromBuffer(
       &dict_data[0], max_dict_bytes, &samples[0], &sample_lens[0],
@@ -836,7 +836,7 @@ inline std::string ZSTD_TrainDictionary(const std::string& samples,
                                         size_t max_dict_bytes) {
   // Dictionary trainer is available since v0.6.1, but ZSTD was marked stable
   // only since v0.8.0. For now we enable the feature in stable versions only.
-#if ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
+#if defined(ZSTD) && ZSTD_VERSION_NUMBER >= 800  // v0.8.0+
   // skips potential partial sample at the end of "samples"
   size_t num_samples = samples.size() >> sample_len_shift;
   std::vector<size_t> sample_lens(num_samples, 1 << sample_len_shift);

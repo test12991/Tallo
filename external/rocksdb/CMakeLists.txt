@@ -66,15 +66,15 @@ else()
       include_directories(${JEMALLOC_INCLUDE_DIR})
     endif()
   endif()
-  
+
   # No config file for this
   option(WITH_GFLAGS "build with GFlags" ON)
   if(WITH_GFLAGS)
-    find_package(gflags)
-    if(gflags_FOUND)
+    find_package(GFlags)
+    if(GFlags_FOUND)
       add_definitions(-DGFLAGS=1)
-      include_directories(${gflags_INCLUDE_DIR})
-      list(APPEND THIRDPARTY_LIBS ${gflags_LIBRARIES})
+      include_directories(${GFLAGS_INCLUDE_DIR})
+      list(APPEND THIRDPARTY_LIBS ${GFLAGS_LIBRARIES})
     endif()
   endif()
 

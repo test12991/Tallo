@@ -57,7 +57,7 @@ endif()
 if(GFLAGS_FOUND)
     set(GFLAGS_INCLUDE_DIRS ${GFLAGS_INCLUDE_DIR})
     set(GFLAGS_LIBRARIES ${GFLAGS_LIBRARY})
-    message(STATUS "Found gflags  (include: ${GFLAGS_INCLUDE_DIR}, library: ${GFLAGS_LIBRARY})")
+    message(STATUS "Found GFlags  (include: ${GFLAGS_INCLUDE_DIR}, library: ${GFLAGS_LIBRARY})")
     mark_as_advanced(GFLAGS_LIBRARY_DEBUG GFLAGS_LIBRARY_RELEASE
                      GFLAGS_LIBRARY GFLAGS_INCLUDE_DIR GFLAGS_ROOT_DIR)
 endif()
