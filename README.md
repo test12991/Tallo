@@ -5,7 +5,7 @@
 
 ##### Prerequisites
 
-###### Ubuntu 16.04 or 18.04
+###### Ubuntu 18.04
 - You will need the following packages: boost (1.55 or higher), cmake, git, gcc (4.9 or higher), g++ (4.9 or higher), make, and python. Most of these should already be installed on your system.
 - `sudo apt-get -y install build-essential python-dev gcc g++ git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
 
