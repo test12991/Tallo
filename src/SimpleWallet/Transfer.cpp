@@ -318,15 +318,22 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
     hidecursor();
 
-    while (true) {
+    while (getFusionReadyCount(wallet) > 0) {
         /* Create as many fusion transactions until we can't send anymore, either because balance is locked too much or we can no longer optimize anymore transactions */
         size_t tmpFusionTxID = makeFusionTransaction(wallet, threshold);
 
         if (tmpFusionTxID == CryptoNote::WALLET_INVALID_TRANSACTION_ID) {
-            break;
+            if (fusionTransactionHashes.empty()) { // Node rejected the first fusion transaction
+                std::cout << WarningMsg("\rNetwork is busy, pausing for 15 seconds...") << std::flush;
+                std::this_thread::sleep_for(std::chrono::seconds(15));
+            } else {
+                break; // stop trying if we have at least 1 fusion transaction created.
+            }
         } else {
             CryptoNote::WalletTransaction w = wallet.getTransaction(tmpFusionTxID);
             fusionTransactionHashes.push_back(w.hash);
+
+            Common::Console::clearLine();
 
             if (fusionTransactionHashes.size() == 1) {
                 std::cout << InformationMsg("\rCreated ") << SuccessMsg("1") << InformationMsg(" fusion transaction!") << std::flush;
