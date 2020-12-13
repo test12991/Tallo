@@ -318,16 +318,19 @@ bool optimize(CryptoNote::WalletGreen &wallet, uint64_t threshold) {
 
     hidecursor();
 
+    int retries = 20;
+
     while (getFusionReadyCount(wallet) > 0) {
         /* Create as many fusion transactions until we can't send anymore, either because balance is locked too much or we can no longer optimize anymore transactions */
         size_t tmpFusionTxID = makeFusionTransaction(wallet, threshold);
 
         if (tmpFusionTxID == CryptoNote::WALLET_INVALID_TRANSACTION_ID) {
-            if (fusionTransactionHashes.empty()) { // Node rejected the first fusion transaction
-                std::cout << WarningMsg("\rNetwork is busy, pausing for 15 seconds...") << std::flush;
+            if (fusionTransactionHashes.empty() && (retries--)) { // Node rejected the first fusion transaction
+                Common::Console::clearLine();
+                std::cout << WarningMsg("\rNetwork is busy, pausing for 15 seconds... ") << SuccessMsg(std::to_string(retries)) << WarningMsg(" retries remaining...") << std::flush;
                 std::this_thread::sleep_for(std::chrono::seconds(15));
             } else {
-                break; // stop trying if we have at least 1 fusion transaction created.
+                break; // stop trying if we have at least 1 fusion transaction created or we tried to retry 20 times.
             }
         } else {
             CryptoNote::WalletTransaction w = wallet.getTransaction(tmpFusionTxID);
