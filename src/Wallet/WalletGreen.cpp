@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -1301,7 +1301,7 @@ size_t WalletGreen::transfer(const TransactionParameters& transactionParameters)
 
     if (id != WALLET_INVALID_TRANSACTION_ID) {
       auto& tx = m_transactions[id];
-      m_logger(INFO, BRIGHT_WHITE) << "Transaction created and send, ID " << id <<
+      m_logger(INFO, BRIGHT_WHITE) << "Transaction created and sent, ID " << id <<
         ", hash " << m_transactions[id].hash <<
         ", state " << tx.state <<
         ", totalAmount " << m_currency.formatAmount(tx.totalAmount) <<
