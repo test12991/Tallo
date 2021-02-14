@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -756,6 +757,20 @@ std::error_code WalletService::getViewKey(std::string& viewSecretKey) {
     viewSecretKey = Common::podToHex(viewKey.secretKey);
   } catch (std::system_error& x) {
     logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting view key: " << x.what();
+    return x.code();
+  }
+
+  return std::error_code();
+}
+
+std::error_code WalletService::getViewKeys(std::string& viewPublicKey, std::string& viewSecretKey) {
+  try {
+    System::EventLock lk(readyEvent);
+    CryptoNote::KeyPair viewKey = wallet.getViewKey();
+    viewPublicKey = Common::podToHex(viewKey.publicKey);
+    viewSecretKey = Common::podToHex(viewKey.secretKey);
+  } catch (std::system_error& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting view keys: " << x.what();
     return x.code();
   }
 

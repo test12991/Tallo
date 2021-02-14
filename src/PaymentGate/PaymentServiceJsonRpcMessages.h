@@ -93,6 +93,19 @@ struct GetViewKey {
   };
 };
 
+struct GetViewKeys {
+  struct Request {
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+
+  struct Response {
+    std::string viewSecretKey;
+    std::string viewPublicKey;
+
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+};
+
 struct GetMnemonicSeed {
   struct Request {
     std::string address;

@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -60,6 +61,14 @@ void GetViewKey::Request::serialize(CryptoNote::ISerializer& serializer) {
 
 void GetViewKey::Response::serialize(CryptoNote::ISerializer& serializer) {
   serializer(viewSecretKey, "viewSecretKey");
+}
+
+void GetViewKeys::Request::serialize(CryptoNote::ISerializer& serializer) {
+}
+
+void GetViewKeys::Response::serialize(CryptoNote::ISerializer& serializer) {
+  serializer(viewSecretKey, "viewSecretKey");
+  serializer(viewPublicKey, "viewPublicKey");
 }
 
 void GetMnemonicSeed::Request::serialize(CryptoNote::ISerializer& serializer) {
