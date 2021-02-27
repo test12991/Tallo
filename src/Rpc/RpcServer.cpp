@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018, The Bittorium developers
-// Copyright (c) 2019-2020, The Talleo developers
+// Copyright (c) 2019-2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -571,6 +571,7 @@ bool RpcServer::on_get_info(const COMMAND_RPC_GET_INFO::request& req, COMMAND_RP
   res.version = PROJECT_VERSION;
   res.max_block_size = m_core.getCurrency().maxBlockCumulativeSize(res.height);
   res.max_tx_size = m_core.getMaximumTransactionSize();
+  res.genesis_time = m_core.getCurrency().genesisBlock().timestamp;
   res.status = CORE_RPC_STATUS_OK;
   return true;
 }
