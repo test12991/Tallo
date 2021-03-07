@@ -4,9 +4,9 @@
 #
 #     ` $ curl -sL "https://raw.githubusercontent.com/TalleoProject/Talleo/master/scripts/multi_installer.sh" | bash
 #
-# Supports Ubuntu 16.04 LTS, OSX 10.10+
+# Supports Ubuntu 18.04 LTS, OSX 10.10+
 # Supports building project from current directory (automatic detection)
-#Thanks to pinkstarcoin 
+#Thanks to pinkstarcoin
 
 set -o errexit
 set -o pipefail
@@ -84,7 +84,7 @@ _configure_ubuntu() {
         _note "Sudo privileges required for package installation"
     fi
     $_sudo apt-get update -qq
-    $_sudo apt-get install -qq -y git build-essential python-dev gcc g++ git cmake libboost-all-dev librocksdb-dev  >>build.log 2>&1 || _fail "Unable to install build dependencies. Please see build.log for more information"
+    $_sudo apt-get install -qq -y git build-essential python-dev gcc g++ git cmake libboost-all-dev  >>build.log 2>&1 || _fail "Unable to install build dependencies. Please see build.log for more information"
 
     export CXXFLAGS="-std=gnu++11"
 }
@@ -98,7 +98,7 @@ _configure_debian() {
         _note "Sudo privileges required for package installation"
     fi
     $_sudo apt-get update -qq
-    $_sudo apt-get install -qq -y git build-essential python-dev gcc g++ git cmake libboost-all-dev librocksdb-dev  >>build.log 2>&1 || _fail "Unable to install build dependencies. Please see build.log for more information"
+    $_sudo apt-get install -qq -y git build-essential python-dev gcc g++ git cmake libboost-all-dev  >>build.log 2>&1 || _fail "Unable to install build dependencies. Please see build.log for more information"
 
     export CXXFLAGS="-std=gnu++11"
 }

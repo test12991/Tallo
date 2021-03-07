@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -149,7 +149,6 @@ const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
 const char* const SEED_NODES[] = {
   "95.216.163.155:33802",
-  "193.70.84.52:33802",
   "138.201.154.252:33802"
 };
 } // CryptoNote

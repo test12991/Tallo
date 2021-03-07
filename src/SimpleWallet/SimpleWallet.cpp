@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (c) 2018, The Karbo developers
-Copyright (C) 2019-2020, The Talleo developers
+Copyright (C) 2019-2021, The Talleo developers
 
 
 This program is free software: you can redistribute it and/or modify
@@ -235,9 +235,9 @@ std::shared_ptr<WalletInfo> createViewWallet(CryptoNote::WalletGreen &wallet) {
         std::getline(std::cin, address);
         boost::algorithm::trim(address);
 
-        if (address.length() != 99) {
+        if (address.length() != 97) {
             std::cout << WarningMsg("Address is wrong length!") << std::endl
-                      << "It should be 99 characters long, but it is " << address.length() << " characters long!" << std::endl;
+                      << "It should be 97 characters long, but it is " << address.length() << " characters long!" << std::endl;
         } else if (address.substr(0, 2) != "TA") {
             std::cout << WarningMsg("Invalid address! It should start with \"TA\"!") << std::endl;
         } else if (!CryptoNote::parseAccountAddressString(prefix, publicKeys, address)) {

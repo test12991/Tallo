@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -57,7 +58,7 @@ int main(int argc, char *argv[]) {
             end = n - currency.difficultyLag();
             begin = end - currency.difficultyWindow();
         }
-        uint64_t res = currency.nextDifficulty(1, n,
+        uint64_t res = currency.nextDifficulty(1, (uint32_t) n,
             vector<uint64_t>(timestamps.begin() + begin, timestamps.begin() + end),
             vector<uint64_t>(cumulative_difficulties.begin() + begin, cumulative_difficulties.begin() + end));
         if (res != difficulty) {
