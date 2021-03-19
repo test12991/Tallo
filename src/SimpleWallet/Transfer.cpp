@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
-Copyright (C) 2019-2020, The Talleo developers
+Copyright (C) 2019-2021, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -108,7 +108,9 @@ bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<Wal
               << std::endl;
 
     if (confirm("Is this correct?")) {
-        confirmPassword(walletInfo->walletPass);
+        if (walletInfo->walletPass != "") {
+            confirmPassword(walletInfo->walletPass);
+        }
         return true;
     } else {
         return false;
