@@ -1348,7 +1348,7 @@ void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo) {
 
     walletInfo->knownTransactionCount = 0;
 
-    /* Wallet is now unitialized. You must reinit with load, initWithKeys, or whatever.
+    /* Wallet is now uninitialized. You must reinit with load, initWithKeys, or whatever.
        This function wipes the cache, then saves the wallet. */
     walletInfo->wallet.clearCacheAndShutdown();
 
