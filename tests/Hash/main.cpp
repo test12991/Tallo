@@ -66,6 +66,7 @@ struct hash_func {
   const string name;
   hash_f &f;
 } hashes[] = {{"fast", Crypto::cn_fast_hash},
+              {"slow", cn_v6},
               {"cryptonight-v6", cn_v6},
               {"cryptonight-v7", cn_v7},
               {"cryptonight-lite-v0", cn_lite_v0},
