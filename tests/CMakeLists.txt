@@ -35,7 +35,6 @@ add_executable(SystemTests ${SystemTests})
 add_executable(TransfersTests ${TransfersTests})
 add_executable(UnitTests ${UnitTests})
 
-add_executable(DifficultyTests Difficulty/Difficulty.cpp)
 add_executable(HashTargetTests HashTarget.cpp)
 add_executable(HashTests Hash/main.cpp)
 
@@ -53,7 +52,6 @@ endif ()
 target_link_libraries(TransfersTests IntegrationTestLibrary TestsCommon Wallet gtest_main InProcessNode NodeRpcProxy P2P Rpc Http BlockchainExplorer CryptoNoteCore Serialization System Logging Transfers Common Crypto upnpc-static ${Boost_LIBRARIES})
 target_link_libraries(UnitTests gtest_main PaymentGate Wallet TestGenerator InProcessNode NodeRpcProxy Rpc P2P upnpc-static Http Transfers Serialization System Logging BlockchainExplorer CryptoNoteCore Common Crypto ${Boost_LIBRARIES})
 
-target_link_libraries(DifficultyTests CryptoNoteCore Serialization Crypto Logging Common ${Boost_LIBRARIES})
 target_link_libraries(HashTargetTests CryptoNoteCore Crypto)
 target_link_libraries(HashTests Crypto)
 
@@ -67,7 +65,7 @@ if(NOT MSVC)
   endif()
 endif()
 
-add_custom_target(tests DEPENDS IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests DifficultyTests HashTargetTests)
+add_custom_target(tests DEPENDS IntegrationTests NodeRpcProxyTests PerformanceTests SystemTests TransfersTests UnitTests HashTargetTests)
 
 set_property(TARGET
   tests
@@ -84,7 +82,6 @@ set_property(TARGET
   TransfersTests
   UnitTests
 
-  DifficultyTests
   HashTargetTests
   HashTests
 PROPERTY FOLDER "tests")
@@ -99,13 +96,11 @@ set_property(TARGET PerformanceTests PROPERTY OUTPUT_NAME "performance_tests")
 set_property(TARGET SystemTests PROPERTY OUTPUT_NAME "system_tests")
 set_property(TARGET TransfersTests PROPERTY OUTPUT_NAME "transfers_tests")
 set_property(TARGET UnitTests PROPERTY OUTPUT_NAME "unit_tests")
-set_property(TARGET DifficultyTests PROPERTY OUTPUT_NAME "difficulty_tests")
 set_property(TARGET HashTargetTests PROPERTY OUTPUT_NAME "hash_target_tests")
 set_property(TARGET HashTests PROPERTY OUTPUT_NAME "hash_tests")
 
 add_test(CoreTests core_tests --generate_and_play_test_data)
 add_test(CryptoTests crypto_tests ${CMAKE_CURRENT_SOURCE_DIR}/crypto/tests.txt)
-add_test(DifficultyTests difficulty_tests ${CMAKE_CURRENT_SOURCE_DIR}/Difficulty/data.txt)
 foreach(hash IN ITEMS fast slow tree extra-blake extra-groestl extra-jh extra-skein)
   add_test(hash-${hash} hash_tests ${hash} ${CMAKE_CURRENT_SOURCE_DIR}/Hash/tests-${hash}.txt)
 endforeach(hash)
