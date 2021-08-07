@@ -829,9 +829,12 @@ void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool view
     uint32_t remoteHeight = node.getLastKnownBlockHeight();
     uint32_t walletHeight = wallet.getBlockCount();
 
-    std::cout << "Available balance: " << SuccessMsg(formatAmount(confirmedBalance)) << std::endl
-              << "Locked (unconfirmed) balance: " << WarningMsg(formatAmount(unconfirmedBalance)) << std::endl
-              << "Total balance: " << InformationMsg(formatAmount(totalBalance)) << std::endl;
+    size_t totalLen = formatAmount(totalBalance).length(); // total balance is always the widest string
+
+    std::cout << std::right << std::setw(30) << "Available balance: " << std::right << std::setw(totalLen) << SuccessMsg(formatAmount(confirmedBalance)) << std::endl
+              << std::right << std::setw(30) << "Locked (unconfirmed) balance: " << std::right << std::setw(totalLen) << WarningMsg(formatAmount(unconfirmedBalance)) << std::endl
+              << std::string(30+totalLen, '-') << std::endl
+              << std::right << std::setw(30) << "Total balance: " << std::right << std::setw(totalLen) << InformationMsg(formatAmount(totalBalance)) << std::endl;
 
     if (viewWallet) {
         std::cout << std::endl
