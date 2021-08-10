@@ -1006,6 +1006,12 @@ void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
               << std::left << std::setw(13) << WarningMsg("Fee: ") << std::right << std::setw(totalLen) << WarningMsg(formatAmount(t.fee)) << std::endl
               << std::left << std::setw(13) << WarningMsg("Total Spent: ") << std::right << std::setw(totalLen) << WarningMsg(formatAmount(-amount)) << std::endl;
 
+    Crypto::Hash paymentId;
+    std::vector<uint8_t> vec(t.extra.begin(), t.extra.end());
+    if (CryptoNote::getPaymentIdFromTxExtra(vec, paymentId)) {
+        std::cout << std::left << std::setw(13) << SuccessMsg("Payment ID: ") << std::setw(64) << SuccessMsg(Common::podToHex(paymentId)) << std::endl;
+    }
+
     std::cout << std::endl;
 }
 
