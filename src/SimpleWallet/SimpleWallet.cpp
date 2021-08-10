@@ -992,17 +992,19 @@ void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
     int64_t amount = allWallets ? t.totalAmount : filterAmounts(t, wallet);
     if (amount == 0) return;
 
+    size_t totalLen = formatAmount(-amount).length();
+
     std::cout << std::endl
-              << WarningMsg("Outgoing transfer:") << std::endl
-              << WarningMsg("Hash: " + Common::podToHex(t.hash)) << std::endl
-              << WarningMsg("Spent: " + formatAmount(-amount - t.fee)) << std::endl
-              << WarningMsg("Fee: " + formatAmount(t.fee)) << std::endl
-              << WarningMsg("Total Spent: " + formatAmount(-amount)) << std::endl;
+              << WarningMsg("Outgoing transfer:") << std::endl;
 
     /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "") {
-        std::cout << WarningMsg("Timestamp: " + blockTime) << std::endl;
+        std::cout << std::left << std::setw(13) << WarningMsg("Time: ") << std::setw(0) << WarningMsg(blockTime) << std::endl;
     }
+    std::cout << std::left << std::setw(13) << WarningMsg("Hash: ") << std::setw(64) << WarningMsg(Common::podToHex(t.hash)) << std::endl
+              << std::left << std::setw(13) << WarningMsg("Spent: ") << std::right << std::setw(totalLen) << WarningMsg(formatAmount(-amount - t.fee)) << std::endl
+              << std::left << std::setw(13) << WarningMsg("Fee: ") << std::right << std::setw(totalLen) << WarningMsg(formatAmount(t.fee)) << std::endl
+              << std::left << std::setw(13) << WarningMsg("Total Spent: ") << std::right << std::setw(totalLen) << WarningMsg(formatAmount(-amount)) << std::endl;
 
     std::cout << std::endl;
 }
@@ -1017,15 +1019,15 @@ void printIncomingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
 
     /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "") {
-        std::cout << SuccessMsg("Time: " + blockTime) << std::endl;
+        std::cout << std::left << std::setw(13) << SuccessMsg("Time: ") << std::setw(0) << SuccessMsg(blockTime) << std::endl;
     }
-    std::cout << SuccessMsg("Hash: " + Common::podToHex(t.hash)) << std::endl
-              << SuccessMsg("Amount: " + formatAmount(amount)) << std::endl;
+    std::cout << std::left << std::setw(13) << SuccessMsg("Hash: ") << std::setw(64) << SuccessMsg(Common::podToHex(t.hash)) << std::endl
+              << std::left << std::setw(13) << SuccessMsg("Amount: ") << std::setw(0) << SuccessMsg(formatAmount(amount)) << std::endl;
 
     Crypto::Hash paymentId;
     std::vector<uint8_t> vec(t.extra.begin(), t.extra.end());
     if (CryptoNote::getPaymentIdFromTxExtra(vec, paymentId)) {
-        std::cout << SuccessMsg("Payment ID: " + Common::podToHex(paymentId)) << std::endl;
+        std::cout << std::left << std::setw(13) << SuccessMsg("Payment ID: ") << std::setw(64) << SuccessMsg(Common::podToHex(paymentId)) << std::endl;
     }
 
     std::cout << std::endl;
@@ -1328,13 +1330,13 @@ void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
                 Common::Console::clearLine();
                 std::cout << "\r"
                           << InformationMsg("New incoming transaction!") << std::endl
-                          << SuccessMsg("Hash: " + Common::podToHex(t.hash)) << std::endl
-                          << SuccessMsg("Amount: " + formatAmount(t.totalAmount)) << std::endl;
+                          << std::left << std::setw(13) << SuccessMsg("Hash: ") << std::setw(64) << SuccessMsg(Common::podToHex(t.hash)) << std::endl
+                          << std::left << std::setw(13) << SuccessMsg("Amount: ") << std::setw(0) << SuccessMsg(formatAmount(t.totalAmount)) << std::endl;
 
                 Crypto::Hash paymentId;
                 std::vector<uint8_t> vec(t.extra.begin(), t.extra.end());
                 if (CryptoNote::getPaymentIdFromTxExtra(vec, paymentId)) {
-                    std::cout << SuccessMsg("Payment ID: " + Common::podToHex(paymentId)) << std::endl;
+                    std::cout << std::left << std::setw(13) << SuccessMsg("Payment ID: ") << std::setw(64) << SuccessMsg(Common::podToHex(paymentId)) << std::endl;
                 }
                 std::cout << std::endl;
                 std::cout << getPrompt(walletInfo) << std::flush;
