@@ -56,7 +56,7 @@ std::string join(std::vector<std::string>& v, const std::string& delim) {
 
 bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<WalletInfo> walletInfo) {
     std::cout << std::endl
-              << InformationMsg("Confirm Transaction?") << std::endl;
+              << InformationMsg("Confirm transaction?") << std::endl;
 
     std::string paymentId = "";
 
@@ -77,14 +77,14 @@ bool confirmTransaction(CryptoNote::TransactionParameters t, std::shared_ptr<Wal
 
     if (paymentId != "") {
         std::cout << ", a mixin of " << SuccessMsg(std::to_string(t.mixIn))
-                  << " and a Payment ID of " << SuccessMsg(paymentId);
+                  << " and a payment ID of " << SuccessMsg(paymentId);
     } else {
         std::cout << " and a mixin of " << SuccessMsg(std::to_string(t.mixIn));
     }
 
     std::cout << std::endl << std::endl
-              << "FROM: " << SuccessMsg(join(t.sourceAddresses, ", ")) << std::endl
-              << "TO: " << SuccessMsg(t.destinations[0].address) << std::endl
+              << std::left << std::setw(6) << "From: " << std::setw(0) << SuccessMsg(join(t.sourceAddresses, ", ")) << std::endl
+              << std::left << std::setw(6) << "To: " << std::setw(0) << SuccessMsg(t.destinations[0].address) << std::endl
               << std::endl;
 
     if (confirm("Is this correct?")) {
