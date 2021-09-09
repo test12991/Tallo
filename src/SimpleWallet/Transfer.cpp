@@ -703,7 +703,7 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
             std::string errMsg = e.what();
             /* For some reason we are unable to send our full balance when I have tested. It looks possible it is due to dust amounts,
                possibly these can't be sent? The relevant code can be found in src/Wallet/WalletGreen.cpp in the function selectTransfers() */
-            if (errMsg == "Not enough money: Wrong amount" && !retried) {
+            if (errMsg == "Not enough money: Wrong amount" && (!retried && (p.mixIn != 0))) {
                 std::cout << WarningMsg("Failed to send transaction - not enough funds!") << std::endl
                           << "You sometimes need to send a small amount less than your full balance to get the transfer to succeed." << std::endl
                           << "This is possibly due to dust in your wallet that is unable to be sent without a mixin of 0." << std::endl;
@@ -720,9 +720,9 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
             /* The internal node error I believe is caused by the same issue as the mixin error.
                Rocksteady explained this as not enough traffic having occured on the network to allow your to mixin with.
                Hopefully, this will only occur on the testnet and not the main network.
-               It seems sending multiple smaller transactiosn will provide the network with more change to allow tx's to go through.
+               It seems sending multiple smaller transactions will provide the network with more change to allow transactions to go through.
                However, in some wallets that have only recieved one big single transaction, they may be unable to send at all without lowering their mixin count to 0 */
-            else if ((errMsg == "MixIn count is too big" || errMsg == "Internal node error") && !retried) {
+            else if ((errMsg == "MixIn count is too big" || errMsg == "Internal node error") && (!retried && (p.mixIn != 0))) {
                 std::cout << WarningMsg("Failed to send transaction!") << std::endl
                           << "Unable to find enough outputs to mix with." << std::endl
                           << "Try lowering the amount you are sending in one transaction." << std::endl
@@ -739,7 +739,7 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
             } else if (errMsg == "Network error") {
                 std::cout << WarningMsg("Couldn't connect to the network to send the transaction!") << std::endl
                           << "Ensure " << CryptoNote::CRYPTONOTE_NAME << "d or the remote node you are using is open and functioning." << std::endl;
-            } else if (retried) {
+            } else if (retried || (p.mixIn == 0)) {
                 std::cout << WarningMsg("Failed to send transaction with zero mixin! Try lowering the amount you are sending.") << std::endl;
             } else {
                 std::cout << WarningMsg("Failed to send transaction!") << std::endl
