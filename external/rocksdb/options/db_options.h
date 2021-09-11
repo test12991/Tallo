@@ -82,7 +82,9 @@ struct ImmutableDBOptions {
 
 struct MutableDBOptions {
   MutableDBOptions();
+#ifndef __clang__
   explicit MutableDBOptions(const MutableDBOptions& options) = default;
+#endif
   explicit MutableDBOptions(const DBOptions& options);
 
   void Dump(Logger* log) const;

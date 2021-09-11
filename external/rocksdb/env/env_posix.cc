@@ -20,6 +20,9 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#ifdef OS_ANDROID
+#include <sys/sysmacros.h>
+#endif
 #ifdef OS_LINUX
 #include <sys/statfs.h>
 #include <sys/syscall.h>

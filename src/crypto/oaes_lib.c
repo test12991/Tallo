@@ -30,7 +30,11 @@
 
 #include <stddef.h>
 #include <time.h>
+#ifdef HAVE_GETTIMEOFDAY
+#include <sys/time.h>
+#else
 #include <sys/timeb.h>
+#endif
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #else
@@ -479,6 +483,7 @@ static void oaes_get_seed( char buf[RANDSIZ + 1] )
 #else
 static uint32_t oaes_get_seed(void)
 {
+#ifndef HAVE_GETTIMEOFDAY
 	struct timeb timer;
 	struct tm *gmTimer;
 	char * _test = NULL;
@@ -490,7 +495,19 @@ static uint32_t oaes_get_seed(void)
 	_ret = (uint32_t)(gmTimer->tm_year + 1900 + gmTimer->tm_mon + 1 + gmTimer->tm_mday +
 			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.millitm +
 			(uintptr_t) ( _test + timer.millitm ) + getpid());
+#else
+	struct timeval timer;
+	struct tm *gmTimer;
+	char * _test = NULL;
+	uint32_t _ret = 0;
 
+	gettimeofday(&timer, NULL);
+	gmTimer = gmtime( &timer.tv_sec );
+	_test = (char *) calloc( sizeof( char ), timer.tv_usec/1000 );
+	_ret = gmTimer->tm_year + 1900 + gmTimer->tm_mon + 1 + gmTimer->tm_mday +
+			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.tv_usec/1000 +
+			(uintptr_t) ( _test + timer.tv_usec/1000 ) + getpid();
+#endif
 	if( _test )
 		free( _test );
 

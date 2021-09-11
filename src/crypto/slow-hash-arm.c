@@ -515,7 +515,6 @@ void cn_slow_hash(
     uint8_t c[AES_BLOCK_SIZE];
     uint8_t c1[AES_BLOCK_SIZE];
     uint8_t d[AES_BLOCK_SIZE];
-    uint8_t aes_key[AES_KEY_SIZE];
     RDATA_ALIGN16 uint8_t expandedKey[256];
 
     union cn_slow_hash_state state;

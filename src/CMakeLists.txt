@@ -1,3 +1,5 @@
+include(CheckSymbolExists)
+
 add_definitions(-DSTATICLIB)
 
 if(NOT ROCKSDB_FOUND)
@@ -31,6 +33,15 @@ if(MSVC)
 file(GLOB_RECURSE System System/* Platform/Windows/System/*)
 elseif(APPLE)
 file(GLOB_RECURSE System System/* Platform/OSX/System/* Platform/Posix/System/*)
+elseif(ANDROID)
+file(GLOB_RECURSE System System/* Platform/Android/System/* Platform/Posix/System/*)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+  file(GLOB_RECURSE AndroidCompat Platform/Android/ucontext/arm/*)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+  file(GLOB_RECURSE AndroidCompat Platform/Android/ucontext/aarch64/*)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i686")
+  file(GLOB_RECURSE AndroidCompat Platform/Android/ucontext/x86/*)
+endif()
 else()
 file(GLOB_RECURSE System System/* Platform/Linux/System/* Platform/Posix/System/*)
 endif()
@@ -40,6 +51,16 @@ endif()
 # Probably not what you need to be looking at if something isn't building
 source_group("" FILES $${Common} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${Daemon} ${JsonRpcServer} ${Http} ${Logging} ${Miner} ${Mnemonics} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${SimpleWallet} ${System} ${Transfers} ${Wallet} ${WalletLegacy})
 
+# Check functions
+check_symbol_exists(gettimeofday "sys/time.h" HAVE_GETTIMEOFDAY)
+if(HAVE_GETTIMEOFDAY)
+  add_definitions("-DHAVE_GETTIMEOFDAY")
+endif(HAVE_GETTIMEOFDAY)
+
+# Add dependencies
+if(ANDROID)
+add_library(AndroidCompat ${AndroidCompat})
+endif()
 add_library(BlockchainExplorer ${BlockchainExplorer})
 add_library(Common ${Common})
 add_library(Crypto ${Crypto})
@@ -83,7 +104,13 @@ if(MSVC)
   target_link_libraries(System ws2_32)
   target_link_libraries(Daemon Rpcrt4)
   target_link_libraries(PaymentGateService Rpcrt4)
-endif ()
+elseif(ANDROID)
+  target_link_libraries(System AndroidCompat)
+  target_link_libraries(Daemon dl)
+  target_link_libraries(SimpleWallet dl)
+  target_link_libraries(PaymentGateService dl)
+  target_link_libraries(Miner dl)
+endif()
 
 # Add the dependencies we need
 target_link_libraries(CryptoNoteCore Common Logging Crypto P2P Rpc Http Serialization System ${Boost_LIBRARIES})

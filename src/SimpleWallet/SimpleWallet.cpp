@@ -169,7 +169,7 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &confi
             std::string answer;
             std::getline(std::cin, answer);
 
-            char c = std::tolower(answer[0]);
+            int c = std::tolower(answer[0]);
 
             /* Lets people spam enter in the transaction screen */
             if (c == 't' || c == '\0') {
