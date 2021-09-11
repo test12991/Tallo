@@ -1,8 +1,11 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.0)
 
-project (miniupnpc C)
+cmake_policy(SET CMP0048 NEW)
+
 set (MINIUPNPC_VERSION 1.9)
 set (MINIUPNPC_API_VERSION 10)
+
+project (miniupnpc VERSION ${MINIUPNPC_VERSION} LANGUAGES C)
 
 if (NOT CMAKE_BUILD_TYPE)
   if (WIN32)
