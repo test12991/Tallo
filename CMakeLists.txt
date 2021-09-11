@@ -60,7 +60,7 @@ endif()
 set(STATIC ${MSVC} CACHE BOOL "Link libraries statically")
 
 if(MSVC)
-  add_definitions("/bigobj /MP /W3 /GS- /D_CRT_SECURE_NO_WARNINGS /wd4996 /wd4345 /D_WIN32_WINNT=0x0600 /DWIN32_LEAN_AND_MEAN /DGTEST_HAS_TR1_TUPLE=0 /D_VARIADIC_MAX=8 /D__SSE4_1__")
+  add_definitions("/bigobj" "/MP" "/W3" "/GS-" "/D_CRT_SECURE_NO_WARNINGS" "/wd4996" "/wd4345" "/D_WIN32_WINNT=0x0600" "/DWIN32_LEAN_AND_MEAN" "/DGTEST_HAS_TR1_TUPLE=0" "/D_VARIADIC_MAX=8" "/D__SSE4_1__")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:10485760")
   if(STATIC)
     foreach(VAR CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS_RELWITHDEBINFO CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
@@ -75,7 +75,7 @@ else()
   elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     # This option has no effect in glibc version less than 2.20.
     # Since glibc 2.20 _BSD_SOURCE is deprecated, this macro is recomended instead
-    add_definitions("-D_DEFAULT_SOURCE -D_GNU_SOURCE")
+    add_definitions("-D_DEFAULT_SOURCE" "-D_GNU_SOURCE")
   endif()
   set(ARCH native CACHE STRING "CPU to build for: -march value or default")
   if("${ARCH}" STREQUAL "default")
