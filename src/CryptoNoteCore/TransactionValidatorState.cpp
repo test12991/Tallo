@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -17,6 +17,8 @@
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "TransactionValidatorState.h"
+
+#include <algorithm>
 
 namespace CryptoNote {
 

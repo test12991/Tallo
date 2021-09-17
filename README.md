@@ -58,15 +58,17 @@ Run `./src/Talleod` to connect to the network and let it sync (it may take a whi
 #### Windows 10
 
 ##### Prerequisites
-- Install [Visual Studio 2017 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%202017)
-- When installing Visual Studio, it is **required** that you install **Desktop development with C++** and the **VC++ v140 toolchain** when selecting features. The option to install the v140 toolchain can be found by expanding the "Desktop development with C++" node on the right. You will need this for the project to build correctly.
+- Install [Visual Studio 2017 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202017) or [Visual Studio 2019 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202019)
+- When installing Visual Studio 2017, it is **required** that you install **Desktop development with C++** and the **VC++ v140 toolchain** when selecting features. The option to install the v140 toolchain can be found by expanding the "Desktop development with C++" node on the right. You will need this for the project to build correctly.
 - Install [Boost 1.64.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.64.0/), ensuring you download the installer for MSVC 14.0.
 
-NOTE: If you have Visual Studio 2017.9 Community, you will need to use [Boost 1.71.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.71.0/) and v141 toolchain
+NOTES:
+1. If you have Visual Studio 2017.9 Community, you will need to use [Boost 1.71.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.71.0/) and v141 toolchain
+2. If you have Visual Studio 2019 Community, you will need to use [Boost 1.73.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.73.0/) or later and v142 toolchain
 
 ##### Building
 
-- From the start menu, open 'x64 Native Tools Command Prompt for vs2017'.
+- From the start menu, open 'x64 Native Tools Command Prompt for VS 2017'.
 - `cd <your_Talleo_directory>`
 - `mkdir build`
 - `cd build`

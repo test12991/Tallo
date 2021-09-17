@@ -57,7 +57,7 @@ Status ExternalSstFileIngestionJob::Prepare(
     return Status::InvalidArgument("The list of files is empty");
   } else if (num_files > 1) {
     // Verify that passed files dont have overlapping ranges
-    autovector<const IngestedFileInfo*> sorted_files;
+    std::vector<const IngestedFileInfo*> sorted_files;
     for (size_t i = 0; i < num_files; i++) {
       sorted_files.push_back(&files_to_ingest_[i]);
     }
