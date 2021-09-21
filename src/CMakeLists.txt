@@ -28,6 +28,7 @@ file(GLOB_RECURSE WalletLegacy WalletLegacy/*)
 file(GLOB_RECURSE JsonRpcServer JsonRpcServer/*)
 file(GLOB_RECURSE PaymentGate PaymentGate/*)
 file(GLOB_RECURSE PaymentGateService PaymentGateService/*)
+file(GLOB_RECURSE AddressGenerator AddressGenerator/*)
 
 if(MSVC)
 file(GLOB_RECURSE System System/* Platform/Windows/System/*)
@@ -93,12 +94,16 @@ if(MSVC)
   set(PG_SOURCES_OS
     BinaryInfo/walletd.rc
   )
+  set(GENERATE_SOURCES_OS
+    BinaryInfo/generate.rc
+  )
 endif()
 
 add_executable(Daemon ${Daemon} ${DAEMON_SOURCES_OS})
 add_executable(SimpleWallet ${SimpleWallet} ${SIMPLE_WALLET_SOURCES_OS})
 add_executable(PaymentGateService ${PaymentGateService} ${PG_SOURCES_OS})
 add_executable(Miner ${Miner} ${MINER_SOURCES_OS})
+add_executable(AddressGenerator ${AddressGenerator} ${GENERATE_SOURCES_OS})
 
 if(MSVC)
   target_link_libraries(System ws2_32)
@@ -110,6 +115,7 @@ elseif(ANDROID)
   target_link_libraries(SimpleWallet dl)
   target_link_libraries(PaymentGateService dl)
   target_link_libraries(Miner dl)
+  target_link_libraries(AddressGenerator dl)
 endif()
 
 # Add the dependencies we need
@@ -130,6 +136,7 @@ else()
   target_link_libraries(PaymentGateService PaymentGate JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto Rpc Http System Logging Common InProcessNode rocksdb ${Boost_LIBRARIES})
 endif()
 target_link_libraries(Miner CryptoNoteCore Rpc Serialization System Http Logging Common Crypto ${Boost_LIBRARIES})
+target_link_libraries(AddressGenerator CryptoNoteCore Logging Common ${Boost_LIBRARIES})
 
 # Add dependencies means we have to build the latter before we build the former
 # In this case it's because we need to have the current version name rather
@@ -139,9 +146,11 @@ add_dependencies(Daemon version)
 add_dependencies(SimpleWallet version)
 add_dependencies(PaymentGateService version)
 add_dependencies(P2P version)
+add_dependencies(AddressGenerator version)
 
 # Finally build the binaries
 set_property(TARGET Daemon PROPERTY OUTPUT_NAME "Talleod")
 set_property(TARGET SimpleWallet PROPERTY OUTPUT_NAME "simplewallet")
 set_property(TARGET PaymentGateService PROPERTY OUTPUT_NAME "walletd")
 set_property(TARGET Miner PROPERTY OUTPUT_NAME "miner")
+set_property(TARGET AddressGenerator PROPERTY OUTPUT_NAME "generate")
