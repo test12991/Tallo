@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2021, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -618,7 +618,11 @@ Difficulty Currency::nextDifficultyZawyLWMA2(uint8_t version, uint32_t blockInde
     next_D = std::max(next_D, (prev_D*110)/100);
   }
 
-  return static_cast<uint64_t>(next_D);
+  uint64_t nextD = static_cast<uint64_t>(next_D);
+  if (nextD == 0)
+    return 100;
+
+  return nextD;
 }
 
 Difficulty Currency::nextDifficulty(uint8_t version, uint32_t blockIndex, std::vector<uint64_t> timestamps,
