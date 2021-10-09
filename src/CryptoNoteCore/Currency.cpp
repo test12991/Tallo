@@ -619,7 +619,10 @@ Difficulty Currency::nextDifficultyZawyLWMA2(uint8_t version, uint32_t blockInde
   }
 
   uint64_t nextD = static_cast<uint64_t>(next_D);
-  if (nextD == 0)
+
+  if (blockIndex >= 1000000 && nextD < 1000000)
+    return 1000000;
+  else if (nextD == 0)
     return 100;
 
   return nextD;
