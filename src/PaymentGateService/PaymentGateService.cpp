@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -38,6 +38,7 @@
 #include "P2p/NetNode.h"
 #include <System/Context.h>
 #include "Wallet/WalletGreen.h"
+#include "version.h"
 
 #ifdef ERROR
 #undef ERROR
@@ -284,6 +285,12 @@ void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, 
   std::unique_ptr<PaymentService::WalletService> serviceGuard(service);
   try {
     service->init();
+#ifdef WIN32
+    if (!config.gateConfiguration.daemonize) {
+      std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " wallet daemon v" + std::string(PROJECT_VERSION_LONG) + " - " + config.gateConfiguration.containerFile;
+      SetConsoleTitleA(consoletitle.c_str());
+    }
+#endif
   } catch (std::exception& e) {
     Logging::LoggerRef(logger, "run")(Logging::ERROR, Logging::BRIGHT_RED) << "Failed to init walletService reason: " << e.what();
     return;

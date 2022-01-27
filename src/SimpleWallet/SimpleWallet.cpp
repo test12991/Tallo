@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (c) 2018, The Karbo developers
-Copyright (C) 2019-2021, The Talleo developers
+Copyright (C) 2019-2022, The Talleo developers
 
 
 This program is free software: you can redistribute it and/or modify
@@ -101,9 +101,8 @@ int main(int argc, char **argv) {
 
     std::future_status status = initNode.wait_for(std::chrono::seconds(20));
 
-    /* Connection took to long to remote node, let program continue regardless
-       as they could perform functions like export_keys without being
-       connected */
+    /* Connection to remote node took too long, let program continue regardless
+       as they could perform functions like export_keys without being connected */
     if (status != std::future_status::ready) {
         if (config.host != "127.0.0.1") {
             std::cout << WarningMsg("Unable to connect to remote node, connection timed out.") << std::endl
@@ -308,6 +307,11 @@ std::shared_ptr<WalletInfo> importFromKeys(CryptoNote::WalletGreen &wallet, Cryp
               << InformationMsg("Your wallet ") << SuccessMsg(walletAddress) << InformationMsg(" has been successfully imported!") << std::endl
               << std::endl;
 
+#ifdef _WIN32
+    std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " SimpleWallet v" + std::string(PROJECT_VERSION_LONG) + " - " + walletFileName;
+    SetConsoleTitleA(consoletitle.c_str());
+#endif
+
     return std::make_shared<WalletInfo>(walletFileName, walletPass, walletAddress, false, wallet);
 }
 
@@ -330,6 +334,11 @@ std::shared_ptr<WalletInfo> generateWallet(CryptoNote::WalletGreen &wallet) {
 
     std::cout << WarningMsg("If you lose these your wallet cannot be recreated!") << std::endl
               << std::endl;
+
+#ifdef _WIN32
+    std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " SimpleWallet v" + std::string(PROJECT_VERSION_LONG) + " - " + walletFileName;
+    SetConsoleTitleA(consoletitle.c_str());
+#endif
 
     return std::make_shared<WalletInfo>(walletFileName, walletPass, walletAddress, false, wallet);
 }
@@ -356,6 +365,11 @@ Maybe<std::shared_ptr<WalletInfo>> openWallet(CryptoNote::WalletGreen &wallet, C
 
         try {
             wallet.load(walletFileName, walletPass);
+
+#ifdef _WIN32
+            std::string consoletitle = std::string(CryptoNote::CRYPTONOTE_NAME) + " SimpleWallet v" + std::string(PROJECT_VERSION_LONG) + " - " + walletFileName;
+            SetConsoleTitleA(consoletitle.c_str());
+#endif
 
             std::string walletAddress = wallet.getAddress(0);
 
