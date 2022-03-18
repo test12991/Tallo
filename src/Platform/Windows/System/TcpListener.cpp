@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -131,7 +131,7 @@ TcpConnection TcpListener::accept() {
   if (connection == INVALID_SOCKET) {
     message = "socket failed, " + errorMessage(WSAGetLastError());
   } else {
-    uint8_t addresses[sizeof sockaddr_in * 2 + 32];
+    uint8_t addresses[sizeof(sockaddr_in) * 2 + 32];
     DWORD received;
     TcpListenerContext context2;
     context2.hEvent = NULL;
