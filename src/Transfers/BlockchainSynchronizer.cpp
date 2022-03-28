@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -39,10 +39,6 @@ namespace {
 
 const int RETRY_TIMEOUT = 5;
 
-std::ostream& operator<<(std::ostream& os, const CryptoNote::IBlockchainConsumer* consumer) {
-  return os << "0x" << std::setw(8) << std::setfill('0') << std::hex << reinterpret_cast<uintptr_t>(consumer) << std::dec << std::setfill(' ');
-}
-
 class TransactionReaderListFormatter {
 public:
   explicit TransactionReaderListFormatter(const std::vector<std::unique_ptr<CryptoNote::ITransactionReader>>& transactionList) :
@@ -74,6 +70,10 @@ private:
 }
 
 namespace CryptoNote {
+
+std::ostream& operator<<(std::ostream& os, const IBlockchainConsumer* consumer) {
+  return os << "0x" << std::setw(8) << std::setfill('0') << std::hex << reinterpret_cast<uintptr_t>(consumer) << std::dec << std::setfill(' ');
+}
 
 BlockchainSynchronizer::BlockchainSynchronizer(INode& node, Logging::ILogger& logger, const Hash& genesisBlockHash) :
   m_logger(logger, "BlockchainSynchronizer"),
