@@ -127,49 +127,6 @@ else ()
   message(STATUS "LZ4 library is disabled")
 endif ()
 
-# ================================================== ZLIB ==================================================
-#
-# Edit these 4 lines to define paths to ZLIB
-#
-set(ZLIB_HOME $ENV{THIRDPARTY_HOME}/ZLIB.Library)
-set(ZLIB_INCLUDE ${ZLIB_HOME}/inc/include)
-set(ZLIB_LIB_DEBUG ${ZLIB_HOME}/bin/debug/amd64/zlib.lib)
-set(ZLIB_LIB_RELEASE ${ZLIB_HOME}/bin/retail/amd64/zlib.lib)
-
-#
-# Don't touch these lines
-#
-
-# For compatibilty
-if (ZLIB)
-  set(WITH_ZLIB ON)
-endif ()
-
-if (WITH_ZLIB)
-  message(STATUS "ZLIB library is enabled")
-
-  if(DEFINED ENV{ZLIB_INCLUDE})
-    set(ZLIB_INCLUDE $ENV{ZLIB_INCLUDE})
-  endif()
-  
-  if(DEFINED ENV{ZLIB_LIB_DEBUG})
-    set(ZLIB_LIB_DEBUG $ENV{ZLIB_LIB_DEBUG})
-  endif()
-
-  if(DEFINED ENV{ZLIB_LIB_RELEASE})
-    set(ZLIB_LIB_RELEASE $ENV{ZLIB_LIB_RELEASE})
-  endif()
-  
-  set(ZLIB_CXX_FLAGS -DZLIB)
-  set(ZLIB_LIBS debug ${ZLIB_LIB_DEBUG} optimized ${ZLIB_LIB_RELEASE})
-
-  add_definitions(${ZLIB_CXX_FLAGS})
-  include_directories(${ZLIB_INCLUDE})
-  set (THIRDPARTY_LIBS ${THIRDPARTY_LIBS} ${ZLIB_LIBS})
-else ()
-  message(STATUS "ZLIB library is disabled")
-endif ()
-
 # For compatibilty
 if (XPRESS)
   set(WITH_XPRESS ON)
