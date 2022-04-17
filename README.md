@@ -1,12 +1,12 @@
 
 ### How To Compile
 
-#### Ubuntu 16.04 or newer
+#### Ubuntu 18.04 or newer
 
 ##### Prerequisites
 
 ###### Ubuntu 18.04
-- You will need the following packages: boost (1.55 or higher), cmake, git, gcc (4.9 or higher), g++ (4.9 or higher), make, and python. Most of these should already be installed on your system.
+- You will need the following packages: boost (1.55 or higher), cmake, git, gcc (6.x), g++ (6.x), make, and python. Most of these should already be installed on your system.
 - `sudo apt-get -y install build-essential python-dev gcc g++ git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
 
 ###### Ubuntu 20.04
