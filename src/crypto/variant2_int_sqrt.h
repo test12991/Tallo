@@ -1,5 +1,6 @@
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018-2019, The TurtleCoin Developers
+// Copyright (c) 2022, The Talleo Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -65,7 +66,7 @@ static inline uint32_t integer_square_root_v2(uint64_t n)
         r >>= 1;
     }
 
-    return r * 2 + ((n > r) ? 1 : 0);
+    return (uint32_t)(r * 2 + ((n > r) ? 1 : 0));
 }
 
 /*

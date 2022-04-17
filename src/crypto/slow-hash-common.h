@@ -2,6 +2,7 @@
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2014-2018, The Aeon Project
 // Copyright (c) 2018-2019, The TurtleCoin Developers
+// Copyright (c) 2022, The Talleo Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -168,13 +169,13 @@ union cn_slow_hash_state {
         }                                                           \
     while (0)
 
-#define VARIANT2_INTEGER_MATH_DIVISION_STEP(b, ptr)                                                      \
-    ((uint64_t *)(b))[0] ^= division_result ^ (sqrt_result << 32);                                       \
-    {                                                                                                    \
-        const uint64_t dividend = ((uint64_t *)(ptr))[1];                                                \
-        const uint32_t divisor = (((uint64_t *)(ptr))[0] + (uint32_t)(sqrt_result << 1)) | 0x80000001UL; \
-        division_result = ((uint32_t)(dividend / divisor)) + (((uint64_t)(dividend % divisor)) << 32);   \
-    }                                                                                                    \
+#define VARIANT2_INTEGER_MATH_DIVISION_STEP(b, ptr)                                                                        \
+    ((uint64_t *)(b))[0] ^= division_result ^ (sqrt_result << 32);                                                         \
+    {                                                                                                                      \
+        const uint64_t dividend = ((uint64_t *)(ptr))[1];                                                                  \
+        const uint32_t divisor = (const uint32_t)((((uint64_t *)(ptr))[0] + (uint32_t)(sqrt_result << 1)) | 0x80000001UL); \
+        division_result = ((uint32_t)(dividend / divisor)) + (((uint64_t)(dividend % divisor)) << 32);                     \
+    }                                                                                                                      \
     const uint64_t sqrt_input = ((uint64_t *)(ptr))[0] + division_result
 
 #define VARIANT2_INTEGER_MATH_SSE2(b, ptr)                 \
