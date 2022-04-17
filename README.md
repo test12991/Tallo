@@ -58,13 +58,21 @@ Run `./src/Talleod` to connect to the network and let it sync (it may take a whi
 #### Windows 10
 
 ##### Prerequisites
-- Install [Visual Studio 2017 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202017) or [Visual Studio 2019 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202019)
-- When installing Visual Studio 2017, it is **required** that you install **Desktop development with C++** and the **VC++ v140 toolchain** when selecting features. The option to install the v140 toolchain can be found by expanding the "Desktop development with C++" node on the right. You will need this for the project to build correctly.
-- Install [Boost 1.64.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.64.0/), ensuring you download the installer for MSVC 14.0.
+- Install either
+  1. [Visual Studio 2017 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202017)
+  2. [Visual Studio 2017.9 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202017%20%28version%2015.9%29)
+  3. [Visual Studio 2019 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202019)
+  4. [Visual Studio 2022 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202022)
 
 NOTES:
-1. If you have Visual Studio 2017.9 Community, you will need to use [Boost 1.71.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.71.0/) and v141 toolchain
-2. If you have Visual Studio 2019 Community, you will need to use [Boost 1.73.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.73.0/) or later and v142 toolchain
+1. When installing Visual Studio 2017, it is **required** that you
+    1. Install **Desktop development with C++** and the **VC++ v140 toolchain** when selecting features. The option to install the v140 toolchain can be found by expanding the "Desktop development with C++" node on the right. You will need this for the project to build correctly.
+    2. Install [Boost 1.64.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.64.0/), ensuring you download the installer for MSVC 14.0.
+2. If you have Visual Studio 2017.9 Community, you will need to use [Boost 1.71.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.71.0/) and v141 toolchain
+3. If you have Visual Studio 2019 Community, you will need to use [Boost 1.73.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.73.0/) or later, and v142 toolchain
+4. If you have Visual Studio 2022 Community, you will need to use either
+    1. [Boost 1.77.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.77.0/) and v142 toolchain
+    2. [Boost 1.78.0](https://sourceforge.net/projects/boost/files/boost-binaries/1.78.0/) or later, and v143 toolchain
 
 ##### Building
 
@@ -82,7 +90,7 @@ NOTES:
 Cryptonote Developers, Bytecoin Developers, Monero Developers, TurtleCoin Developers, Forknote Project, PinkstarcoinV2 Developers, Bittorium Developers, Talleo developers.
 
 #### Donate
-Donate to our project and help us achieve more for you!  
+Donate to our project and help us achieve more for you!
 Our BTC Address:   1D1YBHmFkd4J7bEG6PYfZBLoXtp98hKsfw
 
 
