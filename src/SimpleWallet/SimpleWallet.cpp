@@ -118,10 +118,10 @@ int main(int argc, char **argv) {
     CryptoNote::WalletGreen wallet(*dispatcher, currency, *node, logger.getLogger());
 
     /* Run the interactive wallet interface */
-    run(wallet, *node, config);
+    run(*dispatcher, wallet, *node, config);
 }
 
-void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config) {
+void run(System::Dispatcher& dispatcher, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config) {
     auto maybeWalletInfo = Nothing<std::shared_ptr<WalletInfo>>();
     Action action;
     std::string coinName(CryptoNote::CRYPTONOTE_NAME);
@@ -208,7 +208,7 @@ void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &confi
 
     welcomeMsg();
 
-    inputLoop(walletInfo, node);
+    inputLoop(dispatcher, walletInfo, node);
 
     shutdown(walletInfo->wallet, node, alreadyShuttingDown);
 }
@@ -704,7 +704,7 @@ std::string getInputAndDoWorkWhileIdle(std::shared_ptr<WalletInfo> &walletInfo) 
     }
 }
 
-void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node) {
+void inputLoop(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node) {
     while (true) {
         std::cout << getPrompt(walletInfo);
 
@@ -777,12 +777,12 @@ void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node)
             } else if (command == "count_transfers") {
                 countTransfers(true, true, walletInfo->wallet, node);
             } else if (command == "transfer") {
-                transfer(walletInfo);
+                transfer(dispatcher, walletInfo);
             } else if (words[0] == "transfer") {
                 /* remove the first item from words - this is the "transfer"
                    command, leaving us just the transfer arguments. */
                 words.erase(words.begin());
-                transfer(walletInfo, words);
+                transfer(dispatcher, walletInfo, words);
             } else if (command == "quick_optimize") {
                 quickOptimize(walletInfo->wallet);
             } else if (command == "full_optimize") {

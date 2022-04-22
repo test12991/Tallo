@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
-Copyright (C) 2019-2021, The Talleo developers
+Copyright (C) 2019-2022, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,7 +26,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <SimpleWallet/Transfer.h>
 #include <SimpleWallet/SubWallet.h>
+#include <Common/JsonValue.h>
 #include <Common/StringTools.h>
+#include <Rpc/HttpClient.h>
 #include <boost/algorithm/string.hpp>
 
 #include <math.h>
@@ -505,7 +507,7 @@ void fusionTX(CryptoNote::WalletGreen &wallet, CryptoNote::TransactionParameters
     }
 }
 
-void transfer(std::shared_ptr<WalletInfo> walletInfo, std::vector<std::string> args) {
+void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> walletInfo, std::vector<std::string> args) {
     uint16_t mixin;
     std::string address;
     uint64_t amount;
@@ -514,6 +516,14 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo, std::vector<std::string> a
 
     /* Check we have enough args for the default required parameters */
     if (args.size() >= 3) {
+        if (args[1].find("@") != std::string::npos) {
+            args[1] = resolveAddress(dispatcher, args[1]);
+            if (args[1].empty()) {
+                std::cout << WarningMsg("You have specified unknown e-mail address!") << std::endl;
+                return;
+            }
+        }
+
         if (parseMixin(args[0]) && parseAddress(args[1]) && parseAmount(args[2])) {
             mixin = std::stoi(args[0]);
             address = args[1];
@@ -564,17 +574,17 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo, std::vector<std::string> a
         }
     }
 
-    doTransfer(mixin, address, amount, fee, extra, walletInfo);
+    doTransfer(dispatcher, mixin, address, amount, fee, extra, walletInfo);
 }
 
-void transfer(std::shared_ptr<WalletInfo> walletInfo) {
+void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> walletInfo) {
     std::cout << InformationMsg("Note: You can type \"cancel\" at any time to cancel the transaction") << std::endl
               << std::endl;
 
     std::string sourceAddress = walletInfo->wallet.getAddress(subWallet);
     uint64_t balance = walletInfo->wallet.getActualBalance(sourceAddress);
 
-    auto maybeAddress = getDestinationAddress();
+    auto maybeAddress = getDestinationAddress(dispatcher);
 
     if (!maybeAddress.isJust) {
         std::cout << WarningMsg("Cancelling transaction.") << std::endl;
@@ -633,10 +643,10 @@ void transfer(std::shared_ptr<WalletInfo> walletInfo) {
 
     std::string extra = maybeExtra.x;
 
-    doTransfer(mixin, address, amount, fee, extra, walletInfo);
+    doTransfer(dispatcher, mixin, address, amount, fee, extra, walletInfo);
 }
 
-void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t fee, std::string extra, std::shared_ptr<WalletInfo> walletInfo) {
+void doTransfer(System::Dispatcher& dispatcher, uint16_t mixin, std::string address, uint64_t amount, uint64_t fee, std::string extra, std::shared_ptr<WalletInfo> walletInfo) {
     std::string sourceAddress = walletInfo->wallet.getAddress(subWallet);
     uint64_t balance = walletInfo->wallet.getActualBalance(sourceAddress);
     uint64_t remote_node_fee = 0;
@@ -650,6 +660,14 @@ void doTransfer(uint16_t mixin, std::string address, uint64_t amount, uint64_t f
                   << InformationMsg("Funds needed: " + formatAmount(amount + fee + remote_node_fee)) << std::endl
                   << SuccessMsg("Funds available: " + formatAmount(balance)) << std::endl;
         return;
+    }
+
+    if (address.find("@") != std::string::npos) {
+        address = resolveAddress(dispatcher, address);
+        if (address.empty()) {
+            std::cout << WarningMsg("You have specified unknown e-mail address!") << std::endl;
+            return;
+        }
     }
 
     std::vector<CryptoNote::WalletOrder> transfers;
@@ -867,7 +885,7 @@ Maybe<uint64_t> getTransferAmount() {
     }
 }
 
-Maybe<std::string> getDestinationAddress() {
+Maybe<std::string> getDestinationAddress(System::Dispatcher& dispatcher) {
     while (true) {
         std::string transferAddr;
 
@@ -878,6 +896,14 @@ Maybe<std::string> getDestinationAddress() {
 
         if (transferAddr == "cancel") {
             return Nothing<std::string>();
+        }
+
+	if (transferAddr.find("@") != std::string::npos) {
+            transferAddr = resolveAddress(dispatcher, transferAddr);
+            if (transferAddr.empty()) {
+                std::cout << WarningMsg("You have specified unknown e-mail address!") << std::endl;
+                continue;
+            }
         }
 
         if (parseAddress(transferAddr)) {
@@ -978,4 +1004,50 @@ bool parseAmount(std::string amountString) {
     }
 
     return true;
+}
+
+//----------------------------------------------------------------------------------------------------
+bool processServerGetAddressResponse(const std::string& response, std::string& wallet_address) {
+    try {
+        std::stringstream stream(response);
+        Common::JsonValue json;
+        stream >> json;
+
+        auto rootIt = json.getObject().find("address");
+        if (rootIt == json.getObject().end()) {
+            return false;
+        }
+
+        wallet_address = rootIt->second.getString();
+    } catch (std::exception&) {
+        return false;
+    }
+
+    return true;
+}
+std::string resolveAddress(System::Dispatcher& dispatcher, const std::string& email) {
+    CryptoNote::HttpClient httpClient(dispatcher, "wallet.talleo.org", 443, true);
+    CryptoNote::HttpRequest req;
+    CryptoNote::HttpResponse res;
+
+    req.setUrl("/getaddress.php?email=" + email);
+
+    try {
+        httpClient.request(req, res);
+    } catch (const std::exception& e) {
+        std::string errorMsg = e.what();
+        std::cout << WarningMsg("Error connecting to the remote node: " + errorMsg) << std::endl;
+    }
+
+    if (res.getStatus() != CryptoNote::HttpResponse::STATUS_200) {
+        std::cout << WarningMsg("Remote node returned code " + std::to_string(res.getStatus())) << std::endl;
+    }
+
+    std::string address;
+    if (!processServerGetAddressResponse(res.getBody(), address)) {
+        std::cout << WarningMsg("Failed to parse remote node response") << std::endl;
+    }
+
+    return address;
+
 }

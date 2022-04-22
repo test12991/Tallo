@@ -2,7 +2,7 @@
 Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
-Copyright (C) 2021, The Talleo developers
+Copyright (C) 2021-2022, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,19 +53,19 @@ struct WalletInfo {
     CryptoNote::WalletGreen &wallet;
 };
 
-void transfer(std::shared_ptr<WalletInfo> walletInfo);
+void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> walletInfo);
 
-void transfer(std::shared_ptr<WalletInfo> walletInfo,
+void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> walletInfo,
               std::vector<std::string> args);
 
-void doTransfer(uint16_t mixin, std::string address, uint64_t amount,
+void doTransfer(System::Dispatcher& dispatcher, uint16_t mixin, std::string address, uint64_t amount,
                 uint64_t fee, std::string extra,
                 std::shared_ptr<WalletInfo> walletInfo);
 
 void fusionTX(CryptoNote::WalletGreen &wallet,
               CryptoNote::TransactionParameters p);
 
-void sendMultipleTransactions(CryptoNote::WalletGreen &wallet,
+void sendMultipleTransactions(System::Dispatcher& dispatcher, CryptoNote::WalletGreen &wallet,
                               std::vector<CryptoNote::TransactionParameters>
                               transfers);
 
@@ -91,7 +91,7 @@ bool parseFee(std::string feeString);
 
 Maybe<std::string> getPaymentID();
 
-Maybe<std::string> getDestinationAddress();
+Maybe<std::string> getDestinationAddress(System::Dispatcher& dispatcher);
 
 Maybe<uint64_t> getFee();
 
@@ -101,3 +101,5 @@ Maybe<uint16_t> getMixin();
 
 size_t makeFusionTransaction(CryptoNote::WalletGreen &wallet, const std::vector<std::string> &addresses,
                              uint64_t threshold);
+
+std::string resolveAddress(System::Dispatcher& dispatcher, const std::string& email);

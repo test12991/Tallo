@@ -72,11 +72,11 @@ void welcomeMsg();
 
 void help(bool viewWallet);
 
-void inputLoop(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node);
+void inputLoop(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node);
 
 void exportKeys(std::shared_ptr<WalletInfo> &walletInfo);
 
-void run(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config);
+void run(System::Dispatcher& dispatcher, CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, Config &config);
 
 void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet);
 
