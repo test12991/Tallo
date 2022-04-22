@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -76,7 +77,7 @@ int main(int argc, const char** argv) {
 
   Logging::ConsoleLogger log;
   Logging::LoggerRef logger(log, "main");
-  NodeRpcProxy nodeProxy("127.0.0.1", 18081, logger.getLogger());
+  NodeRpcProxy nodeProxy("127.0.0.1", 18081, "/", false, logger.getLogger());
 
   NodeObserver observer1("obs1", nodeProxy, log);
   NodeObserver observer2("obs2", nodeProxy, log);

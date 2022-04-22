@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -27,10 +28,15 @@
 #include "Rpc/JsonRpc.h"
 #include "Rpc/HttpClient.h"
 
-BlockchainMonitor::BlockchainMonitor(System::Dispatcher& dispatcher, const std::string& daemonHost, uint16_t daemonPort, size_t pollingInterval, Logging::ILogger& logger):
+#ifdef WIN32
+#undef ERROR
+#endif
+
+BlockchainMonitor::BlockchainMonitor(System::Dispatcher& dispatcher, const std::string& daemonHost, uint16_t daemonPort, bool useSSL, size_t pollingInterval, Logging::ILogger& logger):
   m_dispatcher(dispatcher),
   m_daemonHost(daemonHost),
   m_daemonPort(daemonPort),
+  m_useSSL(useSSL),
   m_pollingInterval(pollingInterval),
   m_stopped(false),
   m_httpEvent(dispatcher),
@@ -78,7 +84,7 @@ Crypto::Hash BlockchainMonitor::requestLastBlockHash() {
   m_logger(Logging::DEBUGGING) << "Requesting last block hash";
 
   try {
-    CryptoNote::HttpClient client(m_dispatcher, m_daemonHost, m_daemonPort);
+    CryptoNote::HttpClient client(m_dispatcher, m_daemonHost, m_daemonPort, m_useSSL);
 
     CryptoNote::COMMAND_RPC_GET_LAST_BLOCK_HEADER::request request;
     CryptoNote::COMMAND_RPC_GET_LAST_BLOCK_HEADER::response response;

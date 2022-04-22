@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -27,13 +28,13 @@ namespace PaymentService {
 
 class NodeFactory {
 public:
-  static CryptoNote::INode* createNode(const std::string& daemonAddress, uint16_t daemonPort, Logging::ILogger& logger);
+  static CryptoNote::INode* createNode(const std::string& daemonAddress, uint16_t daemonPort, const std::string& daemonPath, bool useSSL, Logging::ILogger& logger);
   static CryptoNote::INode* createNodeStub();
 private:
   NodeFactory();
   ~NodeFactory();
 
-  CryptoNote::INode* getNode(const std::string& daemonAddress, uint16_t daemonPort);
+  CryptoNote::INode* getNode(const std::string& daemonAddress, uint16_t daemonPort, const std::string& daemonPath, bool useSSL);
 
   static NodeFactory factory;
 };

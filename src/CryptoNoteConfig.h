@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019-2021, The Talleo developers
+// Copyright (c) 2019-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -131,6 +131,12 @@ const size_t   COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT         =  1000;
 
 const int      P2P_DEFAULT_PORT                              =  33802;
 const int      RPC_DEFAULT_PORT                              =  33888;
+const int      RPC_DEFAULT_SSL_PORT                          =  33988;
+const int      GATE_RPC_DEFAULT_PORT                         =  33777;
+const int      GATE_RPC_DEFAULT_SSL_PORT                     =  33877;
+const char     RPC_DEFAULT_CHAIN_FILE[]                      = "rpc_server.crt";
+const char     RPC_DEFAULT_KEY_FILE[]                        = "rpc_server.key";
+const char     RPC_DEFAULT_DH_FILE[]                         = "rpc_server.pem";
 
 const size_t   P2P_LOCAL_WHITE_PEERLIST_LIMIT                =  1000;
 const size_t   P2P_LOCAL_GRAY_PEERLIST_LIMIT                 =  5000;

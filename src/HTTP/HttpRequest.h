@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -34,12 +35,14 @@ namespace CryptoNote {
     void addHeader(const std::string& name, const std::string& value);
     void setBody(const std::string& b);
     void setUrl(const std::string& uri);
+    void setHost(const std::string& host);
 
   private:
     friend class HttpParser;
 
     std::string method;
     std::string url;
+    std::string m_host;
     Headers headers;
     std::string body;
 

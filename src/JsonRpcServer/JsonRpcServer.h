@@ -1,4 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2014-2017, XDN - project developers
+// Copyright (c) 2018, The Karbo developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -47,7 +50,10 @@ public:
   JsonRpcServer(System::Dispatcher& sys, System::Event& stopEvent, Logging::ILogger& loggerGroup, PaymentService::Configuration& config);
   JsonRpcServer(const JsonRpcServer&) = delete;
 
-  void start(const std::string& bindAddress, uint16_t bindPort);
+  void setCerts(const std::string& chain_file, const std::string& key_file, const std::string& dh_file);
+
+  void start(const std::string& bindAddress, uint16_t bindPort, uint16_t bindPortSSL,
+             bool server_ssl_enable);
 
 protected:
   static void makeErrorResponse(const std::error_code& ec, Common::JsonValue& resp);

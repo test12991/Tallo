@@ -55,6 +55,19 @@ target_link_libraries(TransfersTests IntegrationTestLibrary TestsCommon Wallet g
 target_link_libraries(HashTargetTests CryptoNoteCore Crypto)
 target_link_libraries(HashTests Crypto)
 
+if(OPENSSL_FOUND)
+  target_link_libraries(IntegrationTests ${OPENSSL_LIBRARIES})
+  target_link_libraries(NodeRpcProxyTests ${OPENSSL_LIBRARIES})
+  target_link_libraries(TransfersTests ${OPENSSL_LIBRARIES})
+
+  # prevent error LNK2019: unresolved external symbol _vsnprintf
+  if(MSVC AND NOT (MSVC_VERSION LESS 1900))
+    target_link_libraries(IntegrationTests "legacy_stdio_definitions.lib")
+    target_link_libraries(NodeRpcProxyTests "legacy_stdio_definitions.lib")
+    target_link_libraries(TransfersTests "legacy_stdio_definitions.lib")
+  endif()
+endif()
+
 if(NOT MSVC)
   set_property(TARGET gtest gtest_main IntegrationTestLibrary IntegrationTests TestGenerator SystemTests HashTargetTests TransfersTests APPEND PROPERTY COMPILE_OPTIONS "-Wno-undef" "-Wno-sign-compare")
   if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 10.0)

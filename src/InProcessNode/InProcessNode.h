@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018, The Bittorium developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -92,6 +93,9 @@ public:
   virtual void getFeeAddress(std::string& feeAddress, const Callback& callback) override;
   virtual void getCollateralHash(std::string &collateralHash, const Callback& callback) override;
   virtual void isSynchronized(bool& syncStatus, const Callback& callback) override;
+
+  virtual void setRootCert(const std::string &path) override {};
+  virtual void disableVerify() override {};
 
 private:
   virtual void peerCountUpdated(size_t count) override;

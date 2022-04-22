@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -29,8 +30,14 @@ public:
   static void initOptions(boost::program_options::options_description& desc);
   void init(const boost::program_options::variables_map& options);
 
-  std::string daemonHost;
-  uint16_t daemonPort;
+  std::string m_daemon_host;
+  uint16_t m_daemon_port;
+  uint16_t m_daemon_port_ssl;
+  std::string m_daemon_path;
+  bool m_enable_ssl;
+  std::string m_chain_file = "";
+  std::string m_key_file = "";
+  std::string m_dh_file = "";
 };
 
 } //namespace PaymentService

@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -26,6 +27,14 @@
 #define NOMINMAX
 #endif
 #include <windows.h>
+#endif
+
+#ifdef __FreeBSD__
+#include <pthread_np.h>
+#include <sys/cpuset.h>
+#ifndef cpu_set_t
+#  define cpu_set_t cpuset_t 
+#endif
 #endif
 
 void set_process_affinity(int core)
@@ -71,7 +80,13 @@ void set_thread_high_priority()
   ::pthread_attr_getschedpolicy(&attr, &policy);
   max_prio_for_policy = ::sched_get_priority_max(policy);
 
+#ifdef __FreeBSD__
+  sched_param params;
+  params.sched_priority = max_prio_for_policy;
+  if (0 != ::sched_setparam(0, &params))
+#else
   if (0 != ::pthread_setschedprio(::pthread_self(), max_prio_for_policy))
+#endif
   {
     std::cout << "pthread_setschedprio - ERROR" << std::endl;
   }

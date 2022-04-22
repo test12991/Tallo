@@ -81,10 +81,10 @@ int main(int argc, char **argv) {
     System::Dispatcher localDispatcher;
     System::Dispatcher *dispatcher = &localDispatcher;
 
-    remote_fee_address = getFeeAddress(localDispatcher, config.host, config.port);
+    remote_fee_address = getFeeAddress(localDispatcher, config.host, config.port, config.path, config.ssl);
 
     /* Our connection to Talleod */
-    std::unique_ptr<CryptoNote::INode> node(new CryptoNote::NodeRpcProxy(config.host, config.port, logger.getLogger()));
+    std::unique_ptr<CryptoNote::INode> node(new CryptoNote::NodeRpcProxy(config.host, config.port, config.path, config.ssl, logger.getLogger()));
 
     std::promise<std::error_code> errorPromise;
     std::future<std::error_code> error = errorPromise.get_future();
@@ -1628,12 +1628,12 @@ bool processServerFeeAddressResponse(const std::string& response, std::string& f
 }
 
 //----------------------------------------------------------------------------------------------------
-std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port) {
-    CryptoNote::HttpClient httpClient(dispatcher, daemon_host, daemon_port);
+std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port, std::string daemon_path, bool use_ssl) {
+    CryptoNote::HttpClient httpClient(dispatcher, daemon_host, daemon_port, use_ssl);
     CryptoNote::HttpRequest req;
     CryptoNote::HttpResponse res;
 
-    req.setUrl("/feeaddress");
+    req.setUrl(daemon_path + "feeaddress");
 
     try {
         httpClient.request(req, res);

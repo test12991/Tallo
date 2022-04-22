@@ -40,6 +40,7 @@
 #include "CryptoNoteCheckpoints.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
 #include "CryptoNoteCore/Core.h"
+#include "CryptoNoteCore/CoreConfig.h"
 #include "CryptoNoteCore/Currency.h"
 #include "CryptoNoteCore/DatabaseBlockchainCache.h"
 #include "CryptoNoteCore/DatabaseBlockchainCacheFactory.h"
@@ -205,7 +206,8 @@ int main(int argc, char* argv[])
     desc_options.add(desc_cmd_only).add(desc_cmd_sett);
 
     po::variables_map vm;
-    boost::filesystem::path data_dir_path;
+    boost::system::error_code ec;
+    std::string data_dir = "";
     bool r = command_line::handle_error_helper(desc_options, [&]()
     {
       po::store(po::parse_command_line(argc, argv, desc_options), vm);
@@ -217,17 +219,20 @@ int main(int argc, char* argv[])
         return false;
       }
 
+      data_dir = command_line::get_arg(vm, command_line::arg_data_dir);
       std::string config = command_line::get_arg(vm, arg_config_file);
+
+      boost::filesystem::path data_dir_path(data_dir);
       boost::filesystem::path config_path(config);
+      if (!config_path.has_parent_path()) {
+        config_path = data_dir_path / config_path;
+      }
 
       boost::system::error_code ec;
       if (boost::filesystem::exists(config_path, ec)) {
         po::store(po::parse_config_file<char>(config_path.string<std::string>().c_str(), desc_cmd_sett), vm);
       }
       po::notify(vm);
-
-      data_dir_path = command_line::get_arg(vm, command_line::arg_data_dir);
-
       if (command_line::get_arg(vm, arg_print_genesis_tx)) {
         print_genesis_tx_hex(vm, logManager);
         return false;
@@ -267,6 +272,13 @@ int main(int argc, char* argv[])
       logger(INFO) << "Starting in testnet mode!";
     }
 
+    CoreConfig coreConfig;
+    coreConfig.init(vm);
+    NetNodeConfig netNodeConfig;
+    netNodeConfig.init(vm);
+    netNodeConfig.setTestnet(testnet_mode);
+    RpcServerConfig rpcConfig;
+    rpcConfig.init(vm);
     //create objects and link them
     CryptoNote::CurrencyBuilder currencyBuilder(logManager);
     bool blockexplorer_mode = command_line::get_arg(vm, arg_blockexplorer_on) || command_line::get_arg(vm, arg_blockexplorer_old_on);
@@ -299,13 +311,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    NetNodeConfig netNodeConfig;
-    netNodeConfig.init(vm);
-    netNodeConfig.setTestnet(testnet_mode);
-
-    RpcServerConfig rpcConfig;
-    rpcConfig.init(vm);
-
     DataBaseConfig dbConfig;
     dbConfig.init(vm);
 
@@ -333,6 +338,21 @@ int main(int argc, char* argv[])
       database.init(dbConfig);
       dbShutdownOnExit.resume();
     }
+
+    boost::filesystem::path data_dir_path(data_dir);
+    boost::filesystem::path chain_file_path(rpcConfig.getChainFile());
+    boost::filesystem::path key_file_path(rpcConfig.getKeyFile());
+    boost::filesystem::path dh_file_path(rpcConfig.getDhFile());
+    if (!chain_file_path.has_parent_path()) {
+      chain_file_path = data_dir_path / chain_file_path;
+    }
+    if (!key_file_path.has_parent_path()) {
+      key_file_path = data_dir_path / key_file_path;
+    }
+    if (!dh_file_path.has_parent_path()) {
+      dh_file_path = data_dir_path / dh_file_path;
+    }
+
 
     System::Dispatcher dispatcher;
     logger(INFO) << "Initializing core...";
@@ -366,8 +386,24 @@ int main(int argc, char* argv[])
       dch.start_handling();
     }
 
-    logger(INFO) << "Starting core rpc server on address " << rpcConfig.getBindAddress();
-    rpcServer.start(rpcConfig.bindIp, rpcConfig.bindPort);
+    bool server_ssl_enable = false;
+    if (rpcConfig.isEnabledSSL()) {
+      if (boost::filesystem::exists(chain_file_path, ec) &&
+        boost::filesystem::exists(key_file_path, ec) &&
+        boost::filesystem::exists(dh_file_path, ec)) {
+        rpcServer.setCerts(boost::filesystem::canonical(chain_file_path).string(),
+          boost::filesystem::canonical(key_file_path).string(),
+          boost::filesystem::canonical(dh_file_path).string());
+        server_ssl_enable = true;
+      }
+      else {
+        logger(ERROR, BRIGHT_RED) << "Start RPC SSL server was canceled because certificate file(s) could not be found" << std::endl;
+      }
+    }
+    std::string ssl_info = "";
+    if (server_ssl_enable) ssl_info += ", SSL on address " + rpcConfig.getBindAddressSSL();
+    logger(INFO) << "Starting core rpc server on address " << rpcConfig.getBindAddress() << ssl_info;
+    rpcServer.start(rpcConfig.getBindIP(), rpcConfig.getBindPort(), rpcConfig.getBindPortSSL(), server_ssl_enable);
     rpcServer.enableCors(command_line::get_arg(vm, arg_enable_cors));
     if (command_line::has_arg(vm, arg_set_fee_address)) {
       std::string addr_str = command_line::get_arg(vm, arg_set_fee_address);

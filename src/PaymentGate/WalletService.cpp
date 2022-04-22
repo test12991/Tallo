@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2016-2022, Karbo developers
+// Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018-2019, The Cash2 developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -317,13 +320,10 @@ std::vector<CryptoNote::WalletOrder> convertWalletRpcOrdersToWalletOrders(const 
 
 }
 
-void generateNewWallet(const CryptoNote::Currency& currency, const WalletConfiguration& conf, Logging::ILogger& logger, System::Dispatcher& dispatcher) {
+void generateNewWallet(const CryptoNote::Currency& currency, const WalletConfiguration& conf, Logging::ILogger& logger, System::Dispatcher& dispatcher, CryptoNote::INode& node) {
   Logging::LoggerRef log(logger, "generateNewWallet");
 
-  CryptoNote::INode* nodeStub = NodeFactory::createNodeStub();
-  std::unique_ptr<CryptoNote::INode> nodeGuard(nodeStub);
-
-  CryptoNote::IWallet* wallet = new CryptoNote::WalletGreen(dispatcher, currency, *nodeStub, logger);
+  CryptoNote::IWallet* wallet = new CryptoNote::WalletGreen(dispatcher, currency, node, logger);
   std::unique_ptr<CryptoNote::IWallet> walletGuard(wallet);
 
   std::string address;

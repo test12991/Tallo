@@ -68,6 +68,8 @@ Config parseArguments(int argc, char **argv)
 
     config.host = "127.0.0.1";
     config.port = CryptoNote::RPC_DEFAULT_PORT;
+    config.path = "/";
+    config.ssl = false;
 
     config.walletFile = "";
     config.walletPass = "";
@@ -131,6 +133,7 @@ Config parseArguments(int argc, char **argv)
     if (cmdOptionExists(argv, argv+argc, "--remote-daemon"))
     {
         char *url = getCmdOption(argv, argv + argc, "--remote-daemon");
+        char *path = getCmdOption(argv, argv + argc, "--daemon-path");
 
         /* No url following --remote-daemon */
         if (!url)
@@ -171,6 +174,13 @@ Config parseArguments(int argc, char **argv)
                     config.exit = true;
                 }
             }
+        }
+        if (path) {
+            std::string pathString(path);
+            config.path = pathString;
+        }
+        if (cmdOptionExists(argv, argv + argc, "--use-ssl")) {
+          config.ssl = true;
         }
     }
 
@@ -268,6 +278,8 @@ void helpMessage()
               << "  -h, " << std::left << std::setw(36) << "--help" << "Display this help message and exit" << std::endl
               << "  -v, " << std::left << std::setw(36) << "--version" << "Display the version information and exit" << std::endl
               << "      " << std::left << std::setw(36) << "--remote-daemon <url>" << "Connect to the remote daemon at <url>" << std::endl
+              << "      " << std::left << std::setw(36) << "--daemon-path <path>" << "RPC path of remote daemon, default is /" << std::endl
+              << "      " << std::left << std::setw(36) << "--use-ssl" << "Use SSL to connect to remote daemon, default is false" << std::endl
               << "      " << std::left << std::setw(36) << "--wallet-file <file>" << "Open the wallet <file>" << std::endl
               << "      " << std::left << std::setw(36) << "--password <pass>" << "Use the password <pass> to open the wallet" << std::endl
               << "      " << std::left << std::setw(36) << "--disable-background-optimize" << "Disable background wallet optimization" << std::endl

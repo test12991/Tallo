@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2014-2017 XDN - project developers
+// Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018-2019, The Karbo developers
+// Copyright (c) 2019-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -23,6 +26,7 @@
 #include <boost/program_options.hpp>
 
 #include "Logging/ILogger.h"
+#include "CryptoNoteConfig.h"
 
 namespace po = boost::program_options;
 
@@ -39,26 +43,36 @@ Configuration::Configuration() {
   printAddresses = false;
   syncFromZero = false;
   logLevel = Logging::INFO;
-  bindAddress = "";
-  bindPort = 0;
+  m_bind_address = "";
+  m_bind_port = 0;
+  m_bind_port_ssl = 0;
+  m_rpcPassword = "";
   secretViewKey = "";
   secretSpendKey = "";
   mnemonicSeed = "";
-  rpcPassword = "";
+  m_enable_ssl = false;
+  m_chain_file = "";
+  m_key_file = "";
+  m_dh_file = "";
   legacySecurity = false;
 }
 
-void Configuration::initOptions(boost::program_options::options_description& desc) {
+void Configuration::initOptions(po::options_description& desc) {
   desc.add_options()
       ("bind-address", po::value<std::string>()->default_value("127.0.0.1"), "payment service bind address")
-      ("bind-port", po::value<uint16_t>()->default_value(33777), "payment service bind port")
-      ("rpc-password", po::value<std::string>(), "Specify the password to access the rpc server.")
+      ("bind-port", po::value<uint16_t>()->default_value((uint16_t) CryptoNote::GATE_RPC_DEFAULT_PORT), "payment service bind port")
+      ("bind-port-ssl", po::value<uint16_t>()->default_value((uint16_t) CryptoNote::GATE_RPC_DEFAULT_SSL_PORT), "payment service bind port ssl")
+      ("rpc-password", po::value<std::string>(), "Specify the password to access the RPC server.")
+      ("rpc-ssl-enable", po::bool_switch(), "Enable SSL for RPC service")
+      ("rpc-chain-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_CHAIN_FILE)), "SSL chain file")
+      ("rpc-key-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_KEY_FILE)), "SSL key file")
+      ("rpc-dh-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_DH_FILE)), "SSL DH file")
       ("rpc-legacy-security", "Enable legacy mode (no password for RPC). WARNING: INSECURE. USE ONLY AS A LAST RESORT.")
       ("container-file,w", po::value<std::string>(), "container file")
       ("container-password,p", po::value<std::string>(), "container password")
       ("generate-container,g", "generate new container file with one wallet and exit")
-	    ("view-key", po::value<std::string>(), "generate a container with this secret key view")
-	    ("spend-key", po::value<std::string>(), "generate a container with this secret spend key")
+      ("view-key", po::value<std::string>(), "generate a container with this secret key view")
+      ("spend-key", po::value<std::string>(), "generate a container with this secret spend key")
       ("mnemonic-seed", po::value<std::string>(), "generate a container with this mnemonic seed")
       ("daemon,d", "run as daemon in Unix or as service in Windows")
 #ifdef _WIN32
@@ -72,7 +86,7 @@ void Configuration::initOptions(boost::program_options::options_description& des
       ("address", "print wallet addresses and exit");
 }
 
-void Configuration::init(const boost::program_options::variables_map& options) {
+void Configuration::init(const po::variables_map& options) {
   if (options.count("daemon") != 0) {
     daemonize = true;
   }
@@ -109,12 +123,36 @@ void Configuration::init(const boost::program_options::variables_map& options) {
     serverRoot = options["server-root"].as<std::string>();
   }
 
-  if (options.count("bind-address") != 0 && (!options["bind-address"].defaulted() || bindAddress.empty())) {
-    bindAddress = options["bind-address"].as<std::string>();
+  if (options.count("bind-address") != 0 && (!options["bind-address"].defaulted() || m_bind_address.empty())) {
+    m_bind_address = options["bind-address"].as<std::string>();
   }
 
-  if (options.count("bind-port") != 0 && (!options["bind-port"].defaulted() || bindPort == 0)) {
-    bindPort = options["bind-port"].as<uint16_t>();
+  if (options.count("bind-port") != 0 && (!options["bind-port"].defaulted() || m_bind_port == 0)) {
+    m_bind_port = options["bind-port"].as<uint16_t>();
+  }
+
+  if (options.count("bind-port-ssl") != 0 && (!options["bind-port-ssl"].defaulted() || m_bind_port_ssl == 0)) {
+    m_bind_port_ssl = options["bind-port-ssl"].as<uint16_t>();
+  }
+
+  if (options.count("rpc-password") != 0) {
+    m_rpcPassword = options["rpc-password"].as<std::string>();
+  }
+
+  if (options["rpc-ssl-enable"].as<bool>()){
+    m_enable_ssl = true;
+  }
+
+  if (options.count("rpc-chain-file") != 0 && (!options["rpc-chain-file"].defaulted() || m_chain_file.empty())) {
+    m_chain_file = options["rpc-chain-file"].as<std::string>();
+  }
+
+  if (options.count("rpc-key-file") != 0 && (!options["rpc-key-file"].defaulted() || m_key_file.empty())) {
+    m_key_file = options["rpc-key-file"].as<std::string>();
+  }
+
+  if (options.count("rpc-dh-file") != 0 && (!options["rpc-dh-file"].defaulted() || m_dh_file.empty())) {
+    m_dh_file = options["rpc-dh-file"].as<std::string>();
   }
 
   if (options.count("container-file") != 0) {
@@ -129,32 +167,24 @@ void Configuration::init(const boost::program_options::variables_map& options) {
     generateNewContainer = true;
   }
 
-  if (options.count("view-key") != 0)
-  {
-    if (!generateNewContainer)
-    {
+  if (options.count("view-key") != 0) {
+    if (!generateNewContainer) {
       throw ConfigurationError("generate-container parameter is required");
     }
     secretViewKey = options["view-key"].as<std::string>();
   }
 
-  if (options.count("spend-key") != 0)
-  {
-    if (!generateNewContainer)
-    {
+  if (options.count("spend-key") != 0) {
+    if (!generateNewContainer) {
       throw ConfigurationError("generate-container parameter is required");
     }
     secretSpendKey = options["spend-key"].as<std::string>();
   }
 
-  if (options.count("mnemonic-seed") != 0)
-  {
-    if (!generateNewContainer)
-    {
+  if (options.count("mnemonic-seed") != 0) {
+    if (!generateNewContainer) {
       throw ConfigurationError("generate-container parameter is required");
-    }
-    else if (options.count("spend-key") != 0 || options.count("view-key") != 0)
-    {
+    } else if (options.count("spend-key") != 0 || options.count("view-key") != 0) {
       throw ConfigurationError("Cannot specify import via both mnemonic seed and private keys");
     }
     mnemonicSeed = options["mnemonic-seed"].as<std::string>();
@@ -168,8 +198,13 @@ void Configuration::init(const boost::program_options::variables_map& options) {
     syncFromZero = true;
   }
   if (!registerService && !unregisterService) {
-    if (containerFile.empty()) {
-      throw ConfigurationError("container-file parameter are required");
+    if (containerFile.empty() && containerPassword.empty()) {
+      throw ConfigurationError("Both container-file and container-password parameters are required");
+    }
+	if (containerPassword.empty()) {
+		if (pwd_container.read_password()) {
+			containerPassword = pwd_container.password();
+		}
     }
   }
 
@@ -187,7 +222,7 @@ void Configuration::init(const boost::program_options::variables_map& options) {
     legacySecurity = true;
   }
   else {
-    rpcPassword = options["rpc-password"].as<std::string>();
+    m_rpcPassword = options["rpc-password"].as<std::string>();
   }
 
 }

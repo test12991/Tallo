@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (C) 2018, The Karbo developers
-Copyright (C) 2020-2021, The Talleo developers
+Copyright (C) 2020-2022, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include "CryptoNote.h"
 
 #include <Common/ConsoleHandler.h>
+#include <Common/PasswordContainer.h>
 #include <Common/SignalHandler.h>
 
 #include <CryptoNoteCore/Account.h>
@@ -46,7 +47,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <NodeRpcProxy/NodeRpcProxy.h>
 
-#include <SimpleWallet/PasswordContainer.h>
 #include <SimpleWallet/Transfer.h>
 #include <SimpleWallet/ParseArguments.h>
 
@@ -160,4 +160,4 @@ ColouredMsg getPrompt(std::shared_ptr<WalletInfo> &walletInfo);
 
 CryptoNote::BlockDetails getBlock(uint32_t blockHeight, CryptoNote::INode &node);
 
-std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port);
+std::string getFeeAddress(System::Dispatcher& dispatcher, std::string daemon_host, uint16_t daemon_port, std::string daemon_path, bool use_ssl);

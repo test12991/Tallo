@@ -1,4 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2014-2017, XDN - project developers
+// Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -23,6 +27,12 @@
 
 #include <boost/program_options.hpp>
 
+#include "Common/PasswordContainer.h"
+
+namespace {
+	Tools::PasswordContainer pwd_container;
+}
+
 namespace PaymentService {
 
 class ConfigurationError : public std::runtime_error {
@@ -36,16 +46,21 @@ struct Configuration {
   void init(const boost::program_options::variables_map& options);
   static void initOptions(boost::program_options::options_description& desc);
 
-  std::string bindAddress;
-  uint16_t bindPort;
-  std::string rpcPassword;
+  std::string m_bind_address;
+  uint16_t m_bind_port;
+  uint16_t m_bind_port_ssl;
+  std::string m_rpcPassword;
+  bool m_enable_ssl;
+  std::string m_chain_file;
+  std::string m_key_file;
+  std::string m_dh_file;
 
   std::string containerFile;
   std::string containerPassword;
+  std::string logFile;
   std::string secretViewKey;
   std::string secretSpendKey;
   std::string mnemonicSeed;
-  std::string logFile;
   std::string serverRoot;
 
   bool generateNewContainer;

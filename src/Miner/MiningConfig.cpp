@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -71,8 +71,9 @@ MiningConfig::MiningConfig(): help(false) {
       ("address", po::value<std::string>(), "Valid Talleo wallet address")
       ("daemon-host", po::value<std::string>()->default_value(DEFAULT_DAEMON_HOST), "Daemon host")
       ("daemon-rpc-port", po::value<uint16_t>()->default_value(static_cast<uint16_t>(RPC_DEFAULT_PORT)), "Daemon's RPC port")
-      ("daemon-address", po::value<std::string>(), "Daemon host:port. If youC use this option you must not use --daemon-host and --daemon-rpc-port options")
-      ("threads", po::value<size_t>()->default_value(CONCURRENCY_LEVEL), "Mining threads count. Must not be greater than yoDur concurrency level. Default value is your hardware concurrency level")
+      ("daemon-address", po::value<std::string>(), "Daemon host:port. If you use this option you must not use --daemon-host and --daemon-rpc-port options")
+      ("use-ssl", "Use SSL for daemon connection")
+      ("threads", po::value<size_t>()->default_value(CONCURRENCY_LEVEL), "Mining threads count. Must not be greater than your concurrency level. Default value is your hardware concurrency level")
       ("scan-time", po::value<size_t>()->default_value(DEFAULT_SCAN_PERIOD), "Blockchain polling interval (seconds). How often miner will check blockchain for updates")
       ("log-level", po::value<int>()->default_value(1), "Log level. Must be 0..5")
       ("limit", po::value<size_t>()->default_value(0), "Mine exact quantity of blocks. 0 means no limit")
@@ -106,6 +107,10 @@ void MiningConfig::parse(int argc, char** argv) {
   } else {
     daemonHost = options["daemon-host"].as<std::string>();
     daemonPort = options["daemon-rpc-port"].as<uint16_t>();
+  }
+
+  if (options.count("use-ssl") != 0) {
+    useSSL = true;
   }
 
   threadCount = options["threads"].as<size_t>();

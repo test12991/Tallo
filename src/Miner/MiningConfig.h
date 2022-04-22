@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -31,6 +32,7 @@ struct MiningConfig {
   std::string miningAddress;
   std::string daemonHost;
   uint16_t daemonPort;
+  bool useSSL;
   size_t threadCount;
   size_t scanPeriod;
   uint8_t logLevel;

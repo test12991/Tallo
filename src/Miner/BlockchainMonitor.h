@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -27,7 +28,7 @@
 
 class BlockchainMonitor {
 public:
-  BlockchainMonitor(System::Dispatcher& dispatcher, const std::string& daemonHost, uint16_t daemonPort, size_t pollingInterval, Logging::ILogger& logger);
+  BlockchainMonitor(System::Dispatcher& dispatcher, const std::string& daemonHost, uint16_t daemonPort, bool useSSL, size_t pollingInterval, Logging::ILogger& logger);
 
   void waitBlockchainUpdate();
   void stop();
@@ -35,6 +36,7 @@ private:
   System::Dispatcher& m_dispatcher;
   std::string m_daemonHost;
   uint16_t m_daemonPort;
+  bool m_useSSL;
   size_t m_pollingInterval;
   bool m_stopped;
   System::Event m_httpEvent;

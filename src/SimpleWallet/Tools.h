@@ -2,7 +2,7 @@
 Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
-Copyright (C) 2021, The Talleo developers
+Copyright (C) 2021-2022, The Talleo developers
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 #include <sstream>
 
 #include <Common/ConsoleTools.h>
-#include <SimpleWallet/PasswordContainer.h>
+#include <Common/PasswordContainer.h>
 
 void confirmPassword(std::string walletPass);
 

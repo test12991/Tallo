@@ -1,14 +1,20 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The TurtleCoin Developers
+// Copyright (c) 2022, The Talleo developers
 //
 // Please see the included LICENSE file for more information.
 
 #include "hash-ops.h"
 
-#include <alloca.h>
+#ifndef __FreeBSD__
+  #include <alloca.h>
+#endif
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
+#ifdef __FreeBSD__
+#define alloca(x) __builtin_alloca(x)
+#endif
 
 void tree_hash(const char (*hashes)[HASH_SIZE], size_t count, char *root_hash)
 {

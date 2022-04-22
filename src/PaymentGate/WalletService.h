@@ -1,5 +1,8 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2016-2019, The Karbo developers
+// Copyright (c) 2018, The TurtleCoin Developers
+// Copyright (c) 2018-2019, The Cash2 developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -25,7 +28,9 @@
 #include "INode.h"
 #include "CryptoNoteCore/Currency.h"
 #include "PaymentServiceJsonRpcMessages.h"
-#undef ERROR //TODO: workaround for windows build. fix it
+#ifdef _WIN32
+#undef ERROR //TODO: workaround for Windows build. fix it
+#endif
 #include "Logging/LoggerRef.h"
 
 #include <fstream>
@@ -49,7 +54,7 @@ struct WalletConfiguration {
   std::string mnemonicSeed;
 };
 
-void generateNewWallet(const CryptoNote::Currency& currency, const WalletConfiguration& conf, Logging::ILogger& logger, System::Dispatcher& dispatcher);
+void generateNewWallet(const CryptoNote::Currency& currency, const WalletConfiguration& conf, Logging::ILogger& logger, System::Dispatcher& dispatcher, CryptoNote::INode& node);
 
 struct TransactionsInBlockInfoFilter;
 

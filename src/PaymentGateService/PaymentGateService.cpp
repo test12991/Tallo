@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2016-2020 The Karbo developers
 // Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
@@ -19,7 +20,8 @@
 
 #include "PaymentGateService.h"
 
-#include <future>
+#include <boost/filesystem.hpp>
+
 
 #include "Common/SignalHandler.h"
 #include "Common/Util.h"
@@ -51,6 +53,33 @@
 #endif
 
 using namespace PaymentService;
+
+bool validateSertPath(const std::string& rootPath,
+                      const std::string& config_chain_file,
+                      const std::string& config_key_file,
+                      const std::string& config_dh_file,
+                      std::string& chain_file,
+                      std::string& key_file,
+                      std::string& dh_file) {
+  bool res = false;
+  boost::system::error_code ec;
+  boost::filesystem::path data_dir_path(rootPath);
+  boost::filesystem::path chain_file_path(config_chain_file);
+  boost::filesystem::path key_file_path(config_key_file);
+  boost::filesystem::path dh_file_path(config_dh_file);
+  if (!chain_file_path.has_parent_path()) chain_file_path = data_dir_path / chain_file_path;
+  if (!key_file_path.has_parent_path()) key_file_path = data_dir_path / key_file_path;
+  if (!dh_file_path.has_parent_path()) dh_file_path = data_dir_path / dh_file_path;
+  if (boost::filesystem::exists(chain_file_path, ec) &&
+      boost::filesystem::exists(key_file_path, ec) &&
+      boost::filesystem::exists(dh_file_path, ec)) {
+        chain_file = boost::filesystem::canonical(chain_file_path).string();
+        key_file = boost::filesystem::canonical(key_file_path).string();
+        dh_file = boost::filesystem::canonical(dh_file_path).string();
+        res = true;
+  }
+  return res;
+}
 
 void changeDirectory(const std::string& path) {
 #ifdef _MSC_VER
@@ -139,7 +168,13 @@ void PaymentGateService::run() {
 
   Logging::LoggerRef log(logger, "run");
 
-  if (config.startInprocess) {
+  //check the container exists before starting service
+  const std::string walletFileName = config.gateConfiguration.containerFile;
+  if (!boost::filesystem::exists(walletFileName)) {
+    log(Logging::ERROR) << "A wallet with the filename "
+      << walletFileName << " doesn't exist! "
+      << "Ensure you entered your wallet name correctly.";
+  } else if (config.startInprocess) {
     runInProcess(log);
   } else {
     runRpcProxy(log);
@@ -170,11 +205,11 @@ void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
 
   //TODO: make command line options
   dbConfig.setConfigFolderDefaulted(true);
-  dbConfig.setDataDir(config.dataDir);
+  dbConfig.setDataDir(config.coreConfig.configFolder);
   dbConfig.setMaxOpenFiles(100);
   dbConfig.setReadCacheSize(128*1024*1024);
   dbConfig.setWriteBufferSize(128*1024*1024);
-  dbConfig.setTestnet(false);
+  dbConfig.setTestnet(config.netNodeConfig.getTestnet());
   dbConfig.setBackgroundThreadsCount(2);
 
   if (dbConfig.isConfigFolderDefaulted()) {
@@ -251,7 +286,11 @@ void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
 
   p2pStarted.wait();
 
-  runWalletService(currency, *node);
+  if (config.gateConfiguration.generateNewContainer) {
+    generateNewWallet(currency, getWalletConfig(), logger, *dispatcher, *node);
+  } else {
+    runWalletService(currency, *node);
+  }
 
   p2pNode.sendStopSignal();
   context.get();
@@ -265,11 +304,17 @@ void PaymentGateService::runRpcProxy(Logging::LoggerRef& log) {
 
   std::unique_ptr<CryptoNote::INode> node(
     PaymentService::NodeFactory::createNode(
-      config.remoteNodeConfig.daemonHost,
-      config.remoteNodeConfig.daemonPort,
+      config.remoteNodeConfig.m_daemon_host,
+      config.remoteNodeConfig.m_daemon_port,
+      config.remoteNodeConfig.m_daemon_path,
+      config.remoteNodeConfig.m_enable_ssl,
       log.getLogger()));
 
-  runWalletService(currency, *node);
+  if (config.gateConfiguration.generateNewContainer) {
+    generateNewWallet(currency, getWalletConfig(), logger, *dispatcher, *node);
+  }else {
+    runWalletService(currency, *node);
+  }
 }
 
 void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, CryptoNote::INode& node) {
@@ -305,7 +350,35 @@ void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, 
     }
   } else {
     PaymentService::PaymentServiceJsonRpcServer rpcServer(*dispatcher, *stopEvent, *service, logger, config.gateConfiguration);
-    rpcServer.start(config.gateConfiguration.bindAddress, config.gateConfiguration.bindPort);
+
+    bool rpc_run_ssl = false;
+    std::string rpc_chain_file = "";
+    std::string rpc_key_file = "";
+    std::string rpc_dh_file = "";
+
+    if (config.gateConfiguration.m_enable_ssl) {
+      if (validateSertPath(config.coreConfig.configFolder,
+          config.gateConfiguration.m_chain_file,
+          config.gateConfiguration.m_key_file,
+          config.gateConfiguration.m_dh_file,
+          rpc_chain_file,
+          rpc_key_file,
+          rpc_dh_file)) {
+        rpcServer.setCerts(rpc_chain_file, rpc_key_file, rpc_dh_file);
+        rpc_run_ssl = true;
+      } else {
+        Logging::LoggerRef(logger, "PaymentGateService")(Logging::ERROR, Logging::BRIGHT_RED) << "Start JSON-RPC SSL server was canceled because certificate file(s) could not be found" << std::endl;
+      }
+    }
+
+    Logging::LoggerRef(logger, "PaymentGateService")(Logging::INFO) << "Starting core RPC server on "
+	    << config.remoteNodeConfig.m_daemon_host << ":" << config.remoteNodeConfig.m_daemon_port;
+    rpcServer.start(config.gateConfiguration.m_bind_address,
+                    config.gateConfiguration.m_bind_port,
+                    config.gateConfiguration.m_bind_port_ssl,
+                    rpc_run_ssl);
+    Logging::LoggerRef(logger, "PaymentGateService")(Logging::INFO) << "Core RPC server started OK";
+
 
     Logging::LoggerRef(logger, "PaymentGateService")(Logging::INFO, Logging::BRIGHT_WHITE) << "JSON-RPC server stopped, stopping wallet service...";
 

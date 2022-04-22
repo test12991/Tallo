@@ -1,5 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2016-2020, The Karbo developers
 // Copyright (c) 2018, The Bittorium developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -47,7 +49,7 @@ public:
 
 class NodeRpcProxy : public CryptoNote::INode {
 public:
-  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, Logging::ILogger& logger);
+  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, const std::string &daemon_path, const bool &daemon_ssl, Logging::ILogger& logger);
   virtual ~NodeRpcProxy();
 
   virtual bool addObserver(CryptoNote::INodeObserver* observer) override;
@@ -91,6 +93,14 @@ public:
   unsigned int rpcTimeout() const { return m_rpcTimeout; }
   void rpcTimeout(unsigned int val) { m_rpcTimeout = val; }
 
+  const std::string m_daemon_path;
+  const std::string m_nodeHost;
+  const unsigned short m_nodePort;
+  const bool m_daemon_ssl;
+
+  virtual void setRootCert(const std::string &path) override;
+  virtual void disableVerify() override;
+
 private:
   void resetInternalState();
   void workerThread(const Callback& initialized_callback);
@@ -124,9 +134,9 @@ private:
 
   void scheduleRequest(std::function<std::error_code()>&& procedure, const Callback& callback);
   template <typename Request, typename Response>
-  std::error_code binaryCommand(const std::string& url, const Request& req, Response& res);
+  std::error_code binaryCommand(const std::string& method, const Request& req, Response& res);
   template <typename Request, typename Response>
-  std::error_code jsonCommand(const std::string& url, const Request& req, Response& res);
+  std::error_code jsonCommand(const std::string& method, const Request& req, Response& res);
   template <typename Request, typename Response>
   std::error_code jsonRpcCommand(const std::string& method, const Request& req, Response& res);
 
@@ -147,8 +157,6 @@ private:
   Tools::ObserverManager<CryptoNote::INodeObserver> m_observerManager;
   Tools::ObserverManager<CryptoNote::INodeRpcProxyObserver> m_rpcProxyObserverManager;
 
-  const std::string m_nodeHost;
-  const unsigned short m_nodePort;
   unsigned int m_rpcTimeout;
   HttpClient* m_httpClient = nullptr;
   System::Event* m_httpEvent = nullptr;
@@ -169,5 +177,7 @@ private:
   std::string m_feeaddress, m_collateralhash;
 
   bool m_connected;
+  std::string m_daemon_cert;
+  bool m_daemon_no_verify;
 };
 }

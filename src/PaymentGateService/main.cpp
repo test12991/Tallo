@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -22,6 +22,7 @@
 
 #include <string.h>
 
+#include "NodeRpcProxy/NodeRpcStub.h"
 #include "PaymentGateService.h"
 #include "version.h"
 
@@ -315,7 +316,8 @@ int main(int argc, char** argv) {
 
     if (config.gateConfiguration.generateNewContainer) {
       System::Dispatcher d;
-      generateNewWallet(pg.getCurrency(), pg.getWalletConfig(), pg.getLogger(), d);
+      CryptoNote::NodeRpcStub stub;
+      generateNewWallet(pg.getCurrency(), pg.getWalletConfig(), pg.getLogger(), d, stub);
       return 0;
     }
 

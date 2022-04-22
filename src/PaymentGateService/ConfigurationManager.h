@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -17,6 +18,7 @@
 
 #pragma once
 
+#include "CryptoNoteCore/CoreConfig.h"
 #include "PaymentServiceConfiguration.h"
 #include "P2p/NetNodeConfig.h"
 #include "RpcNodeConfiguration.h"
@@ -31,8 +33,8 @@ public:
   bool startInprocess;
   Configuration gateConfiguration;
   CryptoNote::NetNodeConfig netNodeConfig;
+  CryptoNote::CoreConfig coreConfig;
   RpcNodeConfiguration remoteNodeConfig;
-  std::string dataDir;
 };
 
 } //namespace PaymentService

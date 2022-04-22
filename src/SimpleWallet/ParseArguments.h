@@ -34,6 +34,8 @@ struct Config {
 
     std::string host;
     int port;
+    std::string path;
+    bool ssl;
 
     std::string walletFile;
     std::string walletPass;

@@ -6,14 +6,14 @@
 ##### Prerequisites
 
 ###### Ubuntu 18.04
-- You will need the following packages: boost (1.55 or higher), cmake, git, gcc (6.x), g++ (6.x), make, and python. Most of these should already be installed on your system.
-- `sudo apt-get -y install build-essential python-dev gcc g++ git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
+- You will need the following packages: boost (1.55 or higher), cmake, git, gcc (6.x), g++ (6.x), make, python and openssl. Most of these should already be installed on your system.
+- `sudo apt-get -y install build-essential python-dev gcc g++ git cmake libboost-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev libssl-dev`
 
 ###### Ubuntu 20.04
 
 - You will need the following packages: boost (1.67), cmake, git, gcc (7.x), g++ (7.x), make, and python3.
 - `sudo apt-get update`
-- `sudo apt-get -y install build-essential python3-dev gcc-7 g++-7 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev`
+- `sudo apt-get -y install build-essential python3-dev gcc-7 g++-7 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev  libssl-dev`
 - `sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70`
 - `sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 70`
 
@@ -42,6 +42,7 @@
 - Install [cmake](https://cmake.org/). See [here](https://stackoverflow.com/questions/23849962/cmake-installer-for-mac-fails-to-create-usr-bin-symlinks) if you are unable call `cmake` from the terminal after installing.
 - Install the [boost](http://www.boost.org/) libraries. Either compile boost manually or run `brew install boost`.
 - Install XCode and Developer Tools.
+- Install OpenSSL
 
 ##### Building
 
@@ -63,6 +64,7 @@ Run `./src/Talleod` to connect to the network and let it sync (it may take a whi
   2. [Visual Studio 2017.9 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202017%20%28version%2015.9%29)
   3. [Visual Studio 2019 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202019)
   4. [Visual Studio 2022 Community Edition](https://my.visualstudio.com/Downloads?q=Visual%20Studio%20Community%202022)
+- Install OpenSSL
 
 NOTES:
 1. When installing Visual Studio 2017, it is **required** that you
