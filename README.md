@@ -21,7 +21,7 @@
 
 - `git clone https://github.com/TalleoProject/Talleo.git`
 - `cd Talleo`
-- `rm -rf build; mkdir -p build/release; cd build/release`
+- `mkdir -p build/release; cd build/release`
 - `cmake -D STATIC=ON -D ARCH="default" -D CMAKE_BUILD_TYPE=Release ../..`
 - `cmake --build .`
 
@@ -48,7 +48,7 @@
 
 - `git clone https://github.com/TalleoProject/Talleo.git`
 - `cd Talleo`
-- `rm -rf build; mkdir -p build/release; cd build/release`
+- `mkdir -p build/release; cd build/release`
 - `cmake ../..` or `cmake -DBOOST_ROOT=<path_to_boost_install> ../..` when building from a specific boost install. If you used brew to install boost, your path is most likely `/usr/local/include/boost.`
 - `cmake --build .`
 
@@ -87,6 +87,19 @@ NOTES:
 - Open Talleo.sln in "Visual Studio" and compile the binaries
 - If all went well, it will complete successfully, and you will find all your binaries in the '..\build\src\Release' directory.
 - Additionally, a `.sln` file will have been created in the `build` directory. If you wish to open the project in Visual Studio with this, you can.
+
+#### FreeBSD
+
+##### Prerequisites
+- Install git, cmake, Boost, MiniUPnPc and OpenSSL
+- `pkg install -y git cmake boost-all miniupnpc openssl`
+
+##### Building
+- `git clone https://github.com/TalleoProject/Talleo.git`
+- `cd Talleo`
+- `mkdir -p build/release; cd build/release`
+- `cmake -D STATIC=ON -D ARCH="default" -D CMAKE_BUILD_TYPE=Release ../..`
+- `cmake --build .`
 
 #### Thanks
 Cryptonote Developers, Bytecoin Developers, Monero Developers, TurtleCoin Developers, Forknote Project, PinkstarcoinV2 Developers, Bittorium Developers, Talleo developers.
