@@ -1,0 +1,11 @@
+freebsd_instance:
+  image_family: freebsd-13-0
+
+task:
+  install_script: pkg install -y git cmake boost-all miniupnpc openssl
+  script:
+    - cd $CIRRUS_WORKING_DIR
+    - mkdir -p build
+    - cd build
+    - cmake ..
+    - cmake --build . --config Release
