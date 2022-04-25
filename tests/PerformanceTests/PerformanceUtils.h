@@ -37,6 +37,11 @@
 #endif
 #endif
 
+#ifdef __NetBSD__
+#include <pthread.h>
+#include <sched.h>
+#endif
+
 void set_process_affinity(int core)
 {
 #if defined (__APPLE__)
@@ -48,6 +53,13 @@ void set_process_affinity(int core)
     mask <<= 1;
   }
   ::SetProcessAffinityMask(::GetCurrentProcess(), core);
+#elif defined(__NetBSD__)
+  cpuset_t *cpuset = cpuset_create();
+  cpuset_set(core, cpuset);
+  if (0 != ::pthread_setaffinity_np(::pthread_self(), cpuset_size(cpuset), cpuset)) {
+    std::cout << "pthread_setaffinity_np - ERROR" << std::endl;
+  }
+  cpuset_destroy(cpuset);
 #elif defined(BOOST_HAS_PTHREADS)
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);

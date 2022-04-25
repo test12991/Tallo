@@ -42,6 +42,10 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   add_definitions (-DMACOSX -D_DARWIN_C_SOURCE)
 endif ()
 
+if (CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+  add_definitions (-D_NETBSD_SOURCE)
+endif ()
+
 # Set compiler specific build flags
 if (CMAKE_COMPILER_IS_GNUC)
   # Set our own default flags at first run.

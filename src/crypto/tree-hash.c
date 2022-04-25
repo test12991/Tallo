@@ -6,13 +6,13 @@
 
 #include "hash-ops.h"
 
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__NetBSD__)
   #include <alloca.h>
 #endif
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__NetBSD__)
 #define alloca(x) __builtin_alloca(x)
 #endif
 

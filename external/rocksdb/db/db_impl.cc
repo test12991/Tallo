@@ -15,6 +15,9 @@
 #ifdef OS_SOLARIS
 #include <alloca.h>
 #endif
+#ifdef OS_NETBSD
+#define alloca __builtin_alloca
+#endif
 
 #include <algorithm>
 #include <cstdio>

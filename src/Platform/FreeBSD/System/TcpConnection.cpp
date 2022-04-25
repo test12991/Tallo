@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Karbo.
 //
@@ -25,6 +26,9 @@
 #include <sys/errno.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#ifdef __NetBSD__
+#include <stdexcept>
+#endif
 
 #include "Dispatcher.h"
 #include <System/ErrorMessage.h>

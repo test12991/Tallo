@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Karbo.
 //
@@ -28,6 +29,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#ifdef __NetBSD__
+#include <stdexcept>
+#endif
 
 #include <System/InterruptedException.h>
 #include <System/Ipv4Address.h>

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2020, The Karbo developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -16,7 +17,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with Bytecoin.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__NetBSD__)
   #include <alloca.h>
 #endif
 #include <cassert>
@@ -30,6 +31,11 @@
 #include "Common/Varint.h"
 #include "crypto.h"
 #include "hash.h"
+
+#ifdef __NetBSD__
+#include <sys/statvfs.h>
+#define alloca __builtin_alloca
+#endif
 
 namespace Crypto {
 

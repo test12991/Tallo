@@ -52,6 +52,10 @@ if(CMAKE_SYSTEM_NAME MATCHES "kOpenBSD.*|OpenBSD.*")
   set(OPENBSD TRUE)
 endif()
 
+if(CMAKE_SYSTEM_NAME MATCHES "NetBSD")
+  set(NETBSD TRUE)
+endif()
+
 if(APPLE)
   include_directories(SYSTEM /usr/include/malloc)
   enable_language(ASM)
@@ -65,7 +69,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Platform/Posix)
 elseif(ANDROID)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Platform/Android)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Platform/Posix)
-elseif(FREEBSD)
+elseif(FREEBSD OR NETBSD)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Platform/FreeBSD)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/Platform/Posix)
 else()
@@ -254,8 +258,8 @@ if(NOT OPENSSL_FOUND)
 endif()
 
 if(OPENSSL_FOUND)
-  ## On non MSVC build systems, we need to link ldl with the static OpenSSL library
-  if(NOT MSVC)
+  ## On non MSVC build systems except NetBSD, we need to link dl with the static OpenSSL library
+  if(NOT MSVC AND NOT NETBSD)
     set(OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES};dl")
   endif()
 
