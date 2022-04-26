@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2016, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Karbo.
 //
@@ -17,6 +18,9 @@
 
 #include <string.h>
 #include <sys/types.h>
+#ifdef __OpenBSD__
+#include <stdint.h>
+#endif
 #include "Context.h"
 
 void

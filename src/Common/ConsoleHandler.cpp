@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -114,7 +115,11 @@ namespace Common {
 
   bool AsyncConsoleReader::waitInput() {
 #ifndef _WIN32
+#ifdef __OpenBSD__
+    int stdin_fileno = fileno(stdin);
+#else
     int stdin_fileno = ::fileno(stdin);
+#endif
 
     while (!m_stop) {
       fd_set read_set;
