@@ -184,7 +184,7 @@ namespace Common {
   void ConsoleHandler::wait() {
 
     try {
-      if (m_thread.joinable()) {
+      if (m_thread.joinable() && m_thread.get_id() != std::this_thread::get_id()) {
         m_thread.join();
       }
     } catch (std::exception& e) {
