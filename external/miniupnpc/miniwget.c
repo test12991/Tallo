@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __FreeBSD__
+#include <strings.h>
+#endif
 #include <ctype.h>
 #ifdef _WIN32
 #include <winsock2.h>
