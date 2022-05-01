@@ -71,7 +71,7 @@ void Configuration::initOptions(po::options_description& desc) {
       ("container-file,w", po::value<std::string>(), "container file")
       ("container-password,p", po::value<std::string>(), "container password")
       ("generate-container,g", "generate new container file with one wallet and exit")
-      ("view-key", po::value<std::string>(), "generate a container with this secret key view")
+      ("view-key", po::value<std::string>(), "generate a container with this secret view key")
       ("spend-key", po::value<std::string>(), "generate a container with this secret spend key")
       ("mnemonic-seed", po::value<std::string>(), "generate a container with this mnemonic seed")
       ("daemon,d", "run as daemon in Unix or as service in Windows")

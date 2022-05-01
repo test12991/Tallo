@@ -42,7 +42,7 @@ void RpcNodeConfiguration::initOptions(boost::program_options::options_descripti
     ("daemon-port", po::value<uint16_t>()->default_value((uint16_t) CryptoNote::RPC_DEFAULT_PORT), "daemon port")
     ("daemon-port-ssl", po::value<uint16_t>()->default_value((uint16_t) CryptoNote::RPC_DEFAULT_SSL_PORT), "daemon port ssl")
     ("daemon-rpc-path", po::value<std::string>()->default_value("/"), "daemon RPC path")
-    ("daemon-ssl-enable", po::bool_switch(), "")
+    ("daemon-ssl-enable", po::bool_switch(), "Enable SSL for daemon")
     ("daemon-chain-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_CHAIN_FILE)), "")
     ("daemon-key-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_KEY_FILE)), "")
     ("daemon-dh-file", po::value<std::string>()->default_value(std::string(CryptoNote::RPC_DEFAULT_DH_FILE)), "");

@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #ifdef OS_ANDROID
 #include <sys/sysmacros.h>
+#include <sys/statfs.h>
 #endif
 #ifdef OS_LINUX
 #include <sys/statfs.h>

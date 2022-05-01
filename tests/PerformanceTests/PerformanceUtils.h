@@ -65,7 +65,7 @@ void set_process_affinity(int core)
   CPU_ZERO(&cpuset);
   CPU_SET(core, &cpuset);
 #if defined (__ANDROID__)
-  if (0 != sched_setaffinity(0, sizeof(cpuset), &cpuset)) {
+  if (0 != ::sched_setaffinity(0, sizeof(cpuset), &cpuset)) {
     std::cout << "sched_setaffinity - ERROR" << std::endl;
   }
 #else
@@ -92,7 +92,7 @@ void set_thread_high_priority()
   ::pthread_attr_getschedpolicy(&attr, &policy);
   max_prio_for_policy = ::sched_get_priority_max(policy);
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__ANDROID__)
   sched_param params;
   params.sched_priority = max_prio_for_policy;
   if (0 != ::sched_setparam(0, &params))
