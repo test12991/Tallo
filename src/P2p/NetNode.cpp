@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020-2021, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -72,7 +72,11 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port) {
   // Add UPnP port mapping
   logger(INFO) << "Attempting to add IGD port mapping.";
   int result;
+#if MINIUPNPC_API_VERSION < 14
   UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, 0, 0, &result);
+#else
+  UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, UPNP_LOCAL_PORT_ANY, 0, 2, &result);
+#endif
   UPNPUrls urls;
   IGDdatas igdData;
   char lanAddress[64];
