@@ -29,20 +29,20 @@
  */
 
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #ifdef HAVE_GETTIMEOFDAY
 #include <sys/time.h>
 #else
 #include <sys/timeb.h>
 #endif
-#ifdef __APPLE__
-#include <malloc/malloc.h>
-#elif !defined(__OpenBSD__)
+
+#if !defined(__APPLE__) && !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__DragonFly__)
 #include <malloc.h>
 #endif
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+
 
 #ifdef WIN32
 #include <process.h>
@@ -465,6 +465,7 @@ OAES_RET oaes_sprintf(
 #ifdef OAES_HAVE_ISAAC
 static void oaes_get_seed( char buf[RANDSIZ + 1] )
 {
+#ifndef HAVE_GETTIMEOFDAY
 	struct timeb timer;
 	struct tm *gmTimer;
 	char * _test = NULL;
@@ -476,6 +477,25 @@ static void oaes_get_seed( char buf[RANDSIZ + 1] )
 		gmTimer->tm_year + 1900, gmTimer->tm_mon + 1, gmTimer->tm_mday,
 		gmTimer->tm_hour, gmTimer->tm_min, gmTimer->tm_sec, timer.millitm,
 		_test + timer.millitm, getpid() );
+#else
+	struct timeval timer;
+	struct tm *gmTimer;
+	char * _test = NULL;
+
+	gettimeofday(&timer, NULL);
+	gmTimer = gmtime(&timer.tv_sec);
+	_test = (char *) calloc( sizeof( char ), timer.tv_usec/1000);
+	sprintf( buf, "%04d%02d%02d%02d%02d%02d%03d%p%d",
+		gmTimer->tm_year + 1900, gmTimer->tm_mon + 1, gmTimer->tm_mday,
+		gmTimer->tm_hour, gmTimer->tm_min, gmTimer->tm_sec, timer.tv_usec/1000,
+		_test + timer.tv_usec/1000,
+#ifdef WIN32
+		_getpid()
+#else
+		getpid()
+#endif
+		);
+#endif
 
 	if( _test )
 		free( _test );
@@ -496,7 +516,7 @@ static uint32_t oaes_get_seed(void)
 			gmTimer->tm_hour + gmTimer->tm_min + gmTimer->tm_sec + timer.millitm +
 			(uintptr_t) ( _test + timer.millitm ) +
 #ifdef WIN32
-                        _getpid()
+			_getpid()
 #else
                         getpid()
 #endif
@@ -629,7 +649,10 @@ static OAES_RET oaes_key_gen( OAES_CTX * ctx, size_t key_size )
 	_key->data = (uint8_t *) calloc( key_size, sizeof( uint8_t ));
 
 	if( NULL == _key->data )
+	{
+		free(_key);
 		return OAES_RET_MEM;
+	}
 
 	for( _i = 0; _i < key_size; _i++ )
 #ifdef OAES_HAVE_ISAAC
