@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbowanec developers
 // Copyright (c) 2018, The Bittorium developers
-// Copyright (c) 2019-2021, The Talleo developers
+// Copyright (c) 2019-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -1345,7 +1345,8 @@ bool RpcServer::on_get_alternate_chains(const COMMAND_RPC_GET_ALTERNATE_CHAINS::
 
 bool RpcServer::on_get_block_headers_range(const COMMAND_RPC_GET_BLOCK_HEADERS_RANGE::request& req, COMMAND_RPC_GET_BLOCK_HEADERS_RANGE::response& res, JsonRpc::JsonRpcError& error_resp) {
 	// TODO: change usage to jsonRpcHandlers?
-	const uint64_t bc_height = m_core.get_current_blockchain_height();
+        auto coreStatistics = m_core.getCoreStatistics();
+	const uint64_t bc_height = coreStatistics.blockchainHeight;
 	if (req.start_height > bc_height || req.end_height >= bc_height || req.start_height > req.end_height)
 	{
 		error_resp.code = CORE_RPC_ERROR_CODE_TOO_BIG_HEIGHT;

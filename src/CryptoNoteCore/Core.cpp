@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019-2020, The Talleo developers
+// Copyright (c) 2019-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -1220,10 +1220,13 @@ bool Core::getBlockTemplate(BlockTemplate& b, const AccountPublicAddress& adr, c
 }
 
 CoreStatistics Core::getCoreStatistics() const {
-  // TODO: implement it
-  assert(false);
   CoreStatistics result;
-  std::fill(reinterpret_cast<uint8_t*>(&result), reinterpret_cast<uint8_t*>(&result) + sizeof(result), 0);
+  result.transactionPoolSize = getPoolTransactionCount();
+  result.blockchainHeight = mainChainStorage->getBlockCount();
+  result.miningSpeed = 0; // XXX: Mining not implemented in Core
+  result.alternativeBlockCount = getAlternativeBlockCount();
+  Crypto::Hash topBlockHash = getTopBlockHash();
+  result.topBlockHashString =  Common::podToHex(topBlockHash);
   return result;
 }
 
@@ -1698,7 +1701,7 @@ IBlockchainCache* Core::findSegmentContainingBlock(const Crypto::Hash& blockHash
     return blockSegment;
   }
 
-  // than search in alternative chains
+  // then search in alternative chains
   return findAlternativeSegmentContainingBlock(blockHash);
 }
 
@@ -1711,7 +1714,7 @@ IBlockchainCache* Core::findSegmentContainingBlock(uint32_t blockHeight) const {
     return blockSegment;
   }
 
-  // than search in alternative chains
+  // then search in alternative chains
   return findAlternativeSegmentContainingBlock(blockHeight);
 }
 
@@ -2414,12 +2417,6 @@ void Core::updateBlockMedianSize() {
   auto lastBlockSizes = mainChain->getLastBlocksSizes(currency.rewardBlocksWindow());
 
   blockMedianSize = std::max(Common::medianValue(lastBlockSizes), static_cast<uint64_t>(nextBlockGrantedFullRewardZone));
-}
-
-uint64_t Core::get_current_blockchain_height() const
-{
-	// TODO: remove when GetCoreStatistics is implemented
-	return mainChainStorage->getBlockCount();
 }
 
 size_t Core::getMaximumTransactionSize() const {
