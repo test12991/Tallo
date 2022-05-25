@@ -374,13 +374,13 @@ int main(int argc, char* argv[])
     cprotocol.set_p2p_endpoint(&p2psrv);
     //DaemonCommandsHandler dch(ccore, p2psrv, logManager);
 	DaemonCommandsHandler dch(ccore, p2psrv, logManager, &rpcServer);
-    logger(INFO) << "Initializing p2p server...";
+    logger(INFO) << "Initializing P2P server...";
     if (!p2psrv.init(netNodeConfig)) {
-      logger(ERROR, BRIGHT_RED) << "Failed to initialize p2p server.";
+      logger(ERROR, BRIGHT_RED) << "Failed to initialize P2P server.";
       return 1;
     }
 
-    logger(INFO) << "P2p server initialized OK";
+    logger(INFO) << "P2P server initialized OK";
 
     if (!command_line::has_arg(vm, arg_console)) {
       dch.start_handling();
@@ -402,7 +402,7 @@ int main(int argc, char* argv[])
     }
     std::string ssl_info = "";
     if (server_ssl_enable) ssl_info += ", SSL on address " + rpcConfig.getBindAddressSSL();
-    logger(INFO) << "Starting core rpc server on address " << rpcConfig.getBindAddress() << ssl_info;
+    logger(INFO) << "Starting core RPC server on address " << rpcConfig.getBindAddress() << ssl_info;
     rpcServer.start(rpcConfig.getBindIP(), rpcConfig.getBindPort(), rpcConfig.getBindPortSSL(), server_ssl_enable, rpcConfig.getExternalPort(), rpcConfig.getExternalPortSSL());
     rpcServer.enableCors(command_line::get_arg(vm, arg_enable_cors));
     if (command_line::has_arg(vm, arg_set_fee_address)) {
@@ -428,25 +428,25 @@ int main(int argc, char* argv[])
         rpcServer.setCollateralHash(ch_str);
       }
     }
-    logger(INFO) << "Core rpc server started ok";
+    logger(INFO) << "Core RPC server started ok";
 
     Tools::SignalHandler::install([&dch, &p2psrv] {
       dch.stop_handling();
       p2psrv.sendStopSignal();
     });
 
-    logger(INFO) << "Starting p2p net loop...";
+    logger(INFO) << "Starting P2P net loop...";
     p2psrv.run();
-    logger(INFO) << "p2p net loop stopped";
+    logger(INFO) << "P2P net loop stopped";
 
     dch.stop_handling();
 
     //stop components
-    logger(INFO) << "Stopping core rpc server...";
+    logger(INFO) << "Stopping core RPC server...";
     rpcServer.stop();
 
     //deinitialize components
-    logger(INFO) << "Deinitializing p2p...";
+    logger(INFO) << "Deinitializing P2P...";
     p2psrv.deinit();
 
     cprotocol.set_p2p_endpoint(nullptr);

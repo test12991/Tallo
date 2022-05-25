@@ -256,9 +256,9 @@ void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
 
   protocol.set_p2p_endpoint(&p2pNode);
 
-  log(Logging::INFO) << "initializing p2pNode";
+  log(Logging::INFO) << "initializing P2P node";
   if (!p2pNode.init(config.netNodeConfig)) {
-    throw std::runtime_error("Failed to init p2pNode");
+    throw std::runtime_error("Failed to init P2P node");
   }
 
   std::unique_ptr<CryptoNote::INode> node(new CryptoNote::InProcessNode(core, protocol, *dispatcher));
@@ -275,7 +275,7 @@ void PaymentGateService::runInProcess(Logging::LoggerRef& log) {
     log(Logging::INFO) << "node is inited successfully";
   }
 
-  log(Logging::INFO) << "Spawning p2p server";
+  log(Logging::INFO) << "Spawning P2P server";
 
   System::Event p2pStarted(*dispatcher);
 

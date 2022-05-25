@@ -189,7 +189,7 @@ void JsonRpcServer::makeInvalidPasswordResponse(Common::JsonValue& resp) {
   code = static_cast<int64_t>(CryptoNote::JsonRpc::errInvalidPassword);
 
   JsonValue message;
-  message = "Invalid or no rpc password";
+  message = "Invalid or no RPC password";
 
   error.insert("code", code);
   error.insert("message", message);
