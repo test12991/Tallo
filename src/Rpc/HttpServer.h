@@ -30,6 +30,7 @@
 
 #include <System/ContextGroup.h>
 #include <System/Dispatcher.h>
+#include <System/Ipv4Address.h>
 #include <System/TcpListener.h>
 #include <System/TcpConnection.h>
 #include <System/Event.h>
@@ -45,7 +46,7 @@ public:
   HttpServer(System::Dispatcher& dispatcher, Logging::ILogger& log);
   void setCerts(const std::string& chain_file, const std::string& key_file, const std::string& dh_file);
   void start(const std::string& address, uint16_t port, uint16_t port_ssl = 0,
-             bool server_ssl_enable = false);
+             bool server_ssl_enable = false, uint16_t external_port = 0, uint16_t external_port_ssl = 0);
   void stop();
   virtual void processRequest(const HttpRequest& request, HttpResponse& response) = 0;
   virtual size_t get_connections_count() const;
@@ -54,8 +55,12 @@ protected:
   System::Dispatcher& m_dispatcher;
 
 private:
+  System::Ipv4Address m_server_ip;
   bool m_server_ssl_do;
   bool m_server_ssl_is_run;
+  uint16_t m_port;
+  uint16_t m_external_port;
+  uint16_t m_external_port_ssl;
   uint16_t m_server_ssl_port;
   unsigned int m_server_ssl_clients;
   std::string m_address;

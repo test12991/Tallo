@@ -27,15 +27,13 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/utility/value_init.hpp>
 
-#include <miniupnpc/miniupnpc.h>
-#include <miniupnpc/upnpcommands.h>
-
 #include <System/Context.h>
 #include <System/ContextGroupTimeout.h>
 #include <System/EventLock.h>
 #include <System/InterruptedException.h>
 #include <System/Ipv4Address.h>
 #include <System/Ipv4Resolver.h>
+#include <System/PortMapping.h>
 #include <System/TcpListener.h>
 #include <System/TcpConnector.h>
 
@@ -65,47 +63,6 @@ size_t get_random_index_with_fixed_probability(size_t max_index) {
     return 0;
   size_t x = Crypto::rand<size_t>() % (max_index + 1);
   return (x*x*x) / (max_index*max_index); //parabola \/
-}
-
-
-void addPortMapping(Logging::LoggerRef& logger, uint32_t port, uint32_t externalPort) {
-  // Add UPnP port mapping
-  logger(INFO) << "Attempting to add IGD port mapping.";
-  int result;
-#if MINIUPNPC_API_VERSION < 14
-  UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, 0, 0, &result);
-#else
-  UPNPDev* deviceList = upnpDiscover(1000, NULL, NULL, UPNP_LOCAL_PORT_ANY, 0, 2, &result);
-#endif
-  UPNPUrls urls;
-  IGDdatas igdData;
-  char lanAddress[64];
-  result = UPNP_GetValidIGD(deviceList, &urls, &igdData, lanAddress, sizeof lanAddress);
-  freeUPNPDevlist(deviceList);
-  if (result != 0) {
-    if (result == 1) {
-      std::ostringstream extPortString;
-      extPortString << (externalPort ? externalPort : port);
-      std::ostringstream portString;
-      portString << port;
-      if (UPNP_AddPortMapping(urls.controlURL, igdData.first.servicetype, extPortString.str().c_str(),
-        portString.str().c_str(), lanAddress, CryptoNote::CRYPTONOTE_NAME, "TCP", 0, "0") != 0) {
-        logger(ERROR) << "UPNP_AddPortMapping failed.";
-      } else {
-        logger(INFO) << "Added IGD port mapping.";
-      }
-    } else if (result == 2) {
-      logger(INFO) << "IGD was found but reported as not connected.";
-    } else if (result == 3) {
-      logger(INFO) << "UPnP device was found but not recoginzed as IGD.";
-    } else {
-      logger(ERROR) << "UPNP_GetValidIGD returned an unknown result code.";
-    }
-
-    FreeUPNPUrls(&urls);
-  } else {
-    logger(INFO) << "No IGD was found.";
-  }
 }
 
 bool parse_peer_from_string(NetworkAddress& pe, const std::string& node_addr) {
@@ -499,7 +456,7 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     if(m_external_port)
       logger(INFO) << "External port defined as " << m_external_port;
 
-    addPortMapping(logger, m_listeningPort, m_external_port);
+    System::addPortMapping(logger, m_listeningPort, m_external_port);
 
     return true;
   }
@@ -537,6 +494,8 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
   //-----------------------------------------------------------------------------------
 
   bool NodeServer::deinit()  {
+    System::deletePortMapping(logger, m_listeningPort, m_external_port);
+
     return store_config();
   }
 

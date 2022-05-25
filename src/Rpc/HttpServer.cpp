@@ -32,9 +32,9 @@
 #include <Common/StringTools.h>
 #include <HTTP/HttpParser.h>
 #include <System/InterruptedException.h>
+#include <System/PortMapping.h>
 #include <System/TcpStream.h>
 #include <System/SocketStream.h>
-#include <System/Ipv4Address.h>
 
 using boost::asio::ip::tcp;
 using namespace Logging;
@@ -43,7 +43,10 @@ using namespace Logging;
 namespace CryptoNote {
 
 HttpServer::HttpServer(System::Dispatcher& dispatcher, Logging::ILogger& log)
-  : m_dispatcher(dispatcher), workingContextGroup(dispatcher), logger(log, "HttpServer") {
+  : m_server_ip("0.0.0.0"), m_dispatcher(dispatcher), workingContextGroup(dispatcher), logger(log, "HttpServer") {
+  m_port = 0;
+  m_external_port = 0;
+  m_external_port_ssl = 0;
   m_server_ssl_do = false;
   m_server_ssl_is_run = false;
   m_server_ssl_clients = 0;
@@ -61,8 +64,14 @@ void HttpServer::setCerts(const std::string& chain_file, const std::string& key_
 }
 
 void HttpServer::start(const std::string& address, uint16_t port, uint16_t port_ssl,
-                       bool server_ssl_enable) {
-  m_listener = System::TcpListener(m_dispatcher, System::Ipv4Address(address), port);
+                       bool server_ssl_enable, uint16_t external_port, uint16_t external_port_ssl) {
+  m_server_ip = System::Ipv4Address(address);
+  m_port = port;
+  if (!m_server_ip.isLoopback()) {
+    m_external_port = external_port;
+    System::addPortMapping(logger, m_port, m_external_port);
+  }
+  m_listener = System::TcpListener(m_dispatcher, m_server_ip, port);
   workingContextGroup.spawn(std::bind(&HttpServer::acceptLoop, this));
 
   m_server_ssl_do = server_ssl_enable;
@@ -71,6 +80,10 @@ void HttpServer::start(const std::string& address, uint16_t port, uint16_t port_
 
   if (!m_chain_file.empty() && !m_key_file.empty() && !m_dh_file.empty() &&
       m_server_ssl_port != 0 && m_server_ssl_do) {
+    if (!m_server_ip.isLoopback()) {
+      m_external_port_ssl = external_port_ssl;
+      System::addPortMapping(logger, m_server_ssl_port, m_external_port_ssl);
+    }
     m_ssl_server_thread = boost::thread(&HttpServer::sslServer, this);
     m_ssl_server_thread.detach();
   }
@@ -79,6 +92,12 @@ void HttpServer::start(const std::string& address, uint16_t port, uint16_t port_
 void HttpServer::stop() {
   workingContextGroup.interrupt();
   workingContextGroup.wait();
+  if (!m_server_ip.isLoopback()) {
+    System::deletePortMapping(logger, m_port, m_external_port);
+    if (m_server_ssl_do) {
+      System::deletePortMapping(logger, m_server_ssl_port, m_external_port_ssl);
+    }
+  }
   m_server_ssl_do = false;
   while (m_server_ssl_is_run) {
     boost::this_thread::sleep_for(boost::chrono::milliseconds(100));

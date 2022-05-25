@@ -34,6 +34,8 @@ public:
   bool isEnabledSSL() const;
   uint16_t getBindPort() const;
   uint16_t getBindPortSSL() const;
+  uint16_t getExternalPort() const;
+  uint16_t getExternalPortSSL() const;
   std::string getBindIP() const;
   std::string getBindAddress() const;
   std::string getBindAddressSSL() const;
@@ -44,6 +46,8 @@ public:
   bool        enableSSL;
   uint16_t    bindPort;
   uint16_t    bindPortSSL;
+  uint16_t    externalPort;
+  uint16_t    externalPortSSL;
   std::string bindIp;
   std::string dhFile;
   std::string chainFile;

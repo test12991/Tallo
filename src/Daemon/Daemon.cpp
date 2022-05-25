@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbo developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -403,7 +403,7 @@ int main(int argc, char* argv[])
     std::string ssl_info = "";
     if (server_ssl_enable) ssl_info += ", SSL on address " + rpcConfig.getBindAddressSSL();
     logger(INFO) << "Starting core rpc server on address " << rpcConfig.getBindAddress() << ssl_info;
-    rpcServer.start(rpcConfig.getBindIP(), rpcConfig.getBindPort(), rpcConfig.getBindPortSSL(), server_ssl_enable);
+    rpcServer.start(rpcConfig.getBindIP(), rpcConfig.getBindPort(), rpcConfig.getBindPortSSL(), server_ssl_enable, rpcConfig.getExternalPort(), rpcConfig.getExternalPortSSL());
     rpcServer.enableCors(command_line::get_arg(vm, arg_enable_cors));
     if (command_line::has_arg(vm, arg_set_fee_address)) {
       std::string addr_str = command_line::get_arg(vm, arg_set_fee_address);

@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2020, The Karbo developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -27,14 +28,18 @@ namespace CryptoNote {
     const std::string DEFAULT_RPC_IP = "127.0.0.1";
     const uint16_t DEFAULT_RPC_PORT = RPC_DEFAULT_PORT;
     const uint16_t DEFAULT_RPC_SSL_PORT = RPC_DEFAULT_SSL_PORT;
+    const uint16_t DEFAULT_RPC_EXTERNAL_PORT = 0;
+    const uint16_t DEFAULT_RPC_EXTERNAL_SSL_PORT = 0;
     const std::string DEFAULT_RPC_CHAIN_FILE = std::string(RPC_DEFAULT_CHAIN_FILE);
     const std::string DEFAULT_RPC_KEY_FILE = std::string(RPC_DEFAULT_KEY_FILE);
     const std::string DEFAULT_RPC_DH_FILE = std::string(RPC_DEFAULT_DH_FILE);
 
     const command_line::arg_descriptor<std::string> arg_rpc_bind_ip = { "rpc-bind-ip", "Interface for RPC service", DEFAULT_RPC_IP };
     const command_line::arg_descriptor<uint16_t> arg_rpc_bind_port = { "rpc-bind-port", "Port for RPC service", DEFAULT_RPC_PORT };
+    const command_line::arg_descriptor<uint16_t> arg_rpc_external_port = { "rpc-external-port", "External port for RPC service (if port forwarding used with NAT)", DEFAULT_RPC_EXTERNAL_PORT };
     const command_line::arg_descriptor<bool> arg_rpc_bind_ssl_enable    = { "rpc-bind-ssl-enable", "Enable SSL for RPC service", false };
     const command_line::arg_descriptor<uint16_t> arg_rpc_bind_ssl_port  = { "rpc-bind-ssl-port", "SSL port for RPC service", DEFAULT_RPC_SSL_PORT };
+    const command_line::arg_descriptor<uint16_t> arg_rpc_external_ssl_port = { "rpc-external-ssl-port", "External SSL port for RPC service (if port forwarding used with NAT)", DEFAULT_RPC_EXTERNAL_SSL_PORT };
     const command_line::arg_descriptor<std::string> arg_chain_file      = { "rpc-chain-file", "SSL chain file", DEFAULT_RPC_CHAIN_FILE };
     const command_line::arg_descriptor<std::string> arg_key_file        = { "rpc-key-file", "SSL key file", DEFAULT_RPC_KEY_FILE };
     const command_line::arg_descriptor<std::string> arg_dh_file         = { "rpc-dh-file", "SSL DH file", DEFAULT_RPC_DH_FILE };
@@ -51,6 +56,8 @@ namespace CryptoNote {
   bool RpcServerConfig::isEnabledSSL() const { return enableSSL; }
   uint16_t RpcServerConfig::getBindPort() const { return bindPort; }
   uint16_t RpcServerConfig::getBindPortSSL() const { return bindPortSSL; }
+  uint16_t RpcServerConfig::getExternalPort() const { return externalPort; }
+  uint16_t RpcServerConfig::getExternalPortSSL() const { return externalPortSSL; }
   std::string RpcServerConfig::getBindIP() const { return bindIp; }
   std::string RpcServerConfig::getDhFile() const { return dhFile; }
   std::string RpcServerConfig::getChainFile() const { return chainFile; }
@@ -61,8 +68,10 @@ namespace CryptoNote {
   void RpcServerConfig::initOptions(boost::program_options::options_description& desc) {
     command_line::add_arg(desc, arg_rpc_bind_ip);
     command_line::add_arg(desc, arg_rpc_bind_port);
+    command_line::add_arg(desc, arg_rpc_external_port);
     command_line::add_arg(desc, arg_rpc_bind_ssl_enable);
     command_line::add_arg(desc, arg_rpc_bind_ssl_port);
+    command_line::add_arg(desc, arg_rpc_external_ssl_port);
     command_line::add_arg(desc, arg_chain_file);
     command_line::add_arg(desc, arg_key_file);
     command_line::add_arg(desc, arg_dh_file);
@@ -73,6 +82,8 @@ namespace CryptoNote {
     bindPort = command_line::get_arg(vm, arg_rpc_bind_port);
     enableSSL = command_line::get_arg(vm, arg_rpc_bind_ssl_enable);
     bindPortSSL = command_line::get_arg(vm, arg_rpc_bind_ssl_port);
+    externalPort = command_line::get_arg(vm, arg_rpc_external_port);
+    externalPortSSL = command_line::get_arg(vm, arg_rpc_external_ssl_port);
     chainFile = command_line::get_arg(vm, arg_chain_file);
     keyFile = command_line::get_arg(vm, arg_key_file);
     dhFile = command_line::get_arg(vm, arg_dh_file);
