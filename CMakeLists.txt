@@ -259,8 +259,10 @@ endif()
 
 if(OPENSSL_FOUND)
   ## On non MSVC build systems except NetBSD, we need to link dl with the static OpenSSL library
-  if(NOT MSVC AND NOT NETBSD)
-    set(OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES};dl")
+  if(CMAKE_DL_LIBS)
+    if(NOT CMAKE_DL_LIBS IN_LIST OPENSSL_LIBRARIES)
+      set(OPENSSL_LIBRARIES "${OPENSSL_LIBRARIES};${CMAKE_DL_LIBS}")
+    endif()
   endif()
 
   include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
