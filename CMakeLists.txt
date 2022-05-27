@@ -207,7 +207,7 @@ if(APPLE)
   set(Boost_USE_STATIC_LIBS ON)
   set(Boost_USE_STATIC_RUNTIME ON)
 endif()
-find_package(Boost REQUIRED COMPONENTS system filesystem thread date_time chrono regex serialization program_options)
+find_package(Boost 1.58 REQUIRED COMPONENTS system filesystem thread date_time chrono regex serialization program_options)
 add_definitions("-DBOOST_BIND_GLOBAL_PLACEHOLDERS")
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
