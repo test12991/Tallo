@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -53,9 +54,11 @@ private:
   System::Event* stopEvent;
   PaymentService::ConfigurationManager config;
   PaymentService::WalletService* service;
-  CryptoNote::CurrencyBuilder currencyBuilder;
 
   Logging::LoggerGroup logger;
+
+  CryptoNote::CurrencyBuilder currencyBuilder;
+
   std::ofstream fileStream;
   Logging::StreamLogger fileLogger;
   Logging::ConsoleLogger consoleLogger;
