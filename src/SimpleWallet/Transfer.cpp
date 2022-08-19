@@ -120,8 +120,7 @@ void sendMultipleTransactions(CryptoNote::WalletGreen &wallet, std::vector<Crypt
 
                 CryptoNote::WalletTransaction sentTx = wallet.getTransaction(id);
 
-                std::cout << SuccessMsg("Transaction has been sent!") << std::endl
-                          << SuccessMsg("Hash: " + Common::podToHex(sentTx.hash)) << std::endl
+                std::cout << SuccessMsg("Transaction has been sent with hash ") << Common::podToHex(sentTx.hash) << SuccessMsg("!") << std::endl
                           << std::endl;
 
                 break;
@@ -483,8 +482,7 @@ void fusionTX(CryptoNote::WalletGreen &wallet, CryptoNote::TransactionParameters
             size_t id = wallet.transfer(p);
             CryptoNote::WalletTransaction tx = wallet.getTransaction(id);
 
-            std::cout << SuccessMsg("Transaction has been sent!") << std::endl
-                      << SuccessMsg("Hash:" + Common::podToHex(tx.hash)) << std::endl;
+            std::cout << SuccessMsg("Transaction has been sent with hash ") << Common::podToHex(tx.hash) << SuccessMsg("!") << std::endl;
         }
     }
     catch (const std::system_error &e) {
@@ -603,9 +601,11 @@ void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> wallet
     uint64_t amount = maybeAmount.x;
 
     if (balance < amount) {
+        size_t totalLen = formatAmount(amount).length(); // Funds needed is always the widest string
+
         std::cout << WarningMsg("You don't have enough funds to cover this transaction!") << std::endl
-                  << InformationMsg("Funds needed: " + formatAmount(amount)) << std::endl
-                  << SuccessMsg("Funds available: " + formatAmount(balance)) << std::endl;
+                  << std::right <<std::setw(17) << "Funds needed: " << std::right << std::setw(totalLen) << InformationMsg(formatAmount(amount)) << std::endl
+                  << std::right <<std::setw(17) << "Funds available: " << std::right << std::setw(totalLen) << SuccessMsg(formatAmount(balance)) << std::endl;
         return;
     }
 
@@ -619,9 +619,11 @@ void transfer(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> wallet
     uint64_t fee = maybeFee.x;
 
     if (balance < amount + fee) {
+        size_t totalLen = formatAmount(amount + fee).length(); // Funds needed is always the widest string
+
         std::cout << WarningMsg("You don't have enough funds to cover this transaction!") << std::endl
-                  << InformationMsg("Funds needed: " + formatAmount(amount + fee)) << std::endl
-                  << SuccessMsg("Funds available: " + formatAmount(balance)) << std::endl;
+                  << std::right <<std::setw(17) << "Funds needed: " << std::right << std::setw(totalLen) << InformationMsg(formatAmount(amount + fee)) << std::endl
+                  << std::right <<std::setw(17) << "Funds available: " << std::right << std::setw(totalLen) << SuccessMsg(formatAmount(balance)) << std::endl;
         return;
     }
 
@@ -656,9 +658,11 @@ void doTransfer(System::Dispatcher& dispatcher, uint16_t mixin, std::string addr
     }
 
     if (balance < amount + fee + remote_node_fee) {
+        size_t totalLen = formatAmount(amount + fee + remote_node_fee).length(); // Funds needed is always the widest string
+
         std::cout << WarningMsg("You don't have enough funds to cover this transaction!") << std::endl
-                  << InformationMsg("Funds needed: " + formatAmount(amount + fee + remote_node_fee)) << std::endl
-                  << SuccessMsg("Funds available: " + formatAmount(balance)) << std::endl;
+                  << std::right <<std::setw(17) << "Funds needed: " << std::right << std::setw(totalLen) << InformationMsg(formatAmount(amount + fee + remote_node_fee)) << std::endl
+                  << std::right <<std::setw(17) << "Funds available: " << std::right << std::setw(totalLen) << SuccessMsg(formatAmount(balance)) << std::endl;
         return;
     }
 
@@ -713,8 +717,7 @@ void doTransfer(System::Dispatcher& dispatcher, uint16_t mixin, std::string addr
 
                 CryptoNote::WalletTransaction tx = walletInfo->wallet.getTransaction(id);
 
-                std::cout << SuccessMsg("Transaction has been sent!") << std::endl
-                          << SuccessMsg("Hash: " + Common::podToHex(tx.hash)) << std::endl;
+                std::cout << SuccessMsg("Transaction has been sent with hash ") << Common::podToHex(tx.hash) << SuccessMsg("!") << std::endl;
             }
         }
         catch (const std::system_error &e) {
