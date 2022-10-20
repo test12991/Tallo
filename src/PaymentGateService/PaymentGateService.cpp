@@ -372,7 +372,11 @@ void PaymentGateService::runWalletService(const CryptoNote::Currency& currency, 
     }
 
     Logging::LoggerRef(logger, "PaymentGateService")(Logging::INFO) << "Starting core RPC server on "
-	    << config.remoteNodeConfig.m_daemon_host << ":" << config.remoteNodeConfig.m_daemon_port;
+	    << config.gateConfiguration.m_bind_address << ":" << config.gateConfiguration.m_bind_port;
+    if (rpc_run_ssl) {
+        Logging::LoggerRef(logger, "PaymentGateService")(Logging::INFO) << "Starting core RPC server (SSL) on "
+	        << config.gateConfiguration.m_bind_address << ":" << config.gateConfiguration.m_bind_port_ssl;
+    }
     rpcServer.start(config.gateConfiguration.m_bind_address,
                     config.gateConfiguration.m_bind_port,
                     config.gateConfiguration.m_bind_port_ssl,
