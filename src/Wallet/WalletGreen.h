@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -47,6 +47,7 @@ public:
   virtual void initializeWithViewKey(const std::string& path, const std::string& password, const Crypto::SecretKey& viewSecretKey) override;
   virtual void load(const std::string& path, const std::string& password, std::string& extra) override;
   virtual void load(const std::string& path, const std::string& password) override;
+  virtual void repair() override;
   virtual void shutdown() override;
 
   virtual void changePassword(const std::string& oldPassword, const std::string& newPassword) override;

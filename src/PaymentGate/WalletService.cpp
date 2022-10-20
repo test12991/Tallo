@@ -493,6 +493,31 @@ std::error_code WalletService::exportWallet(const std::string& fileName) {
   return std::error_code();
 }
 
+std::error_code WalletService::repairWallet() {
+  try {
+    System::EventLock lk(readyEvent);
+
+    logger(Logging::INFO, Logging::BRIGHT_WHITE) << "Repairing wallet";
+
+    if (!inited) {
+      logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Repair impossible: Wallet Service is not initialized";
+      return make_error_code(CryptoNote::error::NOT_INITIALIZED);
+    }
+
+    repair();
+    logger(Logging::INFO, Logging::BRIGHT_WHITE) << "Wallet has been repaired";
+  } catch (std::system_error& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while repairing wallet: " << x.what();
+    return x.code();
+  } catch (std::exception& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while repairing wallet: " << x.what();
+    return make_error_code(CryptoNote::error::INTERNAL_WALLET_ERROR);
+  }
+
+  return std::error_code();
+
+}
+
 std::error_code WalletService::resetWallet() {
   try {
     System::EventLock lk(readyEvent);
@@ -1234,6 +1259,10 @@ void WalletService::refresh() {
   } catch (std::exception& e) {
     logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "exception thrown in refresh(): " << e.what();
   }
+}
+
+void WalletService::repair() {
+  wallet.repair();
 }
 
 void WalletService::reset() {

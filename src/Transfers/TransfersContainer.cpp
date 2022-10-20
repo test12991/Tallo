@@ -883,10 +883,6 @@ void TransfersContainer::load(std::istream& in) {
   m_unconfirmedTransfers = std::move(unconfirmedTransfers);
   m_availableTransfers = std::move(availableTransfers);
   m_spentTransfers = std::move(spentTransfers);
-
-  // Repair the container if it was broken while handling addTransaction() in previous version of the code
-  // Hope it isn't necessary anymore
-  //repair();
 }
 
 void TransfersContainer::repair() {

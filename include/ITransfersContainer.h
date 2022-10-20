@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -100,6 +101,7 @@ public:
   virtual std::vector<TransactionOutputInformation> getTransactionInputs(const Crypto::Hash& transactionHash, uint32_t flags) const = 0;
   virtual void getUnconfirmedTransactions(std::vector<Crypto::Hash>& transactions) const = 0;
   virtual std::vector<TransactionSpentOutputInformation> getSpentOutputs() const = 0;
+  virtual void repair() = 0;
 };
 
 }

@@ -760,6 +760,8 @@ void inputLoop(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> &wall
             } else if (words[0] == "recover_address") {
                 words.erase(words.begin());
                 recoverAddress(walletInfo, node, words);
+            } else if (command == "repair") {
+                repair(walletInfo->wallet);
             } else if (command == "select_address") {
                 selectAddress(walletInfo->wallet);
             } else if (words[0] == "select_address") {
@@ -823,7 +825,8 @@ void help(bool viewWallet) {
                   << SuccessMsg("count_transfers", 25) << "Show number of transfers" << std::endl
                   << SuccessMsg("quick_optimize", 25) << "Quickly optimize your wallet to send large amounts" << std::endl
                   << SuccessMsg("full_optimize", 25) << "Fully optimize your wallet to send large amounts" << std::endl
-                  << SuccessMsg("outgoing_transfers", 25) << "Show outgoing transfers" << std::endl;
+                  << SuccessMsg("outgoing_transfers", 25) << "Show outgoing transfers" << std::endl
+                  << SuccessMsg("repair", 25) << "Repair wallet integrity" << std::endl;
                   ;
     }
     std::cout << SuccessMsg("incoming_transfers", 25) << "Show incoming transfers" << std::endl
@@ -1090,6 +1093,10 @@ void recoverAddress(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &
     std::string address = walletInfo->wallet.createAddress(privateSpendKey);
     std::cout << InformationMsg("Recovering subwallet with address ") << SuccessMsg(address) << InformationMsg("... Rescanning for transactions might take a few minutes.") << std::endl;
     std::cout << InformationMsg("Use the ") << SuggestionMsg("bc_height") << InformationMsg(" command to see the progress.") << std::endl;
+}
+
+void repair(CryptoNote::WalletGreen &wallet) {
+    wallet.repair();
 }
 
 void recoverAddress(std::shared_ptr<WalletInfo> &walletInfo, CryptoNote::INode &node, std::vector<std::string> args) {

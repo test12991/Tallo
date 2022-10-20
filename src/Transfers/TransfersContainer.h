@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -168,6 +169,7 @@ public:
   virtual std::vector<TransactionOutputInformation> getTransactionInputs(const Crypto::Hash& transactionHash, uint32_t flags) const override;
   virtual void getUnconfirmedTransactions(std::vector<Crypto::Hash>& transactions) const override;
   virtual std::vector<TransactionSpentOutputInformation> getSpentOutputs() const override;
+  virtual void repair() override;
 
   // IStreamSerializable
   virtual void save(std::ostream& os) override;
@@ -268,7 +270,6 @@ private:
   void updateTransfersVisibility(const Crypto::KeyImage& keyImage);
 
   void copyToSpent(const TransactionBlockInfo& block, const ITransactionReader& tx, size_t inputIndex, const TransactionOutputInformationEx& output);
-  void repair();
 
 private:
   TransactionMultiIndex m_transactions;

@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2020-2021, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -195,6 +195,16 @@ void WalletGreen::initializeWithViewKey(const std::string& path, const std::stri
 
   initWithKeys(path, password, viewPublicKey, viewSecretKey);
   m_logger(INFO, BRIGHT_WHITE) << "Container initialized with view secret key, public view key " << viewPublicKey;
+}
+
+void WalletGreen::repair() {
+  throwIfNotInitialized();
+
+  for (auto it = m_walletsContainer.begin(); it != m_walletsContainer.end(); ++it) {
+    m_walletsContainer.modify(it, [](WalletRecord& wallet) {
+      wallet.container->repair();
+    });
+  }
 }
 
 void WalletGreen::shutdown() {

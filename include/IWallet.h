@@ -136,6 +136,7 @@ public:
   virtual void initializeWithViewKey(const std::string& path, const std::string& password, const Crypto::SecretKey& viewSecretKey) = 0;
   virtual void load(const std::string& path, const std::string& password, std::string& extra) = 0;
   virtual void load(const std::string& path, const std::string& password) = 0;
+  virtual void repair() = 0;
   virtual void shutdown() = 0;
 
   virtual void changePassword(const std::string& oldPassword, const std::string& newPassword) = 0;

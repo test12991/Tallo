@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -74,6 +74,7 @@ private:
 
   std::error_code handleSave(const Save::Request& request, Save::Response& response);
   std::error_code handleExport(const Export::Request& request, Export::Response& response);
+  std::error_code handleRepair(const Repair::Request& request, Repair::Response& response);
   std::error_code handleReset(const Reset::Request& request, Reset::Response& response);
   std::error_code handleChangePassword(const ChangePassword::Request& request, ChangePassword::Response& response);
   std::error_code handleCreateAddress(const CreateAddress::Request& request, CreateAddress::Response& response);

@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -47,6 +47,16 @@ struct Export {
   struct Request {
     std::string fileName;
 
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+
+  struct Response {
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+};
+
+struct Repair {
+  struct Request {
     void serialize(CryptoNote::ISerializer& serializer);
   };
 

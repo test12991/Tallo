@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -34,6 +34,12 @@ void Export::Request::serialize(CryptoNote::ISerializer& serializer) {
 }
 
 void Export::Response::serialize(CryptoNote::ISerializer& serializer) {
+}
+
+void Repair::Request::serialize(CryptoNote::ISerializer& /*serializer*/) {
+}
+
+void Repair::Response::serialize(CryptoNote::ISerializer& /*serializer*/) {
 }
 
 void Reset::Request::serialize(CryptoNote::ISerializer& serializer) {

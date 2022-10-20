@@ -69,6 +69,7 @@ public:
 
   std::error_code saveWalletNoThrow();
   std::error_code exportWallet(const std::string& fileName);
+  std::error_code repairWallet();
   std::error_code resetWallet();
   std::error_code changePassword(const std::string &oldPassword, const std::string &newPassword, std::string &status);
   std::error_code replaceWithNewWallet(const std::string& viewSecretKey);
@@ -108,6 +109,7 @@ public:
 
 private:
   void refresh();
+  void repair();
   void reset();
 
   void loadWallet();

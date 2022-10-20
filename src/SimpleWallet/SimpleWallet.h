@@ -108,6 +108,8 @@ void estimateFusion(std::shared_ptr<WalletInfo> &walletInfo);
 
 void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);
 
+void repair(CryptoNote::WalletGreen &wallet);
+
 void reset(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo);
 
 void changePassword(std::shared_ptr<WalletInfo> &walletInfo, std::vector<std::string> args);
