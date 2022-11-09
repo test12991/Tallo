@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -219,6 +219,8 @@ Transaction extractTransaction(const RawBlock& block, uint32_t transactionIndex)
 
   if (transactionIndex != 0) {
     Transaction transaction;
+    transaction.version = 0; /* Initialize TransactionPrefix */
+    transaction.unlockTime = 0;
     bool r = fromBinaryArray(transaction, block.transactions[transactionIndex - 1]);
     if (r) {}
     assert(r);
