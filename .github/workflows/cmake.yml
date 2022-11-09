@@ -67,6 +67,36 @@ jobs:
             cxx_compiler: clang++-10
             packages: build-essential python3-dev clang-10 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
 
+          - name: Ubuntu 20.04 Clang 11
+            os: ubuntu-20.04
+            c_compiler: clang-11
+            cxx_compiler: clang++-11
+            packages: build-essential python3-dev clang-11 git cmake libboost1.67-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 22.04 GCC 11
+            os: ubuntu-22.04
+            c_compiler: gcc-11
+            cxx_compiler: g++-11
+            packages: build-essential python3-dev gcc-11 g++-11 git cmake libboost1.74-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 22.04 Clang 12
+            os: ubuntu-22.04
+            c_compiler: clang-12
+            cxx_compiler: clang++-12
+            packages: build-essential python3-dev clang-12 git cmake libboost1.74-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 22.04 Clang 13
+            os: ubuntu-22.04
+            c_compiler: clang-13
+            cxx_compiler: clang++-13
+            packages: build-essential python3-dev clang-13 git cmake libboost1.74-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
+          - name: Ubuntu 22.04 Clang 14
+            os: ubuntu-22.04
+            c_compiler: clang-14
+            cxx_compiler: clang++-14
+            packages: build-essential python3-dev clang-14 git cmake libboost1.74-all-dev libgflags-dev libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libzstd-dev
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
