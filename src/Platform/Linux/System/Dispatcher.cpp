@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2022, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -24,6 +24,7 @@
 #include <sys/eventfd.h>
 #include <sys/timerfd.h>
 #include <fcntl.h>
+#include <pthread.h>
 #include <string.h>
 #include <ucontext.h>
 #include <unistd.h>

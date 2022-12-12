@@ -906,7 +906,6 @@ UPNP_GetValidIGD(struct UPNPDev * devlist,
 	int ndev = 0;
 	int i;
 	int state = -1; /* state 1 : IGD connected. State 2 : IGD. State 3 : anything */
-	int n_igd = 0;
 	char extIpAddr[16];
 	if(!devlist)
 	{
@@ -947,7 +946,6 @@ UPNP_GetValidIGD(struct UPNPDev * devlist,
 			   "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"))
 			{
 				desc[i].is_igd = 1;
-				n_igd++;
 			}
 		}
 	}
