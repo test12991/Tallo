@@ -11,7 +11,11 @@
 
 namespace rocksdb {
 
-#ifndef NDEBUG
+#ifdef NDEBUG
+#  ifdef _MSC_VER
+char suppressMSVCWarningLNK4221;
+#  endif
+#else
 // the delay for debugging purpose.
 static std::atomic<int> states_delay[ThreadStatus::NUM_STATE_TYPES];
 
