@@ -1,5 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
+// Copyright (c) 2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -41,15 +42,16 @@ Miner::~Miner() {
 }
 
 BlockTemplate Miner::mine(const BlockMiningParameters& blockMiningParameters, size_t threadCount) {
+  MiningState state = MiningState::MINING_STOPPED;
+
   if (threadCount == 0) {
     throw std::runtime_error("Miner requires at least one thread");
   }
 
-  if (m_state == MiningState::MINING_IN_PROGRESS) {
-    throw std::runtime_error("Mining is already in progress");
+  while (!m_state.compare_exchange_weak(state, MiningState::MINING_IN_PROGRESS)) {
+    boost::this_thread::sleep_for(boost::chrono::seconds(1));
   }
 
-  m_state = MiningState::MINING_IN_PROGRESS;
   m_miningStopped.clear();
 
   runWorkers(blockMiningParameters, threadCount);
@@ -133,14 +135,12 @@ void Miner::workerFunc(const BlockTemplate& blockTemplate, Difficulty difficulty
       m_hashCount++;
 
       if (check_hash(hash, difficulty)) {
-        m_logger(Logging::INFO) << "Found block for difficulty " << difficulty;
-
-        if (!setStateBlockFound()) {
-          m_logger(Logging::DEBUGGING) << "block is already found or mining stopped";
+        if (setStateBlockFound()) {
+          m_logger(Logging::INFO) << "Found block for difficulty " << difficulty;
+          m_block = block;
           return;
         }
-
-        m_block = block;
+        m_logger(Logging::DEBUGGING) << "block was already found or mining stopped";
         return;
       }
 

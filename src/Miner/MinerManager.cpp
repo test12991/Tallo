@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020-2022, The Talleo developers
+// Copyright (c) 2020-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -227,7 +227,7 @@ bool MinerManager::submitBlock(const BlockTemplate& minedBlock, const std::strin
     m_logger(Logging::INFO) << "Block has been successfully submitted. Block hash: " << Common::podToHex(cachedBlock.getBlockHash());
     return true;
   } catch (std::exception& e) {
-    m_logger(Logging::WARNING) << "Couldn't submit block: " << Common::podToHex(cachedBlock.getBlockHash()) << ", reason: " << e.what();
+    m_logger(Logging::WARNING) << "Couldn't submit block with hash " << Common::podToHex(cachedBlock.getBlockHash()) << ", reason: " << e.what();
     return false;
   }
 }
