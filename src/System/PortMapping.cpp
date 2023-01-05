@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020-2022, The Talleo developers
+// Copyright (c) 2020-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -59,7 +59,7 @@ void addPortMapping(Logging::LoggerRef& logger, uint32_t port, uint32_t external
     } else if (result == 2) {
       logger(INFO) << "IGD was found but reported as not connected.";
     } else if (result == 3) {
-      logger(INFO) << "UPnP device was found but not recoginzed as IGD.";
+      logger(INFO) << "UPnP device was found but not recognized as IGD.";
     } else {
       logger(ERROR) << "UPNP_GetValidIGD returned an unknown result code.";
     }
@@ -99,7 +99,7 @@ void deletePortMapping(Logging::LoggerRef& logger, uint32_t port, uint32_t exter
     } else if (result == 2) {
       logger(INFO) << "IGD was found but reported as not connected.";
     } else if (result == 3) {
-      logger(INFO) << "UPnP device was found but not recoginzed as IGD.";
+      logger(INFO) << "UPnP device was found but not recognized as IGD.";
     } else {
       logger(ERROR) << "UPNP_GetValidIGD returned an unknown result code.";
     }
