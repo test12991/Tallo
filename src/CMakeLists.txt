@@ -83,21 +83,31 @@ add_library(PaymentGate ${PaymentGate})
 add_library(JsonRpcServer ${JsonRpcServer})
 
 if(MSVC)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/BinaryInfo/daemon.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/daemon.manifest @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/BinaryInfo/simplewallet.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/simplewallet.manifest @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/BinaryInfo/miner.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/miner.manifest @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/BinaryInfo/walletd.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/walletd.manifest @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/BinaryInfo/generate.manifest.in ${CMAKE_CURRENT_BINARY_DIR}/generate.manifest @ONLY)
   set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /DUNICODE /D_UNICODE")
   set(DAEMON_SOURCES_OS
     BinaryInfo/daemon.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/daemon.manifest
   )
   set(SIMPLE_WALLET_SOURCES_OS
     BinaryInfo/simplewallet.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/simplewallet.manifest
   )
   set(MINER_SOURCES_OS
     BinaryInfo/miner.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/miner.manifest
   )
   set(PG_SOURCES_OS
     BinaryInfo/walletd.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/walletd.manifest
   )
   set(GENERATE_SOURCES_OS
     BinaryInfo/generate.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/generate.manifest
   )
 endif()
 

@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2019, The Talleo developers
+// Copyright (c) 2019-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -81,10 +81,17 @@ namespace Tools
         if ( osvi.dwMinorVersion == 0 )
         {
           if ( osvi.wProductType == VER_NT_WORKSTATION )
-            StringCchCat(pszOS, BUFSIZE, TEXT("Windows 10 "));
+          {
+            if ( osvi.dwBuildNumber >= 22000)
+              StringCchCat(pszOS, BUFSIZE, TEXT("Windows 11 "));
+            else
+              StringCchCat(pszOS, BUFSIZE, TEXT("Windows 10 "));
+          }
           else
           {
-            if (osvi.dwBuildNumber >= 17623)
+            if (osvi.dwBuildNumber >= 19551)
+              StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2022 "));
+            else if (osvi.dwBuildNumber >= 17623)
               StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2019 "));
             else
               StringCchCat(pszOS, BUFSIZE, TEXT("Windows Server 2016 "));
