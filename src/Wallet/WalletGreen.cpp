@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2020-2022, The Talleo developers
+// Copyright (c) 2020-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -204,6 +204,16 @@ void WalletGreen::repair() {
     m_walletsContainer.modify(it, [](WalletRecord& wallet) {
       wallet.container->repair();
     });
+  }
+
+  for (auto it = m_transactions.begin(); it != m_transactions.end(); ++it) {
+     if (it->state == WalletTransactionState::FAILED || it->state == WalletTransactionState::CANCELLED) {
+        m_transactions.modify(it, [this, it](WalletTransaction& transaction) {
+           transaction.state = WalletTransactionState::DELETED;
+           auto transactionId = std::distance(m_transactions.get<RandomAccessIndex>().begin(), m_transactions.project<RandomAccessIndex>(it));
+           pushEvent(makeTransactionUpdatedEvent(transactionId));
+        });
+     }
   }
 }
 
