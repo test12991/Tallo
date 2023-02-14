@@ -3,7 +3,7 @@ Copyright (C) 2018, The TurtleCoin developers
 Copyright (C) 2018, The PinkstarcoinV2 developers
 Copyright (C) 2018, The Bittorium developers
 Copyright (c) 2018, The Karbo developers
-Copyright (C) 2019-2022, The Talleo developers
+Copyright (C) 2019-2023, The Talleo developers
 
 
 This program is free software: you can redistribute it and/or modify
@@ -732,9 +732,16 @@ void inputLoop(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> &wall
         } else if (command == "save") {
             hidecursor();
             std::cout << InformationMsg("Saving...") << std::flush;
+            time_t startTime = time(NULL);
             walletInfo->wallet.save();
+            time_t endTime = time(NULL);
+            time_t elapsed = endTime - startTime;
             Common::Console::clearLine();
-            std::cout << InformationMsg("\rSaved.") << std::endl;
+            if (elapsed < 1) {
+                std::cout << InformationMsg("\rSaved.") << std::endl;
+            } else {
+                std::cout << InformationMsg("\rSaved in " + std::to_string(elapsed) + " second" + (elapsed != 1 ? "s" : "") + ".") << std::endl;
+            }
             showcursor();
         } else if (command == "bc_height") {
             blockchainHeight(node, walletInfo->wallet);
@@ -928,8 +935,8 @@ bool shutdown(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, bool &al
         while (!finishedShutdown) {
             auto currentTime = std::chrono::system_clock::now();
 
-            /* If not, wait for a max of 20 seconds then force exit. */
-            if ((currentTime - startTime) > std::chrono::seconds(20)) {
+            /* If not, wait for a max of 30 seconds then force exit. */
+            if ((currentTime - startTime) > std::chrono::seconds(30)) {
                 std::cout << WarningMsg("Wallet took too long to save! Force closing.") << std::endl
                           << "Bye." << std::endl;
                 exit(0);

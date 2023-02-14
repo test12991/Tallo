@@ -4,11 +4,11 @@
 #define PROJECT_NAME "Talleo"
 #define PROJECT_COMPANY "Talleo Project"
 #define PROJECT_SITE "https://talleo.org/"
-#define PROJECT_COPYRIGHT "Copyright 2019-2022, The Talleo Developers"
+#define PROJECT_COPYRIGHT "Copyright 2019-@CN_BUILD_YEAR@, The Talleo Developers"
 #define APP_VER_MAJOR 0
 #define APP_VER_MINOR 4
 #define APP_VER_REV 9
-#define APP_VER_BUILD 1163
+#define APP_VER_BUILD 1172
 
 #define BUILD_COMMIT_ID "@VERSION@"
 #define PROJECT_VERSION STR(APP_VER_MAJOR) "." STR(APP_VER_MINOR) "." STR(APP_VER_REV)
