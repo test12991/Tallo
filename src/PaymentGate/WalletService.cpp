@@ -731,6 +731,23 @@ std::error_code WalletService::hasAddress(const std::string& address, std::strin
   return std::error_code();
 }
 
+std::error_code WalletService::getAddressCount(size_t& addressCount, std::string& status) {
+  try {
+    System::EventLock lk(readyEvent);
+
+    logger(Logging::DEBUGGING) << "Get address count request came";
+    addressCount = wallet.getAddressCount();
+  } catch (std::system_error& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting address count: " << x.what();
+    status = x.what();
+    return x.code();
+  }
+
+  logger(Logging::DEBUGGING) << "Container has " << std::to_string(addressCount) << " addresses";
+  status = "OK";
+  return std::error_code();
+}
+
 std::error_code WalletService::getSpendkeys(const std::string& address, std::string& publicSpendKeyText, std::string& secretSpendKeyText) {
   try {
     System::EventLock lk(readyEvent);

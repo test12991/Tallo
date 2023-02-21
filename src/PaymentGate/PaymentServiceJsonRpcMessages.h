@@ -226,6 +226,19 @@ struct HasAddress {
   };
 };
 
+struct GetAddressCount {
+  struct Request {
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+
+  struct Response {
+    std::string status;
+    size_t addressCount;
+
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+};
+
 struct GetSpendKeys {
   struct Request {
     std::string address;

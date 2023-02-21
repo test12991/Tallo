@@ -156,6 +156,14 @@ void HasAddress::Response::serialize(CryptoNote::ISerializer& serializer) {
   serializer(status, "status");
 }
 
+void GetAddressCount::Request::serialize(CryptoNote::ISerializer& /*serializer*/) {
+}
+
+void GetAddressCount::Response::serialize(CryptoNote::ISerializer& serializer) {
+  serializer(status, "status");
+  serializer(addressCount, "addressCount");
+}
+
 void GetSpendKeys::Request::serialize(CryptoNote::ISerializer& serializer) {
   if (!serializer(address, "address")) {
     throw RequestSerializationError();
