@@ -1011,6 +1011,27 @@ int64_t filterAmounts(const CryptoNote::WalletTransaction &t, CryptoNote::Wallet
     return total;
 }
 
+void filterFusionAmounts(const CryptoNote::WalletTransaction &t, CryptoNote::WalletGreen &wallet, int64_t& amountIn, int64_t& amountOut) {
+    std::string address = wallet.getAddress(subWallet);
+    amountIn = 0;
+    amountOut = 0;
+    if (t.fee != 0) {
+        return;
+    }
+    CryptoNote::WalletTransactionWithTransfers tt = wallet.getTransaction(t.hash);
+    size_t numTransfers = tt.transfers.size();
+    for (size_t j = 0; j < numTransfers; j++) {
+        CryptoNote::WalletTransfer wt = tt.transfers[j];
+        if (wt.address == address) {
+            if (wt.amount < 0) {
+                amountOut += wt.amount;
+            } else if (wt.amount > 0) {
+                amountIn += wt.amount;
+            }
+        }
+    }
+}
+
 void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool allWallets) {
     std::string blockTime = getBlockTime(getBlock(t.blockHeight, node));
     int64_t amount = allWallets ? t.totalAmount : filterAmounts(t, wallet);
@@ -1327,12 +1348,20 @@ void countTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &walle
     size_t numTransactions = transactions.size();
     uint64_t totalIncoming = 0;
     uint64_t totalOutgoing = 0;
+    uint64_t totalFusion = 0;
 
     for (size_t i = 0; i < numTransactions; i++) {
         CryptoNote::WalletTransaction t = transactions[i];
         int64_t amount = filterAmounts(t, wallet);
 
-        if (amount < 0 && outgoing) {
+        if (t.fee == 0) {
+            int64_t amountIn;
+            int64_t amountOut;
+            filterFusionAmounts(t, wallet, amountIn, amountOut);
+            if (amountIn != 0 || amountOut != 0) {
+                totalFusion++;
+            }
+        } else if (amount < 0 && outgoing) {
             totalOutgoing++;
         } else if (amount > 0 && incoming) {
             totalIncoming++;
@@ -1346,6 +1375,8 @@ void countTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &walle
     if (outgoing) {
         std::cout << InformationMsg("Outgoing transfers: ") << WarningMsg(std::to_string(totalOutgoing)) << std::endl;
     }
+
+    std::cout << InformationMsg("Fusion transfers:   ") << InformationMsg(std::to_string(totalFusion)) << std::endl;
 }
 
 
