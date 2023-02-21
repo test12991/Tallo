@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -153,6 +154,7 @@ public:
   virtual std::string createAddress(const Crypto::PublicKey& spendPublicKey) = 0;
   virtual std::vector<std::string> createAddressList(const std::vector<Crypto::SecretKey>& spendSecretKeys) = 0;
   virtual void deleteAddress(const std::string& address) = 0;
+  virtual bool hasAddress(const std::string& address) const = 0;
 
   virtual uint64_t getActualBalance() const = 0;
   virtual uint64_t getActualBalance(const std::string& address) const = 0;

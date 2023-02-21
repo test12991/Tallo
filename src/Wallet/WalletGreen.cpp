@@ -1225,6 +1225,10 @@ void WalletGreen::deleteAddress(const std::string& address) {
   m_logger(INFO, BRIGHT_WHITE) << "Wallet deleted " << address;
 }
 
+bool WalletGreen::hasAddress(const std::string& address) const {
+  return isMyAddress(address);
+}
+
 uint64_t WalletGreen::getActualBalance() const {
   throwIfNotInitialized();
   throwIfStopped();

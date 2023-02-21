@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021-2022, The Talleo developers
+// Copyright (c) 2021-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -144,6 +144,16 @@ void DeleteAddress::Request::serialize(CryptoNote::ISerializer& serializer) {
 }
 
 void DeleteAddress::Response::serialize(CryptoNote::ISerializer& serializer) {
+}
+
+void HasAddress::Request::serialize(CryptoNote::ISerializer& serializer) {
+  if (!serializer(address, "address")) {
+    throw RequestSerializationError();
+  }
+}
+
+void HasAddress::Response::serialize(CryptoNote::ISerializer& serializer) {
+  serializer(status, "status");
 }
 
 void GetSpendKeys::Request::serialize(CryptoNote::ISerializer& serializer) {

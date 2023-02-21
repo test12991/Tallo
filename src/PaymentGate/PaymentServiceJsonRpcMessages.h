@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021-2022, The Talleo developers
+// Copyright (c) 2021-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -208,6 +208,20 @@ struct DeleteAddress {
   };
 
   struct Response {
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+};
+
+struct HasAddress {
+  struct Request {
+    std::string address;
+
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+
+  struct Response {
+    std::string status;
+
     void serialize(CryptoNote::ISerializer& serializer);
   };
 };
