@@ -309,6 +309,24 @@ struct GetTransactionHashes {
   };
 };
 
+struct GetTransactionCount {
+  struct Request {
+    std::vector<std::string> addresses;
+    std::string blockHash;
+    uint32_t firstBlockIndex = std::numeric_limits<uint32_t>::max();
+    uint32_t blockCount;
+    std::string paymentId;
+
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+
+  struct Response {
+    size_t transactions;
+
+    void serialize(CryptoNote::ISerializer& serializer);
+  };
+};
+
 struct TransferRpcInfo {
   uint8_t type;
   std::string address;

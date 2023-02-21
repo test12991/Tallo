@@ -220,6 +220,24 @@ void GetTransactionHashes::Response::serialize(CryptoNote::ISerializer& serializ
   serializer(items, "items");
 }
 
+void GetTransactionCount::Request::serialize(CryptoNote::ISerializer& serializer) {
+  serializer(addresses, "addresses");
+
+  if (serializer(blockHash, "blockHash") == serializer(firstBlockIndex, "firstBlockIndex")) {
+    throw RequestSerializationError();
+  }
+
+  if (!serializer(blockCount, "blockCount")) {
+    throw RequestSerializationError();
+  }
+
+  serializer(paymentId, "paymentId");
+}
+
+void GetTransactionCount::Response::serialize(CryptoNote::ISerializer& serializer) {
+  serializer(transactions, "transactions");
+}
+
 void TransferRpcInfo::serialize(CryptoNote::ISerializer& serializer) {
   serializer(type, "type");
   serializer(address, "address");

@@ -91,6 +91,10 @@ public:
     uint32_t blockCount, const std::string& paymentId, std::vector<TransactionHashesInBlockRpcInfo>& transactionHashes);
   std::error_code getTransactionHashes(const std::vector<std::string>& addresses, uint32_t firstBlockIndex,
     uint32_t blockCount, const std::string& paymentId, std::vector<TransactionHashesInBlockRpcInfo>& transactionHashes);
+  std::error_code getTransactionCount(const std::vector<std::string>& addresses, const std::string& blockHash,
+    uint32_t blockCount, const std::string& paymentId, size_t& transactionCount);
+  std::error_code getTransactionCount(const std::vector<std::string>& addresses, uint32_t firstBlockIndex,
+    uint32_t blockCount, const std::string& paymentId, size_t& transactionCount);
   std::error_code getTransactions(const std::vector<std::string>& addresses, const std::string& blockHash,
     uint32_t blockCount, const std::string& paymentId, std::vector<TransactionsInBlockRpcInfo>& transactionHashes);
   std::error_code getTransactions(const std::vector<std::string>& addresses, uint32_t firstBlockIndex,
@@ -124,6 +128,9 @@ private:
 
   std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(const Crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionHashesInBlockRpcInfo> getRpcTransactionHashes(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
+
+  size_t getRpcTransactionCount(const Crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
+  size_t getRpcTransactionCount(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
 
   std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(const Crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;
   std::vector<TransactionsInBlockRpcInfo> getRpcTransactions(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const;

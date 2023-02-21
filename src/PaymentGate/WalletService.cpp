@@ -919,6 +919,55 @@ std::error_code WalletService::getTransactionHashes(const std::vector<std::strin
   return std::error_code();
 }
 
+std::error_code WalletService::getTransactionCount(const std::vector<std::string>& addresses, const std::string& blockHashString,
+  uint32_t blockCount, const std::string& paymentId, size_t& transactionCount) {
+  try {
+    System::EventLock lk(readyEvent);
+    validateAddresses(addresses, currency, logger);
+
+    if (!paymentId.empty()) {
+      validatePaymentId(paymentId, logger);
+    }
+
+    TransactionsInBlockInfoFilter transactionFilter(addresses, paymentId);
+    Crypto::Hash blockHash = parseHash(blockHashString, logger);
+
+    transactionCount = getRpcTransactionCount(blockHash, blockCount, transactionFilter);
+  } catch (std::system_error& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting transaction count: " << x.what();
+    return x.code();
+  } catch (std::exception& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting transaction count: " << x.what();
+    return make_error_code(CryptoNote::error::INTERNAL_WALLET_ERROR);
+  }
+
+  return std::error_code();
+}
+
+std::error_code WalletService::getTransactionCount(const std::vector<std::string>& addresses, uint32_t firstBlockIndex,
+  uint32_t blockCount, const std::string& paymentId, size_t& transactionCount) {
+  try {
+    System::EventLock lk(readyEvent);
+    validateAddresses(addresses, currency, logger);
+
+    if (!paymentId.empty()) {
+      validatePaymentId(paymentId, logger);
+    }
+
+    TransactionsInBlockInfoFilter transactionFilter(addresses, paymentId);
+    transactionCount = getRpcTransactionCount(firstBlockIndex, blockCount, transactionFilter);
+
+  } catch (std::system_error& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting transaction count: " << x.what();
+    return x.code();
+  } catch (std::exception& x) {
+    logger(Logging::WARNING, Logging::BRIGHT_YELLOW) << "Error while getting transaction count: " << x.what();
+    return make_error_code(CryptoNote::error::INTERNAL_WALLET_ERROR);
+  }
+
+  return std::error_code();
+}
+
 std::error_code WalletService::getTransactions(const std::vector<std::string>& addresses, const std::string& blockHashString,
   uint32_t blockCount, const std::string& paymentId, std::vector<TransactionsInBlockRpcInfo>& transactions) {
   try {
@@ -1381,6 +1430,26 @@ std::vector<TransactionsInBlockRpcInfo> WalletService::getRpcTransactions(uint32
   std::vector<CryptoNote::TransactionsInBlockInfo> allTransactions = getTransactions(firstBlockIndex, blockCount);
   std::vector<CryptoNote::TransactionsInBlockInfo> filteredTransactions = filterTransactions(allTransactions, filter);
   return convertTransactionsInBlockInfoToTransactionsInBlockRpcInfo(filteredTransactions);
+}
+
+size_t WalletService::getRpcTransactionCount(const Crypto::Hash& blockHash, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
+  std::vector<CryptoNote::TransactionsInBlockInfo> allTransactions = getTransactions(blockHash, blockCount);
+  std::vector<CryptoNote::TransactionsInBlockInfo> filteredTransactions = filterTransactions(allTransactions, filter);
+  size_t txs = 0;
+  for (auto it = filteredTransactions.begin(); it != filteredTransactions.end(); it++) {
+    txs += it->transactions.size();
+  }
+  return txs;
+}
+
+size_t WalletService::getRpcTransactionCount(uint32_t firstBlockIndex, size_t blockCount, const TransactionsInBlockInfoFilter& filter) const {
+  std::vector<CryptoNote::TransactionsInBlockInfo> allTransactions = getTransactions(firstBlockIndex, blockCount);
+  std::vector<CryptoNote::TransactionsInBlockInfo> filteredTransactions = filterTransactions(allTransactions, filter);
+  size_t txs = 0;
+  for (auto it = filteredTransactions.begin(); it != filteredTransactions.end(); it++) {
+    txs += it->transactions.size();
+  }
+  return txs;
 }
 
 } //namespace PaymentService
