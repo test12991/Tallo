@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2019-2020, The Talleo developers
+// Copyright (c) 2019-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -22,6 +22,7 @@
 #include <future>
 #include <boost/scope_exit.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <Common/StringTools.h>
 #include <System/Dispatcher.h>
 
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
@@ -585,10 +586,6 @@ bool CryptoNoteProtocolHandler::request_missing_objects(CryptoNoteConnectionCont
   return true;
 }
 
-std::string repeatChar(int count, char c) {
-  return std::string(count, c);
-}
-
 bool CryptoNoteProtocolHandler::on_connection_synchronized() {
   bool val_expected = false;
   if (m_synchronized.compare_exchange_strong(val_expected, true)) {
@@ -600,12 +597,12 @@ bool CryptoNoteProtocolHandler::on_connection_synchronized() {
       if (num_chars % 2 == 1) {
          num_chars2++;
       }
-      logger(INFO, BRIGHT_MAGENTA) << repeatChar(num_chars1, '=') << "[ " << CryptoNote::CRYPTONOTE_NAME << " Tip! ]" << repeatChar(num_chars2, '=') << ENDL ;
+      logger(INFO, BRIGHT_MAGENTA) << Common::repeatChar(num_chars1, '=') << "[ " << CryptoNote::CRYPTONOTE_NAME << " Tip! ]" << Common::repeatChar(num_chars2, '=') << ENDL ;
       logger(INFO, WHITE) << " Always exit " << CryptoNote::CRYPTONOTE_NAME << "d and SimpleWallet with the \"exit\" command to preserve your chain and wallet data." << ENDL ;
       logger(INFO, WHITE) << " Use the \"help\" command to see a list of available commands." << ENDL ;
       logger(INFO, WHITE) << " Use the \"export_keys\" command in SimpleWallet to display your keys for restoring a corrupted wallet." << ENDL ;
       logger(INFO, WHITE) << " If you need more assistance, visit the #HELP channel in the " << CryptoNote::CRYPTONOTE_NAME << " Discord Chat - https://discord.gg/aysnp8P" << ENDL ;
-      logger(INFO, BRIGHT_MAGENTA) << repeatChar(43, '=') << ENDL << ENDL ;
+      logger(INFO, BRIGHT_MAGENTA) << Common::repeatChar(43, '=') << ENDL << ENDL ;
 
     m_observerManager.notify(&ICryptoNoteProtocolObserver::blockchainSynchronized, m_core.getTopBlockIndex());
   }

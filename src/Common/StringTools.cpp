@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -351,6 +352,10 @@ std::string timeIntervalToString(uint64_t intervalInSeconds) {
     ".s" << std::setw(2) << seconds;
 
   return ss.str();
+}
+
+std::string repeatChar(int count, char c) {
+  return std::string(count, c);
 }
 
 }
