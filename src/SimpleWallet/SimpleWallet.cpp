@@ -1032,6 +1032,28 @@ void filterFusionAmounts(const CryptoNote::WalletTransaction &t, CryptoNote::Wal
     }
 }
 
+void printOutgoingAddresses(CryptoNote::WalletGreen &wallet, const CryptoNote::WalletTransaction& wtx, int width) {
+    std::vector<std::string> addresses;
+    auto wtwt = wallet.getTransaction(wtx.hash);
+    for (size_t i = 0; i < wtwt.transfers.size(); i++) {
+        auto wt = wtwt.transfers[i];
+        if (!wt.address.empty() && wt.amount < 0 && std::find(addresses.begin(), addresses.end(), wt.address) == addresses.end()) {
+            addresses.push_back(wt.address);
+        }
+    }
+    size_t numAddresses = addresses.size();
+    if (numAddresses > 0) {
+        std::cout << std::left << std::setw(width) << WarningMsg(numAddresses == 1 ? "Address:" : "Addresses: ") << WarningMsg(addresses[0]) << std::endl;
+        for (size_t j = 1; j < numAddresses; j++) {
+            std::cout << Common::repeatChar(width, ' ') << WarningMsg(addresses[j]) << std::endl;
+        }
+    }
+}
+
+void printOutgoingAddresses(std::shared_ptr<WalletInfo> &walletInfo, const CryptoNote::WalletTransaction& wtx, int width) {
+    printOutgoingAddresses(walletInfo->wallet, wtx, width);
+}
+
 void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool allWallets) {
     std::string blockTime = getBlockTime(getBlock(t.blockHeight, node));
     int64_t amount = allWallets ? t.totalAmount : filterAmounts(t, wallet);
@@ -1041,6 +1063,10 @@ void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
 
     std::cout << std::endl
               << WarningMsg("Outgoing transfer:") << std::endl;
+
+    if (allWallets && wallet.getAddressCount() > 1) {
+        printOutgoingAddresses(wallet, t, 13);
+    }
 
     /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "") {
@@ -1060,6 +1086,28 @@ void printOutgoingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
     std::cout << std::endl;
 }
 
+void printIncomingAddresses(CryptoNote::WalletGreen &wallet, const CryptoNote::WalletTransaction& wtx, int width) {
+    std::vector<std::string> addresses;
+    auto wtwt = wallet.getTransaction(wtx.hash);
+    for (size_t i = 0; i < wtwt.transfers.size(); i++) {
+        auto wt = wtwt.transfers[i];
+        if (!wt.address.empty() && wt.amount > 0 && std::find(addresses.begin(), addresses.end(), wt.address) == addresses.end()) {
+            addresses.push_back(wt.address);
+        }
+    }
+    size_t numAddresses = addresses.size();
+    if (numAddresses > 0) {
+        std::cout << std::left << std::setw(width) << SuccessMsg(numAddresses == 1 ? "Address:" : "Addresses: ") << SuccessMsg(addresses[0]) << std::endl;
+        for (size_t j = 1; j < numAddresses; j++) {
+            std::cout << Common::repeatChar(width, ' ') << SuccessMsg(addresses[j]) << std::endl;
+        }
+    }
+}
+
+void printIncomingAddresses(std::shared_ptr<WalletInfo> &walletInfo, const CryptoNote::WalletTransaction& wtx, int width) {
+    printIncomingAddresses(walletInfo->wallet, wtx, width);
+}
+
 void printIncomingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool allWallets) {
     std::string blockTime = getBlockTime(getBlock(t.blockHeight, node));
     int64_t amount = allWallets ? t.totalAmount : filterAmounts(t, wallet);
@@ -1067,6 +1115,10 @@ void printIncomingTransfer(const CryptoNote::WalletTransaction &t, CryptoNote::I
 
     std::cout << std::endl
               << InformationMsg("Incoming transfer:") << std::endl;
+
+    if (allWallets && wallet.getAddressCount() > 1) {
+        printIncomingAddresses(wallet, t, 13);
+    }
 
     /* Couldn't get timestamp, maybe old node or Talleod closed */
     if (blockTime != "") {
@@ -1379,7 +1431,6 @@ void countTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &walle
     std::cout << InformationMsg("Fusion transfers:   ") << InformationMsg(std::to_string(totalFusion)) << std::endl;
 }
 
-
 void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
     hidecursor();
     walletInfo->wallet.updateInternalCache();
@@ -1394,8 +1445,11 @@ void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
             if (t.totalAmount > 0) {
                 Common::Console::clearLine();
                 std::cout << "\r"
-                          << InformationMsg("New incoming transaction!") << std::endl
-                          << std::left << std::setw(13) << SuccessMsg("Hash: ") << std::setw(64) << SuccessMsg(Common::podToHex(t.hash)) << std::endl
+                          << InformationMsg("New incoming transaction!") << std::endl;
+                if (walletInfo->wallet.getAddressCount() > 1) {
+                    printIncomingAddresses(walletInfo, t, 13);
+                }
+                std::cout << std::left << std::setw(13) << SuccessMsg("Hash: ") << std::setw(64) << SuccessMsg(Common::podToHex(t.hash)) << std::endl
                           << std::left << std::setw(13) << SuccessMsg("Amount: ") << std::setw(0) << SuccessMsg(formatAmount(t.totalAmount)) << std::endl;
 
                 Crypto::Hash paymentId;
