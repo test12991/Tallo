@@ -203,7 +203,7 @@ std::vector<CryptoNote::TransactionsInBlockInfo> filterTransactions(
       }
     }
 
-    if (!block.transactions.empty()) {
+    if (!item.transactions.empty()) {
       result.push_back(std::move(item));
     }
   }
