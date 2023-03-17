@@ -354,7 +354,7 @@ std::string timeIntervalToString(uint64_t intervalInSeconds) {
   return ss.str();
 }
 
-std::string repeatChar(int count, char c) {
+std::string repeatChar(size_t count, char c) {
   return std::string(count, c);
 }
 

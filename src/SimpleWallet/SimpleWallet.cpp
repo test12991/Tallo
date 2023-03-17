@@ -881,29 +881,32 @@ void blockchainHeight(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet) 
     uint32_t remoteHeight = node.getLastKnownBlockHeight();
     uint32_t walletHeight = wallet.getBlockCount();
 
+    size_t totalLen = std::max({std::to_string(localHeight).length(), std::to_string(remoteHeight).length(), std::to_string(walletHeight).length()});
+
     /* This is the height that the wallet has been scanned to. The blockchain
        can be fully updated, but we have to walk the chain to find our
        transactions, and this number indicates that progress. */
-    std::cout << "Wallet blockchain height: ";
+    std::cout << std::right << std::setw(27) << "Wallet blockchain height: ";
 
     /* Small buffer because wallet height doesn't update instantly like node
        height does */
     if (walletHeight + 1000 > remoteHeight) {
-        std::cout << SuccessMsg(std::to_string(walletHeight));
+        std::cout << std::right << std::setw(totalLen) << SuccessMsg(std::to_string(walletHeight));
     } else {
-        std::cout << WarningMsg(std::to_string(walletHeight));
+        std::cout << std::right << std::setw(totalLen) << WarningMsg(std::to_string(walletHeight));
     }
 
-    std::cout << std::endl << "Local blockchain height: ";
+    std::cout << std::endl << std::right << std::setw(27) << "Local blockchain height: ";
 
     if (localHeight == remoteHeight) {
-        std::cout << SuccessMsg(std::to_string(localHeight));
+        std::cout << std::right << std::setw(totalLen) << SuccessMsg(std::to_string(localHeight));
     } else {
-        std::cout << WarningMsg(std::to_string(localHeight));
+        std::cout << std::right << std::setw(totalLen) << WarningMsg(std::to_string(localHeight));
     }
 
-    std::cout << std::endl << "Network blockchain height: "
-              << SuccessMsg(std::to_string(remoteHeight)) << std::endl;
+    std::cout << std::endl
+              << std::right << std::setw(27) << "Network blockchain height: "
+              << std::right << std::setw(totalLen) << SuccessMsg(std::to_string(remoteHeight)) << std::endl;
 
     if (localHeight == 0 && remoteHeight == 0) {
         std::cout << WarningMsg("Uh oh, it looks like you don't have " + std::string(CryptoNote::CRYPTONOTE_NAME) + "d open!") << std::endl;
@@ -1420,15 +1423,31 @@ void countTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &walle
         }
     }
 
+    size_t totalLen = std::to_string(totalFusion).length();
+    uint64_t totalCount = totalFusion;
     if (incoming) {
-        std::cout << InformationMsg("Incoming transfers: ") << SuccessMsg(std::to_string(totalIncoming)) << std::endl;
+        totalLen = std::max(totalLen, std::to_string(totalIncoming).length());
+        totalCount += totalIncoming;
     }
 
     if (outgoing) {
-        std::cout << InformationMsg("Outgoing transfers: ") << WarningMsg(std::to_string(totalOutgoing)) << std::endl;
+        totalLen = std::max(totalLen, std::to_string(totalOutgoing).length());
+        totalCount += totalOutgoing;
     }
 
-    std::cout << InformationMsg("Fusion transfers:   ") << InformationMsg(std::to_string(totalFusion)) << std::endl;
+    totalLen = std::max(totalLen, std::to_string(totalCount).length());
+
+    if (incoming) {
+        std::cout << std::right << std::setw(20) << InformationMsg("Incoming transfers: ") << std::right << std::setw(totalLen) << SuccessMsg(std::to_string(totalIncoming)) << std::endl;
+    }
+
+    if (outgoing) {
+        std::cout << std::right << std::setw(20) << InformationMsg("Outgoing transfers: ") << std::right << std::setw(totalLen) << WarningMsg(std::to_string(totalOutgoing)) << std::endl;
+    }
+
+    std::cout << std::right << std::setw(20) << InformationMsg("Fusion transfers: ") << std::right << std::setw(totalLen) << InformationMsg(std::to_string(totalFusion)) << std::endl;
+    std::cout << Common::repeatChar(20 + totalLen, '-') << std::endl;
+    std::cout << std::right << std::setw(20) << InformationMsg("Total transfers: ") << std::right << std::setw(totalLen) << InformationMsg(std::to_string(totalCount)) << std::endl;
 }
 
 void checkForNewTransactions(std::shared_ptr<WalletInfo> &walletInfo) {
@@ -1532,8 +1551,9 @@ void estimateFusion(std::shared_ptr<WalletInfo> &walletInfo) {
     addresses.push_back(address);
     walletInfo->wallet.updateInternalCache();
     auto result = walletInfo->wallet.estimate(getTotalActualBalance(walletInfo->wallet, addresses), addresses);
-    std::cout << "Optimizable outputs: " << InformationMsg(std::to_string(result.fusionReadyCount)) << std::endl
-              << "Total outputs: " << InformationMsg(std::to_string(result.totalOutputCount)) << std::endl;
+    size_t totalLen = std::to_string(result.totalOutputCount).length(); // Total output count is always the widest string
+    std::cout << std::setw(21) << "Optimizable outputs: " << std::right << std::setw(totalLen) << InformationMsg(std::to_string(result.fusionReadyCount)) << std::endl
+              << std::setw(21) << "Total outputs: " << std::right << std::setw(totalLen) << InformationMsg(std::to_string(result.totalOutputCount)) << std::endl;
 }
 
 void findNewTransactions(CryptoNote::INode &node, std::shared_ptr<WalletInfo> &walletInfo) {
