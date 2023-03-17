@@ -247,11 +247,14 @@ bool CryptoNoteProtocolHandler::process_payload_sync_data(const CORE_SYNC_DATA& 
     }
   } else {
     int64_t diff = static_cast<int64_t>(hshd.current_height) - static_cast<int64_t>(get_current_blockchain_height());
+    uint64_t blocks = std::abs(diff);
+    uint64_t days = blocks / (24 * 60 * 60 / m_currency.difficultyTarget());
 
     logger(diff >= 0 ? (is_inital ? Logging::INFO : Logging::DEBUGGING) : Logging::TRACE, Logging::BRIGHT_GREEN) << context <<
       "Your Talleo node is syncing with the network. You are "
       // << get_current_blockchain_height() << " -> " << hshd.current_height
-      << std::abs(diff) << " blocks (" << std::abs(diff) / (24 * 60 * 60 / m_currency.difficultyTarget()) << " days) "
+      << blocks << " " << ((blocks == 1) ? "block" : "blocks")
+      << (days > 0 ? " (" + std::to_string(days) + " " + ((days == 1) ? "day" : "days") + ") " : " ")
       << (diff >= 0 ? std::string("behind") : std::string("ahead of")) << " the remote node. Synchronization started! " << std::endl;
 
     logger(Logging::DEBUGGING) << "Remote top block height: " << hshd.current_height << ", id: " << hshd.top_id;
