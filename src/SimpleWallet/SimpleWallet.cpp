@@ -1409,7 +1409,7 @@ void countTransfers(bool incoming, bool outgoing, CryptoNote::WalletGreen &walle
         CryptoNote::WalletTransaction t = transactions[i];
         int64_t amount = filterAmounts(t, wallet);
 
-        if (t.fee == 0) {
+        if (t.fee == 0 && t.totalAmount == 0) {
             int64_t amountIn;
             int64_t amountOut;
             filterFusionAmounts(t, wallet, amountIn, amountOut);
