@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2020, The Talleo developers
+// Copyright (c) 2020-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -90,6 +90,12 @@ public:
   static const int SIZEOF_PTHREAD_MUTEX_T = 40;
 # else
   static const int SIZEOF_PTHREAD_MUTEX_T = 32;
+# endif
+#elif defined(__powerpc64__)
+# if __WORDSIZE == 64
+  static const int SIZEOF_PTHREAD_MUTEX_T = 40;
+# else
+  static const int SIZEOF_PTHREAD_MUTEX_T = 24;
 # endif
 #else
   static const int SIZEOF_PTHREAD_MUTEX_T = 24;

@@ -92,14 +92,20 @@ else()
   if ((${CMAKE_SYSTEM_NAME} STREQUAL "Android") AND (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64"))
     # Android clang for aarch64 doesn't like variable-length arrays allocated on stack
     add_definitions("-DFORCE_USE_HEAP")
-  elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "ppc.*")
+    # gcc for powerpc64 doesn't like variable-length arrays allocated on stack
+    add_definitions("-DFORCE_USE_HEAP")
+  endif()
+  if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     # This option has no effect in glibc version less than 2.20.
     # Since glibc 2.20 _BSD_SOURCE is deprecated, this macro is recomended instead
     add_definitions("-D_DEFAULT_SOURCE" "-D_GNU_SOURCE")
   endif()
-  set(ARCH native CACHE STRING "CPU to build for: -march value or default")
+  set(ARCH native CACHE STRING "CPU to build for: -march/-mcpu value or default")
   if("${ARCH}" STREQUAL "default")
     set(ARCH_FLAG "")
+  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc.*")
+    set(ARCH_FLAG "-mcpu=${ARCH}")
   else()
     set(ARCH_FLAG "-march=${ARCH}")
   endif()
