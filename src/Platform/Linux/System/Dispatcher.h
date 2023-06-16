@@ -97,6 +97,12 @@ public:
 # else
   static const int SIZEOF_PTHREAD_MUTEX_T = 24;
 # endif
+#elif defined(__aarch64__)
+# if __WORDSIZE == 64
+  static const int SIZEOF_PTHREAD_MUTEX_T = 48;
+# else
+  static const int SIZEOF_PTHREAD_MUTEX_T = 32;
+# endif
 #else
   static const int SIZEOF_PTHREAD_MUTEX_T = 24;
 #endif

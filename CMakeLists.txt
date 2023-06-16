@@ -89,8 +89,8 @@ if(MSVC)
   endif()
   include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/msc)
 else()
-  if ((${CMAKE_SYSTEM_NAME} STREQUAL "Android") AND (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64"))
-    # Android clang for aarch64 doesn't like variable-length arrays allocated on stack
+  if (CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    # clang for aarch64 (Android or Linux) doesn't like variable-length arrays allocated on stack
     add_definitions("-DFORCE_USE_HEAP")
   elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "ppc.*")
     # gcc for powerpc64 doesn't like variable-length arrays allocated on stack
