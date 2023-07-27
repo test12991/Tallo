@@ -932,18 +932,8 @@ bool shutdown(CryptoNote::WalletGreen &wallet, CryptoNote::INode &node, bool &al
     bool finishedShutdown = false;
 
     boost::thread timelyShutdown([&finishedShutdown] {
-        auto startTime = std::chrono::system_clock::now();
-
         /* Has shutdown finished? */
         while (!finishedShutdown) {
-            auto currentTime = std::chrono::system_clock::now();
-
-            /* If not, wait for a max of 30 seconds then force exit. */
-            if ((currentTime - startTime) > std::chrono::seconds(30)) {
-                std::cout << WarningMsg("Wallet took too long to save! Force closing.") << std::endl
-                          << "Bye." << std::endl;
-                exit(0);
-            }
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
