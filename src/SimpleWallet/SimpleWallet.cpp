@@ -725,6 +725,21 @@ void inputLoop(System::Dispatcher& dispatcher, std::shared_ptr<WalletInfo> &wall
             balance(node, walletInfo->wallet, walletInfo->viewWallet);
         } else if (command == "address") {
             std::cout << SuccessMsg(walletInfo->wallet.getAddress(subWallet)) << std::endl;
+        } else if (words[0] == "address") {
+            try {
+                size_t idx = std::stoull(words[1]);
+                if (idx < walletInfo->wallet.getAddressCount()) {
+                    std::cout << InformationMsg("Subwallet " + std::to_string(idx) + ": ") << SuccessMsg(walletInfo->wallet.getAddress(idx)) << std::endl;
+                } else {
+                    std::cout << WarningMsg("Invalid subwallet index!") << std::endl;
+                }
+            }
+            catch (const std::invalid_argument&) {
+                std::cout << WarningMsg("Invalid subwallet index!") << std::endl;
+            }
+            catch (const std::out_of_range&) {
+                std::cout << WarningMsg("Invalid subwallet index!") << std::endl;
+            }
         } else if (command == "incoming_transfers") {
             listTransfers(true, false, walletInfo->wallet, node);
         } else if (command == "exit") {
