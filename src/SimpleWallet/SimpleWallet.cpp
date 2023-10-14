@@ -1249,6 +1249,8 @@ void deleteAddress(CryptoNote::WalletGreen &wallet) {
         if (subWallet == index) {
             subWallet--;
             std::cout << InformationMsg(", new current subwallet is address ") << SuccessMsg(wallet.getAddress(subWallet));
+        } else if (index < subWallet) {
+            subWallet--;
         }
         std::cout << InformationMsg(".") << std::endl;
     } else {
@@ -1276,6 +1278,8 @@ void deleteAddress(CryptoNote::WalletGreen &wallet, std::vector<std::string> arg
         if (subWallet == index) {
             subWallet--;
             std::cout << InformationMsg(", new current subwallet is address ") << SuccessMsg(wallet.getAddress(subWallet));
+        } else if (index < subWallet) {
+            subWallet--;
         }
         std::cout << InformationMsg(".") << std::endl;
     } else {
