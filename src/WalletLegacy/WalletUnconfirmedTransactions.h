@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -20,6 +21,7 @@
 #include "IWalletLegacy.h"
 #include "ITransfersContainer.h"
 
+#include <list>
 #include <unordered_map>
 #include <unordered_set>
 #include <time.h>
