@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019-2022, The Talleo developers
+// Copyright (c) 2019-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -1720,10 +1720,13 @@ IBlockchainCache* Core::findSegmentContainingBlock(uint32_t blockHeight) const {
 
 
 IBlockchainCache* Core::findAlternativeSegmentContainingBlock(const Crypto::Hash& blockHash) const {
-  IBlockchainCache* cache = nullptr;
-  std::find_if(++chainsLeaves.begin(), chainsLeaves.end(),
-               [&](IBlockchainCache* chain) { return cache = findIndexInChain(chain, blockHash); });
-  return cache;
+  for (size_t chain = 1; chain < chainsLeaves.size(); ++chain) {
+    IBlockchainCache* cache = findIndexInChain(chainsLeaves[chain], blockHash);
+    if (cache != nullptr) {
+      return cache;
+    }
+  }
+  return nullptr;
 }
 
 IBlockchainCache* Core::findMainChainSegmentContainingBlock(const Crypto::Hash& blockHash) const {
@@ -1734,11 +1737,13 @@ IBlockchainCache* Core::findMainChainSegmentContainingBlock(uint32_t blockIndex)
   return findIndexInChain(chainsLeaves[0], blockIndex);
 }
 
-// WTF?! this function returns first chain it is able to find..
 IBlockchainCache* Core::findAlternativeSegmentContainingBlock(uint32_t blockIndex) const {
-  IBlockchainCache* cache = nullptr;
-  std::find_if(++chainsLeaves.begin(), chainsLeaves.end(),
-               [&](IBlockchainCache* chain) { return cache = findIndexInChain(chain, blockIndex); });
+  for (size_t chain = 1; chain < chainsLeaves.size(); ++chain) {
+    IBlockchainCache* cache = findIndexInChain(chainsLeaves[chain], blockIndex);
+    if (cache != nullptr) {
+      return cache;
+    }
+  }
   return nullptr;
 }
 
