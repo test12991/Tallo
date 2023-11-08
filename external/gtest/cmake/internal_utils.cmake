@@ -188,8 +188,13 @@ function(cxx_executable name dir libs)
     ${name} "${cxx_default}" "${libs}" "${dir}/${name}.cc" ${ARGN})
 endfunction()
 
-# Sets PYTHONINTERP_FOUND and PYTHON_EXECUTABLE.
-find_package(PythonInterp)
+if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
+  # Sets PYTHONINTERP_FOUND and PYTHON_EXECUTABLE.
+  find_package(PythonInterp)
+else()
+   # Sets Python_Interpreter_FOUND and Python_EXECUTABLE
+  find_package(Python COMPONENTS Interpreter)
+endif()
 
 # cxx_test_with_flags(name cxx_flags libs srcs...)
 #
@@ -224,6 +229,11 @@ function(py_test name)
     # we have to escape $ to delay variable substitution here.
     add_test(${name}
       ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test/${name}.py
+          --build_dir=${CMAKE_CURRENT_BINARY_DIR}/\${CTEST_CONFIGURATION_TYPE})
+  endif()
+  if (Python_Interpreter_FOUND)
+    add_test(${name}
+      ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/test/${name}.py
           --build_dir=${CMAKE_CURRENT_BINARY_DIR}/\${CTEST_CONFIGURATION_TYPE})
   endif()
 endfunction()
