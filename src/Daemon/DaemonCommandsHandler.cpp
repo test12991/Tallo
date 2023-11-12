@@ -1,5 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2021, The Talleo developers
+// Copyright (c) 2021-2023, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -238,7 +238,7 @@ bool DaemonCommandsHandler::print_alternate_chains(const std::vector<std::string
     std::cout << res.chains.size() << " alternate chains found:" << std::endl;
 
     for (const auto& chain: res.chains) {
-      std::cout << chain.length << " blocks long, branching at height " << (chain.height - chain.length + 1)
+      std::cout << chain.length << " " << (chain.length == 1 ? "block" : "blocks") << " long, branching at height " << (chain.height - chain.length + 1)
                 << ", difficulty " << chain.difficulty << ": " << chain.block_hash << std::endl;
     }
   }
