@@ -1,7 +1,7 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2016-2018, The Karbo developers
 // Copyright (c) 2019, The Bittorium developers
-// Copyright (c) 2020-2022, The Talleo developers
+// Copyright (c) 2020-2024, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -372,8 +372,7 @@ int main(int argc, char* argv[])
     CryptoNote::RpcServer rpcServer(dispatcher, logManager, ccore, p2psrv, cprotocol);
 
     cprotocol.set_p2p_endpoint(&p2psrv);
-    //DaemonCommandsHandler dch(ccore, p2psrv, logManager);
-	DaemonCommandsHandler dch(ccore, p2psrv, logManager, &rpcServer);
+    DaemonCommandsHandler dch(ccore, p2psrv, logManager, &rpcServer);
     logger(INFO) << "Initializing P2P server...";
     if (!p2psrv.init(netNodeConfig)) {
       logger(ERROR, BRIGHT_RED) << "Failed to initialize P2P server.";
@@ -397,7 +396,7 @@ int main(int argc, char* argv[])
         server_ssl_enable = true;
       }
       else {
-        logger(ERROR, BRIGHT_RED) << "Start RPC SSL server was canceled because certificate file(s) could not be found" << std::endl;
+        logger(ERROR, BRIGHT_RED) << "Start of RPC SSL server was canceled because certificate file(s) could not be found" << std::endl;
       }
     }
     std::string ssl_info = "";
