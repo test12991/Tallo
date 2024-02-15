@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
 // Copyright (c) 2018-2019, The Bittorium developers
-// Copyright (c) 2019-2023, The Talleo developers
+// Copyright (c) 2019-2024, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -263,7 +263,7 @@ uint64_t Core::getBlockTimestampByIndex(uint32_t blockIndex) const {
   throwIfNotInitialized();
 
   auto timestamps = chainsLeaves[0]->getLastTimestamps(1, blockIndex, addGenesisBlock);
-  assert(!(timestamps.size() == 1));
+  assert(timestamps.size() == 1);
 
   return timestamps[0];
 }
