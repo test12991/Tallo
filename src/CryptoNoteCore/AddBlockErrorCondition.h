@@ -1,4 +1,5 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
+// Copyright (c) 2024, The Talleo developers
 //
 // This file is part of Bytecoin.
 //
@@ -59,7 +60,11 @@ public:
     }
   }
 
-  virtual bool equivalent(const std::error_code& errorCode, int condition) const throw() override  {
+  virtual bool equivalent(int code, const std::error_condition& condition) const noexcept override {
+    return default_error_condition(code) == condition;
+  }
+
+  virtual bool equivalent(const std::error_code& errorCode, int condition) const throw() override {
     AddBlockErrorCondition code = static_cast<AddBlockErrorCondition>(condition);
 
     switch(code) {
