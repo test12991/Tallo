@@ -249,7 +249,7 @@ PushedBlockInfo BlockchainCache::getPushedBlockInfo(uint32_t blockIndex) const {
 
 // Returns upper part of segment. [this] remains lower part.
 // All of indexes on blockIndex == splitBlockIndex belong to upper part
-// TODO: first move containers to new cache, then copy elements back. This can be much more effective, cause we usualy
+// TODO: first move containers to new cache, then copy elements back. This can be much more effective, cause we usually
 // split blockchain near its top.
 std::unique_ptr<IBlockchainCache> BlockchainCache::split(uint32_t splitBlockIndex) {
   logger(Logging::DEBUGGING) << "Splitting at block index: " << splitBlockIndex << ", top block index: " << getTopBlockIndex();
