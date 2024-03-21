@@ -68,6 +68,8 @@ void printPrivateKeys(CryptoNote::WalletGreen &wallet, bool viewWallet);
 
 void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool viewWallet);
 
+void balances(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet, bool viewWallet);
+
 void welcomeMsg();
 
 void help(bool viewWallet);
